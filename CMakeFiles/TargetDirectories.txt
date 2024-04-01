@@ -1,0 +1,4 @@
+/home/michalmo/ZPR/flashcardapp/CMakeFiles/FlashcardApp.dir
+/home/michalmo/ZPR/flashcardapp/CMakeFiles/edit_cache.dir
+/home/michalmo/ZPR/flashcardapp/CMakeFiles/rebuild_cache.dir
+/home/michalmo/ZPR/flashcardapp/CMakeFiles/FlashcardApp_autogen.dir
