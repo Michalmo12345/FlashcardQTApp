@@ -2,12 +2,15 @@
 
 build/
 
-CMakeFiles
+CMakeFiles/
 CMakeCache.txt
 cmake_install.cmake
 Makefile
+build/
+data/
+FlashcardApp
 
 .
-FlashcardApp-autogen/
+FlashcardApp_autogen/
 _deps/
 lib/

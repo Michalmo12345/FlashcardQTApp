@@ -1,0 +1,49 @@
+CREATE TABLE App_user
+(
+  Id INT NOT NULL,
+  Username VARCHAR(64) NOT NULL,
+  Password VARCHAR(64) NOT NULL,
+  Gender VARCHAR(8) NOT NULL,
+  PRIMARY KEY (Id)
+);
+
+CREATE TABLE Set
+(
+  Id INT NOT NULL,
+  Name VARCHAR(64) NOT NULL,
+  Creation_date DATE NOT NULL,
+  Creator_id INT NOT NULL,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (Creator_id) REFERENCES App_user(Id)
+);
+
+CREATE TABLE Flashcard
+(
+  Id INT NOT NULL,
+  Question VARCHAR(64) NOT NULL,
+  Answer VARCHAR(64) NOT NULL,
+  Set_id INT NOT NULL,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (Set_id) REFERENCES Set(Id)
+);
+
+CREATE TABLE Users_sets
+(
+  Id INT NOT NULL,
+  Rate INT,
+  User_id INT NOT NULL,
+  Set_id INT NOT NULL,
+  PRIMARY KEY (Id),
+  FOREIGN KEY (User_id) REFERENCES App_user(Id),
+  FOREIGN KEY (Set_id) REFERENCES Set(Id)
+);
+
+CREATE TABLE User_flashcard
+(
+  Importance INT NOT NULL,
+  Flashcard_id INT NOT NULL,
+  Users_sets_id INT NOT NULL,
+  PRIMARY KEY (Flashcard_id, Users_sets_id),
+  FOREIGN KEY (Flashcard_id) REFERENCES Flashcard(Id),
+  FOREIGN KEY (Users_sets_id) REFERENCES Users_sets(Id)
+);
