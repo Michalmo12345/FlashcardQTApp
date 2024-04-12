@@ -10,8 +10,7 @@ class Flashcard {
         int I; //interval between repetitions
         double EF; //easiness factor
     public:
-        Flashcard(std::string question, std::string answer):
-            question(question), answer(answer), n(0), I(1), EF(2.5) {}
+        Flashcard(std::string question, std::string answer);
         void update(int q);//q is the integer from1-5 chosen by the user to determine knowledge of the flashcard
         void showQuestion();
         void showAnswer();

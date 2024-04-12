@@ -15,9 +15,9 @@ add_compile_options(-std=c++20 -Wall -Wextra -g)
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
 
 add_executable(${PROJECT_NAME} 
-        src/main.cpp
-        src/flashcardmanagement/Flashcard.cpp
-        src/qt_ui/mainwindow.cpp
+        src/main.cc
+        src/flashcardmanagement/Flashcard.cc
+        src/qt_ui/mainwindow.cc
     )
 
 target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets)
