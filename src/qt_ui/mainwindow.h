@@ -3,7 +3,7 @@
 #include <QLabel>
 #include <QListWidgetItem>
 #include <list>
-
+#include "flashcardmanagement/Set.h"
 
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
@@ -16,7 +16,15 @@ class MainWindow : public QMainWindow
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
 
+    private slots:
+        void pushContinue();
+        void beginLearning();
+        void addFlashcard();
+        void goToNextFlashcard();
+        void showAnswer();
     private:
         Ui::MainWindow *ui;
+        Set set_;
+        std::shared_ptr<Flashcard> currentCard_;
 };
 
