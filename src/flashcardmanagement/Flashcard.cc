@@ -16,5 +16,11 @@ void Flashcard::showAnswer() {
     std::cout << answer << std::endl;
 }
 
+std::string Flashcard::getQuestion() {
+    return question;
+}
 
+std::string Flashcard::getAnswer() {
+    return answer;
+}
 

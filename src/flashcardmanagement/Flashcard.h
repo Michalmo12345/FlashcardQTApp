@@ -14,5 +14,6 @@ class Flashcard {
         void update(int q);//q is the integer from1-5 chosen by the user to determine knowledge of the flashcard
         void showQuestion();
         void showAnswer();
-        
+        std::string getQuestion();
+        std::string getAnswer();
 };
