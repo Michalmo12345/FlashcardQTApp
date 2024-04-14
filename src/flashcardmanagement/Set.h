@@ -15,3 +15,5 @@ class Set {
         Flashcard* giveRandomCard() const;
         void saveToFile(const std::string& filename) const;
 };
+
+Set readFromFile(const std::string& filename, const std::string& setName);

@@ -19,5 +19,9 @@ int main(int argc, char *argv[])
     randomCard->showQuestion();
     randomCard->showAnswer();
     set.saveToFile("pliczek_1");
+    // Set set = readFromFile("pliczek_1", "Zestaw1");
+    // auto randomCard = set.giveRandomCard();
+    // randomCard->showQuestion();
+    // randomCard->showAnswer();
     return a.exec();
 }
