@@ -1,10 +1,17 @@
 #include "Set.h"
 #include <iostream>
+#include <string>
+
+Set::Set(std::string name): name_(name) {}
 
 Set::~Set() {
     for (auto card : flashcards_) {
         delete card;
     }
+}
+
+std::string Set::getName() {
+    return name_;
 }
 
 void Set::addCard(Flashcard* card) {
