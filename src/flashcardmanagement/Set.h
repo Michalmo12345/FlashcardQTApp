@@ -10,8 +10,8 @@ class Set {
     public:
         Set(std::string name);
         ~Set();
-        std::string getName();
+        std::string getName() const;
         void addCard(Flashcard* card);
-        Flashcard* giveRandomCard();
-        
+        Flashcard* giveRandomCard() const;
+        void saveToFile(const std::string& filename) const;
 };

@@ -18,6 +18,7 @@ add_compile_options(-std=c++20 -Wall -Wextra -g)
 add_executable(${PROJECT_NAME} 
         src/main.cc
         src/flashcardmanagement/Flashcard.cc
+        src/flashcardmanagement/Set.cc
         src/qt_ui/mainwindow.cc
     )
 
