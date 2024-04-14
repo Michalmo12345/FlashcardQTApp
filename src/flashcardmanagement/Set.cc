@@ -3,28 +3,24 @@
 #include <fstream>
 #include <sstream>
 #include <string>
+#include <memory>
 
-Set::Set(std::string name): name_(name) {}
+Set::Set(std::string name): name_(std::move(name)) {}
 
-Set::~Set() {
-    for (auto card : flashcards_) {
-        delete card;
-    }
-}
+Set::~Set() = default;
 
 std::string Set::getName() const {
     return name_;
 }
 
-void Set::addCard(Flashcard* card) {
+void Set::addCard(std::shared_ptr<Flashcard> card) {
     flashcards_.push_back(card);
 }
 
-Flashcard* Set::giveRandomCard() const {
+std::shared_ptr<Flashcard> Set::giveRandomCard(){
     if (flashcards_.empty()) {
         return nullptr;
     }
-
     srand(time(nullptr));
     return flashcards_[rand() % flashcards_.size()];
 }
@@ -53,7 +49,7 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
             std::istringstream iss(line);
             std::string question, answer;
             if (std::getline(iss, question, ',') && std::getline(iss, answer)) {
-                Flashcard* card = new Flashcard(question, answer);
+                std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(question, answer);
                 set.addCard(card);
             }
         }

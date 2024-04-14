@@ -9,7 +9,7 @@ int base() {
    
    try {
       connection C("dbname = postgres user = admin password = admin \
-      hostaddr = 127.0.0.1 port = 5432");
+      hostaddr = 127.0.0.1 port = 5433");
       if (C.is_open()) {
          cout << "Opened database successfully: " << C.dbname() << endl;
       } else {

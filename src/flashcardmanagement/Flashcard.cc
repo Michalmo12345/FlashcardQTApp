@@ -4,7 +4,7 @@
 Flashcard::Flashcard(std::string question, std::string answer):
     question(question), answer(answer), n(0), I(1), EF(2.5) {}
 
-void Flashcard::update(int q) {
+void Flashcard::update() {
     //implement supermemo algorithm
 }
 
