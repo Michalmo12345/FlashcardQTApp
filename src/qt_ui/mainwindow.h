@@ -20,11 +20,13 @@ class MainWindow : public QMainWindow
         void findSets();
         void pushContinue();
         void readSetFromDB();
+        void readSetFromFile();
         void beginLearning();
         void addFlashcard();
         void goToNextFlashcard();
         void showAnswer();
         void saveToDB();
+        void saveToFile();
     private:
         Ui::MainWindow *ui;
         Set set_;

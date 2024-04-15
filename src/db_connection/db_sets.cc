@@ -4,6 +4,7 @@
 #include <vector>
 #include <pqxx/pqxx>
 #include <memory>
+#include <filesystem>
 
 std::vector<std::string> getSetNamesFromDb() {
     try {        
@@ -21,5 +22,26 @@ std::vector<std::string> getSetNamesFromDb() {
         std::cerr << e.what() << std::endl;
         return {};
     }
+}
+
+std::vector<std::string> getSetNamesFromFiles() {
+    std::string dir = "sets";
+    std::vector<std::string> setNames;
+    try {
+        if (!std::filesystem::exists(dir)) {
+            return {};
+        }
+
+        for (const auto& entry : std::filesystem::directory_iterator(dir)) {
+            if (entry.is_regular_file()) {
+                std::string fileName = entry.path().filename().stem().string();
+                setNames.push_back(fileName);
+            }
+        }
+    } catch (const std::exception& e) {
+        std::cerr << "Wystąpił błąd podczas przetwarzania folderu: " << e.what() << std::endl;
+    }
+
+    return setNames;
 }
 

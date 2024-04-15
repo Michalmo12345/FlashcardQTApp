@@ -15,7 +15,7 @@ class Set {
         void setName(const std::string& name);
         void addCard(std::shared_ptr<Flashcard> card);
         std::shared_ptr<Flashcard> giveRandomCard();
-        void saveToFile(const std::string& filename) const;
+        void saveToFile() const;
         void saveToDB() const;
 };
 

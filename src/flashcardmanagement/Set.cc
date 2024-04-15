@@ -4,6 +4,7 @@
 #include <sstream>
 #include <string>
 #include <memory>
+#include <filesystem>
 #include "db_connection/connect_db.cc"
 #include <pqxx/pqxx>
 
@@ -31,17 +32,29 @@ std::shared_ptr<Flashcard> Set::giveRandomCard(){
     return flashcards_[rand() % flashcards_.size()];
 }
 
-void Set::saveToFile(const std::string& filename) const {
-    std::ofstream file(filename);
+void Set::saveToFile() const {
+    std::string dir = "sets";
+    if (!std::filesystem::exists(dir)) {
+        std::filesystem::create_directory(dir);
+    }
 
+    std::string path = dir + "/" + name_;
+    int counter = 0;
+    while (std::filesystem::exists(path)) {
+        ++counter;
+        path = dir + "/" + name_ + "_" + std::to_string(counter);
+    }
+
+    path = path + ".txt";
+    std::ofstream file(path);
     if (file.is_open()) {
         for (const auto& card : flashcards_) {
             file << card->getQuestion() << "," << card->getAnswer() << std::endl;
         }
         file.close();
-        std::cout << "Zapisano zestaw do pliku: " << filename << std::endl;
+        std::cout << "Zapisano zestaw do pliku: " << path << std::endl;
     } else {
-        std::cerr << "Nie można otworzyć pliku do zapisu: " << filename << std::endl;
+        std::cerr << "Wystąpił błąd przy zapisie: " << path << std::endl;
     }
 }
 
@@ -70,7 +83,7 @@ void Set::saveToDB() const {
 
 Set readFromFile(const std::string& filename, const std::string& setName) {
     Set set(setName);
-    std::ifstream file(filename);
+    std::ifstream file("sets/" + filename);
 
     if (file.is_open()) {
         std::string line;
@@ -83,9 +96,9 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
             }
         }
         file.close();
-        std::cout << "Wczytano zestaw z pliku: " << filename << std::endl;
+        std::cout << "Wczytano zestaw z pliku: sets/" << filename << std::endl;
     } else {
-        std::cerr << "Nie można otworzyć pliku do odczytu: " << filename << std::endl;
+        std::cerr << "Nie można otworzyć pliku do odczytu: sets/" << filename << std::endl;
     }
 
     return set;
