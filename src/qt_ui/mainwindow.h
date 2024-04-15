@@ -17,11 +17,14 @@ class MainWindow : public QMainWindow
         ~MainWindow();
 
     private slots:
+        void findSets();
         void pushContinue();
+        void readSetFromDB();
         void beginLearning();
         void addFlashcard();
         void goToNextFlashcard();
         void showAnswer();
+        void saveToDB();
     private:
         Ui::MainWindow *ui;
         Set set_;

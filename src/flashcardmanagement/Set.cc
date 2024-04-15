@@ -4,6 +4,8 @@
 #include <sstream>
 #include <string>
 #include <memory>
+#include "db_connection/connect_db.cc"
+#include <pqxx/pqxx>
 
 Set::Set(std::string name): name_(std::move(name)) {}
 
@@ -11,6 +13,10 @@ Set::~Set() = default;
 
 std::string Set::getName() const {
     return name_;
+}
+
+void Set::setName(const std::string& name) {
+    name_ = name;
 }
 
 void Set::addCard(std::shared_ptr<Flashcard> card) {
@@ -39,6 +45,29 @@ void Set::saveToFile(const std::string& filename) const {
     }
 }
 
+void Set::saveToDB() const {
+    try {        
+        pqxx::connection conn = connect_to_database();
+        pqxx::work txn(conn); 
+        std::string insert_set = "INSERT INTO set (name) VALUES ($1)";
+        txn.exec_params(insert_set, name_);
+
+        pqxx::result result = txn.exec("SELECT lastval()");
+        int set_id = result[0][0].as<int>();
+        
+        std::string insert_flashcard = "INSERT INTO flashcard (set_id, question, answer) VALUES ($1, $2, $3)";
+        
+        for (const auto& card : flashcards_) {
+            txn.exec_params(insert_flashcard, set_id, card->getQuestion(), card->getAnswer());
+        }
+
+        txn.commit();
+        std::cout << "Set saved successfully to database." << std::endl;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
+}
+
 Set readFromFile(const std::string& filename, const std::string& setName) {
     Set set(setName);
     std::ifstream file(filename);
@@ -60,4 +89,25 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
     }
 
     return set;
+}
+
+Set getSetByName(const std::string& setName) {
+    try {        
+        pqxx::connection conn = connect_to_database();
+        std::string sql = "SELECT flashcard.question, flashcard.answer \
+                           FROM flashcard JOIN set \
+                           ON flashcard.set_id = set.id \
+                           WHERE set.name = $1;";
+        pqxx::nontransaction N(conn);
+        pqxx::result R(N.exec_params(sql, setName));
+        Set set(setName);
+        
+        for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
+            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>());
+            set.addCard(card);
+        }
+        return set;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+    }
 }

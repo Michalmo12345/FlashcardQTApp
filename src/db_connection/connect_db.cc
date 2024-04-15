@@ -1,80 +1,40 @@
+#include "connect_db.h"
 #include <iostream>
 #include <pqxx/pqxx>
 
-using namespace std;
-using namespace pqxx;
-
-// int base() {
-//    char * sql;
-   
-//    try {
-//       connection C("dbname = postgres user = admin password = admin \
-//       hostaddr = 127.0.0.1 port = 5433");
-//       if (C.is_open()) {
-//          cout << "Opened database successfully: " << C.dbname() << endl;
-//       } else {
-//          cout << "Can't open database" << endl;
-//          return 1;
-//       }
-
-//       /* Create SQL statement */
-//       sql = "SELECT * from app_user";
-
-//       /* Create a non-transactional object. */
-//       nontransaction N(C);
-      
-//       /* Execute SQL query */
-//       result R( N.exec( sql ));
-      
-//       /* List down all the records */
-//       for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-//          cout << "id = " << c[0].as<int>() << endl;
-//          cout << "Username = " << c[1].as<string>() << endl;
-//          cout << "Password = " << c[2].as<string>() << endl;
-//          cout << "Gender = " << c[3].as<string>() << endl;
-//       }
-//       cout << "Operation done successfully" << endl;
-//    } catch (const std::exception &e) {
-//       cerr << e.what() << std::endl;
-//       return 1;
-//    }
-
-//    return 0;
-// }
-
-connection connect_to_database() {
+pqxx::connection connect_to_database() {
     try {
-        connection C("dbname = postgres user = admin password = admin \
+        pqxx::connection C("dbname = postgres user = admin password = admin \
         hostaddr = 127.0.0.1 port = 5433");
         if (C.is_open()) {
-            cout << "Opened database successfully: " << C.dbname() << endl;
+            std::cout << "Opened database successfully: " << C.dbname() << std::endl;
         } else {
-            cerr << "Can't open database" << endl;
+            std::cerr << "Can't open database" << std::endl;
             exit(1);
         }
         return C;
     } catch (const std::exception &e) {
-        cerr << e.what() << std::endl;
+        std::cerr << e.what() << std::endl;
         exit(1);
     }
 }
 
 void findUsers() {
-    try {        
-      connection conn = connect_to_database();
-      string sql = "SELECT * from app_user";
-      nontransaction N(conn);
-      result R(N.exec(sql));
+   try {        
+      pqxx::connection conn = connect_to_database();
+      std::string sql = "SELECT * from app_user";
+      pqxx::nontransaction N(conn);
+      pqxx::result R(N.exec(sql));
       
-      for (result::const_iterator c = R.begin(); c != R.end(); ++c) {
-         cout << "id = " << c[0].as<int>() << endl;
-         cout << "Username = " << c[1].as<string>() << endl;
-         cout << "Password = " << c[2].as<string>() << endl;
-         cout << "Gender = " << c[3].as<string>() << endl;
+      for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
+         std::cout << "id = " << c[0].as<int>() << std::endl;
+         std::cout << "Username = " << c[1].as<std::string>() << std::endl;
+         std::cout << "Password = " << c[2].as<std::string>() << std::endl;
+         std::cout << "Gender = " << c[3].as<std::string>() << std::endl;
       }
 
-      cout << "Operation done successfully" << endl;
-    } catch (const std::exception &e) {
-        cerr << e.what() << std::endl;
-    }
+      std::cout << "Operation done successfully" << std::endl;
+   } catch (const std::exception &e) {
+      std::cerr << e.what() << std::endl;
+   }
 }

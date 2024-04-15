@@ -12,9 +12,12 @@ class Set {
         Set(std::string name);
         ~Set();
         std::string getName() const;
+        void setName(const std::string& name);
         void addCard(std::shared_ptr<Flashcard> card);
         std::shared_ptr<Flashcard> giveRandomCard();
         void saveToFile(const std::string& filename) const;
+        void saveToDB() const;
 };
 
 Set readFromFile(const std::string& filename, const std::string& setName);
+Set getSetByName(const std::string& setName);
