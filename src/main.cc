@@ -7,6 +7,7 @@ int main(int argc, char *argv[])
     QApplication a(argc, argv);
     MainWindow w;
     w.show();
+    findUsers();
     // Set set("zestaw A");
     // Flashcard* cardA = new Flashcard("Ile masz lat?", "11");
     // Flashcard* cardB = new Flashcard("Jak masz na imie?", "ABCD");
