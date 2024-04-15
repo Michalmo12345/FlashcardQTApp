@@ -8,9 +8,9 @@
 
 std::vector<std::string> getSetNamesFromDb() {
     try {        
-        pqxx::connection conn = connect_to_database();
+        auto conn = connect_to_database();
         std::string sql = "SELECT name from set";
-        pqxx::nontransaction N(conn);
+        pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec(sql));
         std::vector<std::string> set_names;
         

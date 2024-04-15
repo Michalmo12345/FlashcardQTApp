@@ -60,8 +60,8 @@ void Set::saveToFile() const {
 
 void Set::saveToDB() const {
     try {        
-        pqxx::connection conn = connect_to_database();
-        pqxx::work txn(conn); 
+        auto conn = connect_to_database();
+        pqxx::work txn(*conn); 
         std::string insert_set = "INSERT INTO set (name) VALUES ($1)";
         txn.exec_params(insert_set, name_);
 
@@ -106,12 +106,12 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
 
 Set getSetByName(const std::string& setName) {
     try {        
-        pqxx::connection conn = connect_to_database();
+        auto conn = connect_to_database();
         std::string sql = "SELECT flashcard.question, flashcard.answer \
                            FROM flashcard JOIN set \
                            ON flashcard.set_id = set.id \
                            WHERE set.name = $1;";
-        pqxx::nontransaction N(conn);
+        pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec_params(sql, setName));
         Set set(setName);
         

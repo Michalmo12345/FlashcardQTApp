@@ -1,5 +1,5 @@
 #pragma once
 #include <pqxx/pqxx>
 
-pqxx::connection connect_to_database();
+std::unique_ptr<pqxx::connection> connect_to_database();
 void findUsers();
