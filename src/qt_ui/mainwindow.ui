@@ -15,10 +15,10 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="1">
+    <item row="0" column="0">
      <widget class="QStackedWidget" name="baseStack">
       <property name="currentIndex">
-       <number>2</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <widget class="QLabel" name="label">
@@ -40,21 +40,111 @@
        <widget class="QPushButton" name="pushContinueButton">
         <property name="geometry">
          <rect>
-          <x>120</x>
-          <y>190</y>
-          <width>551</width>
-          <height>301</height>
+          <x>490</x>
+          <y>330</y>
+          <width>241</width>
+          <height>121</height>
          </rect>
         </property>
         <property name="layoutDirection">
          <enum>Qt::LeftToRight</enum>
         </property>
         <property name="text">
-         <string>Continue</string>
+         <string>Utwórz zestaw fiszek</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="findSetsButton">
+        <property name="geometry">
+         <rect>
+          <x>50</x>
+          <y>330</y>
+          <width>241</width>
+          <height>121</height>
+         </rect>
+        </property>
+        <property name="layoutDirection">
+         <enum>Qt::LeftToRight</enum>
+        </property>
+        <property name="text">
+         <string>Wybierz zestaw fiszek</string>
         </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_2">
+       <widget class="QListWidget" name="fileSetsList">
+        <property name="geometry">
+         <rect>
+          <x>90</x>
+          <y>130</y>
+          <width>221</width>
+          <height>221</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QListWidget" name="dbSetsList">
+        <property name="geometry">
+         <rect>
+          <x>480</x>
+          <y>130</y>
+          <width>221</width>
+          <height>221</height>
+         </rect>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_6">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>50</y>
+          <width>121</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Zestawy z plików</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_7">
+        <property name="geometry">
+         <rect>
+          <x>500</x>
+          <y>50</y>
+          <width>171</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Zestawy z bazy danych</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="fileCardButton">
+        <property name="geometry">
+         <rect>
+          <x>140</x>
+          <y>390</y>
+          <width>121</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Wybierz zestaw</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="dbCardButton">
+        <property name="geometry">
+         <rect>
+          <x>520</x>
+          <y>390</y>
+          <width>121</width>
+          <height>51</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Wybierz zestaw</string>
+        </property>
+       </widget>
+      </widget>
+      <widget class="QWidget" name="page_4">
        <widget class="QPushButton" name="pushAddFlashcard">
         <property name="geometry">
          <rect>
@@ -141,6 +231,55 @@
         </property>
         <property name="alignment">
          <set>Qt::AlignCenter</set>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="saveToDbButton">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>130</y>
+          <width>181</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Zapisz do bazy danych</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="saveToFileButton">
+        <property name="geometry">
+         <rect>
+          <x>490</x>
+          <y>180</y>
+          <width>181</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Zapisz do pliku</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_8">
+        <property name="geometry">
+         <rect>
+          <x>170</x>
+          <y>140</y>
+          <width>111</width>
+          <height>20</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Nazwa zestawu:</string>
+        </property>
+       </widget>
+       <widget class="QTextEdit" name="setNameTextEdit">
+        <property name="geometry">
+         <rect>
+          <x>290</x>
+          <y>140</y>
+          <width>161</width>
+          <height>31</height>
+         </rect>
         </property>
        </widget>
       </widget>
