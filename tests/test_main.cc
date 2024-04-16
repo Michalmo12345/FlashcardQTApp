@@ -1,9 +1,5 @@
 #include <gtest/gtest.h>
 
-TEST(sample, dosuccesspls)
-{
-    EXPECT_EQ(1u, 1u);
-}
 
 int main(int argc, char** argv)
 {

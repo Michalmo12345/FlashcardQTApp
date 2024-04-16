@@ -22,7 +22,7 @@ add_compile_options(-std=c++20 -Wall -Wextra -g)
 
 
 # include_directories(${CMAKE_CURRENT_SOURCE_DIR}/src)
-option(BUILD_TESTS "Build tests" OFF)
+option(BUILD_TESTS "Build tests" ON)
 
 if(NOT BUILD_TESTS)
     add_executable(${PROJECT_NAME} 
