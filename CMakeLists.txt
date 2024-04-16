@@ -2,6 +2,14 @@ cmake_minimum_required(VERSION 3.0)
 
 project(FlashcardApp)
 
+include(cmake/FetchGitLib.cmake)
+
+fetch_git_lib(
+        GoogleTest
+        https://github.com/google/googletest/
+        main
+)
+
 find_library(LIBPQXX_LIBRARIES NAMES pqxx)
 find_package(Qt5Widgets COMPONENTS Core Gui Widgets REQUIRED)
 
