@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include <filesystem>
-#include "db_connection/connect_db.cc"
+#include "../db_connection/connect_db.cc"
 #include <pqxx/pqxx>
 
 Set::Set(std::string name): name_(std::move(name)) {}
@@ -24,6 +24,13 @@ void Set::addCard(std::shared_ptr<Flashcard> card) {
     flashcards_.push_back(card);
 }
 
+
+std::shared_ptr<Flashcard> Set::getCard(size_t index) {
+    if (index >= flashcards_.size()) {
+        return nullptr;
+    }
+    return flashcards_[index];
+}
 std::shared_ptr<Flashcard> Set::giveRandomCard(){
     if (flashcards_.empty()) {
         return nullptr;
