@@ -11,8 +11,7 @@ należy nadać skryptowi uprawnienia do wykonania komendą:
 
 ```chmod +x setup.sh```
 a następnie odpalić go za pomocą
-```./setup.sh
-```
+```./setup.sh```
 Skrypt ten zainstaluje wymagane biblioteki lokalnie w katalogu projektu.
 
 ### Uruchamianie i konfiguracja bazy 
@@ -25,6 +24,7 @@ Następnie odpalić bazę danych w kontenerze dockerowym komendą
 ```docker compose up -d```
 
 Przy pierwszym uruchomieniu możemy stworzyć tabele w bazie danych za pomocą polecenia:
+
 
 ```docker-compose exec db psql -U admin -d postgres -f /docker-entrypoint-initdb.d/init.sql```
 
@@ -45,7 +45,10 @@ CMakeLists pozwala na dwa tryby budowania:
 - budowanie testów
 Domyślnie ustawione jest budowanie aplikacji. 
 W celu zmiany trybu musimy wywołać komendę
-`cmake . -DBUILD_TESTS=ON' gdy chcemy budować testy
+
+`cmake . -DBUILD_TESTS=ON' 
+
+gdy chcemy budować testy
 i odpowiednio:
 `cmake . -DBUILD_TESTS=OFF' do budowania aplikacji
 Następnie wywołujemy komendę:
