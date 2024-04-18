@@ -3,7 +3,7 @@
 #include <pqxx/pqxx>
 #include <memory>
 
-std::unique_ptr<pqxx::connection> connect_to_database() {
+std::unique_ptr<pqxx::connection> connectToDatabase() {
     try {
         auto C = std::make_unique<pqxx::connection>("dbname = postgres user = admin password = admin hostaddr = 127.0.0.1 port = 5433");
         if (C->is_open()) {
@@ -21,7 +21,7 @@ std::unique_ptr<pqxx::connection> connect_to_database() {
 
 void findUsers() {
    try {        
-      auto conn = connect_to_database();
+      auto conn = connectToDatabase();
       std::string sql = "SELECT * from app_user";
       pqxx::nontransaction N(*conn);
       pqxx::result R(N.exec(sql));

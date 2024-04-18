@@ -67,7 +67,7 @@ void Set::saveToFile() const {
 
 void Set::saveToDB() const {
     try {        
-        auto conn = connect_to_database();
+        auto conn = connectToDatabase();
         pqxx::work txn(*conn); 
         std::string insert_set = "INSERT INTO set (name) VALUES ($1)";
         txn.exec_params(insert_set, name_);
@@ -113,7 +113,7 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
 
 Set getSetByName(const std::string& setName) {
     try {        
-        auto conn = connect_to_database();
+        auto conn = connectToDatabase();
         std::string sql = "SELECT flashcard.question, flashcard.answer \
                            FROM flashcard JOIN set \
                            ON flashcard.set_id = set.id \

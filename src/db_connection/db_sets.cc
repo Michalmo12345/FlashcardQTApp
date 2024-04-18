@@ -8,7 +8,7 @@
 
 std::vector<std::string> getSetNamesFromDb() {
     try {        
-        auto conn = connect_to_database();
+        auto conn = connectToDatabase();
         std::string sql = "SELECT name from set";
         pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec(sql));
