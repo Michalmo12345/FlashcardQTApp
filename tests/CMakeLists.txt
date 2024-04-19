@@ -9,7 +9,7 @@ add_executable(
     ../src/flashcardmanagement/Set.cc
   )
 
-# target_link_libraries(tests gtest_main ${LIBPQXX_LIBRARIES} pq)
-target_link_libraries(tests gtest main)
+target_link_libraries(tests gtest_main ${LIBPQXX_LIBRARIES} pq)
+
 include(GoogleTest)
 gtest_discover_tests(tests)

@@ -4,21 +4,18 @@
 ## FlashcardAPP
 
 ### Pobieranie zewnętrznych bibliotek
-W celu pobrania bibliotek potrzebnych do prawidłowego funkcjonowania aplikacji, czyli
+Do prawidłowego funckjonowania aplikacji potrzebne jest posiadanie przez klienta dwóch zewnętrznych bibliotek:
 - Qt, do przedstawienia graficznego interfejsu użytkownika
-- pq, PostgreSql do zarządzania bazą danych
-należy nadać skryptowi uprawnienia do wykonania komendą:  
+- libpqxx do zarządzania bazą danych
 
-```chmod +x setup.sh```
-a następnie odpalić go za pomocą
-```./setup.sh```
-Skrypt ten zainstaluje wymagane biblioteki lokalnie w katalogu projektu.
+
 
 ### Uruchamianie i konfiguracja bazy 
 Docelowo baza danych będzie znajdowała się na serwerze. Aktualnie możemy uruchomić ją lokalnie w kontenerze.
 Za pierwszym uruchomineiem należy wywołać polecenie  
 
 `./init-dockers.sh`
+
 Następnie odpalić bazę danych w kontenerze dockerowym komendą  
 
 ```docker compose up -d```
@@ -46,13 +43,14 @@ CMakeLists pozwala na dwa tryby budowania:
 Domyślnie ustawione jest budowanie aplikacji. 
 W celu zmiany trybu musimy wywołać komendę
 
-`cmake . -DBUILD_TESTS=ON' 
+`cmake . -DBUILD_TESTS=ON` 
 
 gdy chcemy budować testy
 i odpowiednio:
-`cmake . -DBUILD_TESTS=OFF' do budowania aplikacji
+`cmake . -DBUILD_TESTS=OFF`
+do budowania aplikacji
 Następnie wywołujemy komendę:
-cmake --build.
+`cmake --build .`
 Następnie będąc w katalogu w którym znajduje się aplikacja odpalamy aplikacje komendą  
 
 ```./FlashcardApp```  
