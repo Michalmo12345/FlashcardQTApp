@@ -1,13 +1,13 @@
 #include "connect_db.h"
 #include <iostream>
 #include <pqxx/pqxx>
+#include <memory>
 
-pqxx::connection connect_to_database() {
+std::unique_ptr<pqxx::connection> connectToDatabase() {
     try {
-        pqxx::connection C("dbname = postgres user = admin password = admin \
-        hostaddr = 127.0.0.1 port = 5433");
-        if (C.is_open()) {
-            std::cout << "Opened database successfully: " << C.dbname() << std::endl;
+        auto C = std::make_unique<pqxx::connection>("dbname = postgres user = admin password = admin hostaddr = 127.0.0.1 port = 5433");
+        if (C->is_open()) {
+            std::cout << "Opened database successfully: " << C->dbname() << std::endl;
         } else {
             std::cerr << "Can't open database" << std::endl;
             exit(1);
@@ -21,9 +21,9 @@ pqxx::connection connect_to_database() {
 
 void findUsers() {
    try {        
-      pqxx::connection conn = connect_to_database();
+      auto conn = connectToDatabase();
       std::string sql = "SELECT * from app_user";
-      pqxx::nontransaction N(conn);
+      pqxx::nontransaction N(*conn);
       pqxx::result R(N.exec(sql));
       
       for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {

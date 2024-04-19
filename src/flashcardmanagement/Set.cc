@@ -5,7 +5,7 @@
 #include <string>
 #include <memory>
 #include <filesystem>
-#include "db_connection/connect_db.cc"
+#include "../db_connection/connect_db.cc"
 #include <pqxx/pqxx>
 
 Set::Set(std::string name): name_(std::move(name)) {}
@@ -24,6 +24,13 @@ void Set::addCard(std::shared_ptr<Flashcard> card) {
     flashcards_.push_back(card);
 }
 
+
+std::shared_ptr<Flashcard> Set::getCard(size_t index) {
+    if (index >= flashcards_.size()) {
+        return nullptr;
+    }
+    return flashcards_[index];
+}
 std::shared_ptr<Flashcard> Set::giveRandomCard(){
     if (flashcards_.empty()) {
         return nullptr;
@@ -60,8 +67,8 @@ void Set::saveToFile() const {
 
 void Set::saveToDB() const {
     try {        
-        pqxx::connection conn = connect_to_database();
-        pqxx::work txn(conn); 
+        auto conn = connectToDatabase();
+        pqxx::work txn(*conn); 
         std::string insert_set = "INSERT INTO set (name) VALUES ($1)";
         txn.exec_params(insert_set, name_);
 
@@ -106,12 +113,12 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
 
 Set getSetByName(const std::string& setName) {
     try {        
-        pqxx::connection conn = connect_to_database();
+        auto conn = connectToDatabase();
         std::string sql = "SELECT flashcard.question, flashcard.answer \
                            FROM flashcard JOIN set \
                            ON flashcard.set_id = set.id \
                            WHERE set.name = $1;";
-        pqxx::nontransaction N(conn);
+        pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec_params(sql, setName));
         Set set(setName);
         

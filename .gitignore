@@ -14,3 +14,10 @@ FlashcardApp
 FlashcardApp_autogen/
 _deps/
 lib/
+
+tests/tests
+tests/CTestTestfile.cmake
+tests/tests_autogen/
+tests/tests[1]_include.cmake
+*.cmake
+!cmake/FindGoogleTest.cmake
