@@ -2,18 +2,10 @@
 #include <iostream>
 
 Flashcard::Flashcard(std::string question, std::string answer):
-    question(question), answer(answer), n(0), I(1), EF(2.5) {}
+    question(question), answer(answer), n(0), interval(0), EFactor(2.5) {}
 
 void Flashcard::update() {
-    //implement supermemo algorithm
-}
-
-void Flashcard::showQuestion() {
-    std::cout << question << std::endl;
-}
-
-void Flashcard::showAnswer() {
-    std::cout << answer << std::endl;
+    
 }
 
 std::string Flashcard::getQuestion() {

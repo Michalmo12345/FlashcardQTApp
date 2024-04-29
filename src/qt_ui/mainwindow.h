@@ -27,6 +27,7 @@ class MainWindow : public QMainWindow
         void showAnswer();
         void saveToDB();
         void saveToFile();
+        void updateFlashcard();
     private:
         Ui::MainWindow *ui;
         Set set_;

@@ -31,6 +31,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
+    connect(ui->repeatButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
+    connect(ui->hardButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
+    connect(ui->easyButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
+    connect(ui->mediumButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
 }
 
 void MainWindow::findSets() {
@@ -111,6 +115,10 @@ void MainWindow::saveToFile() {
     set_.setName(ui->setNameTextEdit->toPlainText().toStdString());
     set_.saveToFile();
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do pliku.");
+}
+
+void MainWindow::updateFlashcard() {
+    currentCard_->update();
 }
 
 MainWindow::~MainWindow()
