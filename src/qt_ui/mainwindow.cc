@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->baseStack->setCurrentIndex(0);
-    // connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::buttonClicked);
     connect(ui->findSetsButton, SIGNAL(clicked()), this, SLOT(findSets()));
     connect(ui->pushContinueButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->dbCardButton, SIGNAL(clicked()), this, SLOT(readSetFromDB()));
@@ -27,10 +26,61 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushBeginLearning, SIGNAL(clicked()), this, SLOT(beginLearning()));
     connect(ui->pushAddFlashcard, SIGNAL(clicked()), this, SLOT(addFlashcard()));
     connect(ui->nextFlashcardButton, SIGNAL(clicked()), this, SLOT(goToNextFlashcard()));
-    connect(ui->showAnswerButton, SIGNAL(clicked()), this, SLOT(showAnswer()));
+    connect(ui->showAnswerButton, &QPushButton::clicked, this, [this]() {
+        showAnswer();
+        
+    });
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
+    connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
+        ui->repeatButton->setStyleSheet("QPushButton { background-color: black; }");
+        updateFlashcard(0);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->repeatButton;
+        });
+    connect(ui->hardButton, &QPushButton::clicked, this, [this]() {
+        ui->hardButton->setStyleSheet("QPushButton { background-color: red; }");
+        updateFlashcard(1);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->hardButton;
+        });
+    connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {
+        ui->problematicButton->setStyleSheet("QPushButton { background-color: orange; }");
+        updateFlashcard(2);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->problematicButton;
+        });
+    connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {
+        ui->mediumButton->setStyleSheet("QPushButton { background-color: yellow; }");
+        updateFlashcard(3);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->mediumButton;
+        });
+    connect(ui->easyButton, &QPushButton::clicked, this, [this]() {
+        ui->easyButton->setStyleSheet("QPushButton { background-color: green; }");
+        updateFlashcard(4);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->easyButton;
+        });
+    connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {
+        ui->perfectButton->setStyleSheet("QPushButton { background-color: blue; }");
+        updateFlashcard(5);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
+        lastClickedButton_ = ui->perfectButton;
+        });
 }
 
 void MainWindow::findSets() {
@@ -80,6 +130,10 @@ void MainWindow::beginLearning() {
 
 void MainWindow::goToNextFlashcard() {
     ui->answerBrowser->clear();
+    if (lastClickedButton_ != nullptr) {
+        lastClickedButton_->setStyleSheet("");
+        lastClickedButton_ = nullptr;
+    }
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
@@ -111,6 +165,10 @@ void MainWindow::saveToFile() {
     set_.setName(ui->setNameTextEdit->toPlainText().toStdString());
     set_.saveToFile();
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do pliku.");
+}
+
+void MainWindow::updateFlashcard(unsigned int quality) {
+    currentCard_->update(quality);
 }
 
 MainWindow::~MainWindow()

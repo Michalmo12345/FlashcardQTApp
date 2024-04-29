@@ -7,14 +7,17 @@ class Flashcard {
     private:
         std::string question;
         std::string answer;
-        int n; //number of repetitions
-        int I; //interval between repetitions
-        double EF; //easiness factor
+        unsigned int repetitions; //number of repetitions
+        unsigned int interval; //interval between repetitions
+        double EFactor; //easiness factor
     public:
         Flashcard(std::string question, std::string answer);
-        void update(); //q is the integer from1-5 chosen by the user to determine knowledge of the flashcard
-        void showQuestion();
-        void showAnswer();
+        double calculateEFactor(double EFactor, int quality);
+        unsigned int calculateInterval(unsigned int repetitions, double EFactor);
+        void update(unsigned int quality); 
+        double getEFactor();
+        unsigned int getRepetitions();
+        unsigned int getInterval();
         std::string getQuestion();
         std::string getAnswer();
 };

@@ -15,10 +15,15 @@
   </property>
   <widget class="QWidget" name="centralwidget">
    <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
+    <item row="0" column="1">
      <widget class="QStackedWidget" name="baseStack">
+      <property name="styleSheet">
+       <string notr="true">QPushButton:pressed {
+    background-color: rgb(222, 221, 218)
+}</string>
+      </property>
       <property name="currentIndex">
-       <number>1</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page">
        <widget class="QLabel" name="label">
@@ -288,13 +293,13 @@
         <property name="geometry">
          <rect>
           <x>230</x>
-          <y>480</y>
+          <y>490</y>
           <width>291</width>
           <height>61</height>
          </rect>
         </property>
         <property name="text">
-         <string>Następna fiszka</string>
+         <string>Następna fiszka </string>
         </property>
        </widget>
        <widget class="QTextBrowser" name="questionBrowser">
@@ -354,6 +359,123 @@
         </property>
         <property name="text">
          <string>Powrót</string>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label_9">
+        <property name="geometry">
+         <rect>
+          <x>230</x>
+          <y>390</y>
+          <width>291</width>
+          <height>16</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Oceń jak dobrze zapamiętałeś daną fiszkę</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="repeatButton">
+        <property name="geometry">
+         <rect>
+          <x>110</x>
+          <y>420</y>
+          <width>81</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Zapomniana</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="hardButton">
+        <property name="geometry">
+         <rect>
+          <x>200</x>
+          <y>420</y>
+          <width>91</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Trudna</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="easyButton">
+        <property name="geometry">
+         <rect>
+          <x>500</x>
+          <y>420</y>
+          <width>91</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="text">
+         <string>Łatwa</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="mediumButton">
+        <property name="geometry">
+         <rect>
+          <x>400</x>
+          <y>420</y>
+          <width>91</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>8</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Umiarkowana</string>
+        </property>
+        <property name="iconSize">
+         <size>
+          <width>17</width>
+          <height>17</height>
+         </size>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="perfectButton">
+        <property name="geometry">
+         <rect>
+          <x>600</x>
+          <y>420</y>
+          <width>91</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">perfectButton::clicked {
+background-color: rgb(53, 132, 228);
+}</string>
+        </property>
+        <property name="text">
+         <string>Bardzo łatwa</string>
+        </property>
+       </widget>
+       <widget class="QPushButton" name="problematicButton">
+        <property name="geometry">
+         <rect>
+          <x>300</x>
+          <y>420</y>
+          <width>91</width>
+          <height>61</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>9</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Problematyczna</string>
         </property>
        </widget>
       </widget>
