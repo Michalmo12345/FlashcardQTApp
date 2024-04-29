@@ -19,7 +19,6 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->baseStack->setCurrentIndex(0);
-    // connect(ui->pushButton, &QPushButton::clicked, this, &MainWindow::buttonClicked);
     connect(ui->findSetsButton, SIGNAL(clicked()), this, SLOT(findSets()));
     connect(ui->pushContinueButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->dbCardButton, SIGNAL(clicked()), this, SLOT(readSetFromDB()));
@@ -27,7 +26,10 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->pushBeginLearning, SIGNAL(clicked()), this, SLOT(beginLearning()));
     connect(ui->pushAddFlashcard, SIGNAL(clicked()), this, SLOT(addFlashcard()));
     connect(ui->nextFlashcardButton, SIGNAL(clicked()), this, SLOT(goToNextFlashcard()));
-    connect(ui->showAnswerButton, SIGNAL(clicked()), this, SLOT(showAnswer()));
+    connect(ui->showAnswerButton, &QPushButton::clicked, this, [this]() {
+        showAnswer();
+        
+    });
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
