@@ -31,12 +31,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
-    connect(ui->repeatButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(0)));
-    connect(ui->hardButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(1)));
-    connect(ui->problematicButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(2)));
-    connect(ui->mediumButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(3)));
-    connect(ui->easyButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(4)));
-    connect(ui->perfectButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(5)));
+    connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {updateFlashcard(0);});
+    connect(ui->hardButton, &QPushButton::clicked, this, [this]() {updateFlashcard(1);});
+    connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {updateFlashcard(2);});
+    connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {updateFlashcard(3);});
+    connect(ui->easyButton, &QPushButton::clicked, this, [this]() {updateFlashcard(4);});
+    connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {updateFlashcard(5);});
 }
 
 void MainWindow::findSets() {
@@ -120,7 +120,7 @@ void MainWindow::saveToFile() {
 }
 
 void MainWindow::updateFlashcard(unsigned int quality) {
-    currentCard_->calculateEFactor(currentCard_->getEFactor(), quality);
+    currentCard_->update(quality);
 }
 
 MainWindow::~MainWindow()

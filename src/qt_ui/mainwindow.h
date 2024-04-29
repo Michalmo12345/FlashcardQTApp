@@ -27,7 +27,7 @@ class MainWindow : public QMainWindow
         void showAnswer();
         void saveToDB();
         void saveToFile();
-        void updateFlashcard(unsigned int quality = 0);
+        void updateFlashcard(unsigned int quality);
     private:
         Ui::MainWindow *ui;
         Set set_;

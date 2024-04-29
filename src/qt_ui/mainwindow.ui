@@ -17,6 +17,11 @@
    <layout class="QGridLayout" name="gridLayout">
     <item row="0" column="1">
      <widget class="QStackedWidget" name="baseStack">
+      <property name="styleSheet">
+       <string notr="true">QPushButton:pressed {
+    background-color: rgb(222, 221, 218)
+}</string>
+      </property>
       <property name="currentIndex">
        <number>3</number>
       </property>
@@ -360,7 +365,7 @@
         <property name="geometry">
          <rect>
           <x>230</x>
-          <y>370</y>
+          <y>390</y>
           <width>291</width>
           <height>16</height>
          </rect>
@@ -445,6 +450,11 @@
           <width>91</width>
           <height>61</height>
          </rect>
+        </property>
+        <property name="styleSheet">
+         <string notr="true">perfectButton::clicked {
+background-color: rgb(53, 132, 228);
+}</string>
         </property>
         <property name="text">
          <string>Bardzo łatwa</string>
