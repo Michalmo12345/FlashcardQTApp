@@ -31,12 +31,36 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
-    connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {updateFlashcard(0);});
-    connect(ui->hardButton, &QPushButton::clicked, this, [this]() {updateFlashcard(1);});
-    connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {updateFlashcard(2);});
-    connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {updateFlashcard(3);});
-    connect(ui->easyButton, &QPushButton::clicked, this, [this]() {updateFlashcard(4);});
-    connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {updateFlashcard(5);});
+    connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
+        ui->repeatButton->setStyleSheet("QPushButton { background-color: black; }");
+        updateFlashcard(0);
+        lastClickedButton_ = ui->repeatButton;
+        });
+    connect(ui->hardButton, &QPushButton::clicked, this, [this]() {
+        ui->hardButton->setStyleSheet("QPushButton { background-color: red; }");
+        updateFlashcard(1);
+        lastClickedButton_ = ui->hardButton;
+        });
+    connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {
+        ui->problematicButton->setStyleSheet("QPushButton { background-color: orange; }");
+        updateFlashcard(2);
+        lastClickedButton_ = ui->problematicButton;
+        });
+    connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {
+        ui->mediumButton->setStyleSheet("QPushButton { background-color: yellow; }");
+        updateFlashcard(3);
+        lastClickedButton_ = ui->mediumButton;
+        });
+    connect(ui->easyButton, &QPushButton::clicked, this, [this]() {
+        ui->easyButton->setStyleSheet("QPushButton { background-color: green; }");
+        updateFlashcard(4);
+        lastClickedButton_ = ui->easyButton;
+        });
+    connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {
+        ui->perfectButton->setStyleSheet("QPushButton { background-color: blue; }");
+        updateFlashcard(5);
+        lastClickedButton_ = ui->perfectButton;
+        });
 }
 
 void MainWindow::findSets() {
@@ -86,6 +110,10 @@ void MainWindow::beginLearning() {
 
 void MainWindow::goToNextFlashcard() {
     ui->answerBrowser->clear();
+    if (lastClickedButton_ != nullptr) {
+        lastClickedButton_->setStyleSheet("");
+        lastClickedButton_ = nullptr;
+    }
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
