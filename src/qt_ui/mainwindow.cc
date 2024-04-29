@@ -34,31 +34,49 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
         ui->repeatButton->setStyleSheet("QPushButton { background-color: black; }");
         updateFlashcard(0);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->repeatButton;
         });
     connect(ui->hardButton, &QPushButton::clicked, this, [this]() {
         ui->hardButton->setStyleSheet("QPushButton { background-color: red; }");
         updateFlashcard(1);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->hardButton;
         });
     connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {
         ui->problematicButton->setStyleSheet("QPushButton { background-color: orange; }");
         updateFlashcard(2);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->problematicButton;
         });
     connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {
         ui->mediumButton->setStyleSheet("QPushButton { background-color: yellow; }");
         updateFlashcard(3);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->mediumButton;
         });
     connect(ui->easyButton, &QPushButton::clicked, this, [this]() {
         ui->easyButton->setStyleSheet("QPushButton { background-color: green; }");
         updateFlashcard(4);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->easyButton;
         });
     connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {
         ui->perfectButton->setStyleSheet("QPushButton { background-color: blue; }");
         updateFlashcard(5);
+        if (lastClickedButton_ != nullptr){
+        lastClickedButton_->setStyleSheet("");
+        }
         lastClickedButton_ = ui->perfectButton;
         });
 }
