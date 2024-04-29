@@ -31,10 +31,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
-    connect(ui->repeatButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
-    connect(ui->hardButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
-    connect(ui->easyButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
-    connect(ui->mediumButton, SIGNAL(clicked()), this, SLOT(updateFlashcard()));
+    connect(ui->repeatButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(0)));
+    connect(ui->hardButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(1)));
+    connect(ui->problematicButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(2)));
+    connect(ui->mediumButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(3)));
+    connect(ui->easyButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(4)));
+    connect(ui->perfectButton, SIGNAL(clicked()), this, SLOT(updateFlashcard(5)));
 }
 
 void MainWindow::findSets() {
@@ -117,8 +119,8 @@ void MainWindow::saveToFile() {
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do pliku.");
 }
 
-void MainWindow::updateFlashcard() {
-    currentCard_->update();
+void MainWindow::updateFlashcard(unsigned int quality) {
+    currentCard_->calculateEFactor(currentCard_->getEFactor(), quality);
 }
 
 MainWindow::~MainWindow()
