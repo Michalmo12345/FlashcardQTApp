@@ -7,7 +7,7 @@
 #include "flashcardmanagement/Set.h"
 #include "db_connection/db_sets.cc"
 #include <memory>
-
+#include <QFile>
 #include "ui_mainwindow.h"
 
 
@@ -182,12 +182,24 @@ void MainWindow::toggleFullScreen() {
     } else {
         showFullScreen();
     }
-    std::cout << "Full screen toggled" << std::endl;
 }
 
 
 void MainWindow::showInfo() {
-    std::cout << "Info" << std::endl;
+    QString filename = "Requirements.md";
+    QFile file(filename);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Readme", "Cannot open file: " + filename);
+        return;
+    }
+
+    QTextStream in(&file);
+    QString contents = in.readAll();
+    file.close();
+
+    // Display contents in a QMessageBox or another suitable widget
+    QMessageBox::information(this, "README", contents);
 }
 MainWindow::~MainWindow()
 {
