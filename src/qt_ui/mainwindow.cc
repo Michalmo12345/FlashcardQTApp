@@ -81,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent)
         }
         lastClickedButton_ = ui->perfectButton;
         });
+
+
+    connect(ui->actionFullScreen, &QAction::triggered, this, &MainWindow::toggleFullScreen);
+    connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
 }
 
 void MainWindow::findSets() {
@@ -171,6 +175,20 @@ void MainWindow::updateFlashcard(unsigned int quality) {
     currentCard_->update(quality);
 }
 
+
+void MainWindow::toggleFullScreen() {
+    if (isFullScreen()) {
+        showNormal();
+    } else {
+        showFullScreen();
+    }
+    std::cout << "Full screen toggled" << std::endl;
+}
+
+
+void MainWindow::showInfo() {
+    std::cout << "Info" << std::endl;
+}
 MainWindow::~MainWindow()
 {
     delete ui;

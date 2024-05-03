@@ -5,6 +5,7 @@
 #include <list>
 #include "flashcardmanagement/Set.h"
 #include <QPushButton>
+#include <QAction>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -28,10 +29,13 @@ class MainWindow : public QMainWindow
         void saveToDB();
         void saveToFile();
         void updateFlashcard(unsigned int quality);
+        void toggleFullScreen();
+        void showInfo();
     private:
         Ui::MainWindow *ui;
         Set set_;
         std::shared_ptr<Flashcard> currentCard_;
         QPushButton* lastClickedButton_ = nullptr;
+
 };
 
