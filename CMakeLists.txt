@@ -32,6 +32,7 @@ if(NOT BUILD_TESTS)
             src/flashcardmanagement/Flashcard.cc
             src/flashcardmanagement/Set.cc
             src/qt_ui/mainwindow.cc
+            src/qt_ui/loginwindow.cc
         )
     target_link_libraries(${PROJECT_NAME} Qt5::Core Qt5::Gui Qt5::Widgets ${LIBPQXX_STATIC_LIBXX_LIBRARIES} pqxx)
     target_include_directories(${PROJECT_NAME} PRIVATE ${CMAKE_CURRENT_SOURCE_DIR}/src ${LIBPQXX_INCLUDE_DIRS})

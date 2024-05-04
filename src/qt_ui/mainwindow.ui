@@ -7,481 +7,728 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>600</height>
+    <height>448</height>
    </rect>
   </property>
   <property name="windowTitle">
    <string>MainWindow</string>
   </property>
   <widget class="QWidget" name="centralwidget">
-   <layout class="QGridLayout" name="gridLayout">
-    <item row="0" column="0">
-     <widget class="QStackedWidget" name="baseStack">
-      <property name="styleSheet">
-       <string notr="true">QPushButton:pressed {
+   <widget class="QStackedWidget" name="baseStack">
+    <property name="geometry">
+     <rect>
+      <x>10</x>
+      <y>0</y>
+      <width>782</width>
+      <height>538</height>
+     </rect>
+    </property>
+    <property name="styleSheet">
+     <string notr="true">QPushButton:pressed {
     background-color: rgb(222, 221, 218)
 }</string>
+    </property>
+    <property name="currentIndex">
+     <number>5</number>
+    </property>
+    <widget class="QWidget" name="page">
+     <widget class="QLabel" name="label">
+      <property name="geometry">
+       <rect>
+        <x>30</x>
+        <y>20</y>
+        <width>711</width>
+        <height>181</height>
+       </rect>
       </property>
-      <property name="currentIndex">
-       <number>1</number>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:26pt;&quot;&gt;Welcome to Flashcard App&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
-      <widget class="QWidget" name="page">
-       <widget class="QLabel" name="label">
-        <property name="geometry">
-         <rect>
-          <x>30</x>
-          <y>20</y>
-          <width>711</width>
-          <height>181</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:26pt;&quot;&gt;Welcome to Flashcard App&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushContinueButton">
-        <property name="geometry">
-         <rect>
-          <x>490</x>
-          <y>330</y>
-          <width>241</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Utwórz zestaw fiszek</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="findSetsButton">
-        <property name="geometry">
-         <rect>
-          <x>50</x>
-          <y>330</y>
-          <width>241</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <property name="layoutDirection">
-         <enum>Qt::LeftToRight</enum>
-        </property>
-        <property name="text">
-         <string>Wybierz zestaw fiszek</string>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_2">
-       <widget class="QListWidget" name="fileSetsList">
-        <property name="geometry">
-         <rect>
-          <x>90</x>
-          <y>130</y>
-          <width>221</width>
-          <height>221</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QListWidget" name="dbSetsList">
-        <property name="geometry">
-         <rect>
-          <x>480</x>
-          <y>130</y>
-          <width>221</width>
-          <height>221</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_6">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>50</y>
-          <width>121</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Zestawy z plików</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_7">
-        <property name="geometry">
-         <rect>
-          <x>500</x>
-          <y>50</y>
-          <width>171</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Zestawy z bazy danych</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="fileCardButton">
-        <property name="geometry">
-         <rect>
-          <x>140</x>
-          <y>390</y>
-          <width>121</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Wybierz zestaw</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="dbCardButton">
-        <property name="geometry">
-         <rect>
-          <x>520</x>
-          <y>390</y>
-          <width>121</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Wybierz zestaw</string>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_4">
-       <widget class="QPushButton" name="pushAddFlashcard">
-        <property name="geometry">
-         <rect>
-          <x>80</x>
-          <y>330</y>
-          <width>181</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Dodaj fiszkę</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="pushBeginLearning">
-        <property name="geometry">
-         <rect>
-          <x>490</x>
-          <y>330</y>
-          <width>191</width>
-          <height>121</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Zacznij naukę</string>
-        </property>
-       </widget>
-       <widget class="QTextEdit" name="questionTextEdit">
-        <property name="geometry">
-         <rect>
-          <x>150</x>
-          <y>210</y>
-          <width>111</width>
-          <height>51</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_2">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>210</y>
-          <width>91</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Pytanie:</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_3">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>270</y>
-          <width>81</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Odpowiedź:</string>
-        </property>
-       </widget>
-       <widget class="QTextEdit" name="answerTextEdit">
-        <property name="geometry">
-         <rect>
-          <x>150</x>
-          <y>270</y>
-          <width>111</width>
-          <height>51</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_4">
-        <property name="geometry">
-         <rect>
-          <x>60</x>
-          <y>20</y>
-          <width>601</width>
-          <height>151</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;Strona główna&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-        <property name="alignment">
-         <set>Qt::AlignCenter</set>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="saveToDbButton">
-        <property name="geometry">
-         <rect>
-          <x>490</x>
-          <y>130</y>
-          <width>181</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Zapisz do bazy danych</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="saveToFileButton">
-        <property name="geometry">
-         <rect>
-          <x>490</x>
-          <y>180</y>
-          <width>181</width>
-          <height>41</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Zapisz do pliku</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_8">
-        <property name="geometry">
-         <rect>
-          <x>170</x>
-          <y>140</y>
-          <width>111</width>
-          <height>20</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Nazwa zestawu:</string>
-        </property>
-       </widget>
-       <widget class="QTextEdit" name="setNameTextEdit">
-        <property name="geometry">
-         <rect>
-          <x>290</x>
-          <y>140</y>
-          <width>161</width>
-          <height>31</height>
-         </rect>
-        </property>
-       </widget>
-      </widget>
-      <widget class="QWidget" name="page_3">
-       <widget class="QPushButton" name="nextFlashcardButton">
-        <property name="geometry">
-         <rect>
-          <x>240</x>
-          <y>460</y>
-          <width>291</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Następna fiszka </string>
-        </property>
-       </widget>
-       <widget class="QTextBrowser" name="questionBrowser">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>130</y>
-          <width>301</width>
-          <height>101</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QTextBrowser" name="answerBrowser">
-        <property name="geometry">
-         <rect>
-          <x>220</x>
-          <y>250</y>
-          <width>301</width>
-          <height>101</height>
-         </rect>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_5">
-        <property name="geometry">
-         <rect>
-          <x>240</x>
-          <y>30</y>
-          <width>241</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Tryb Nauki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="showAnswerButton">
-        <property name="geometry">
-         <rect>
-          <x>560</x>
-          <y>190</y>
-          <width>181</width>
-          <height>111</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Pokaż odpowiedź</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="returnButton">
-        <property name="geometry">
-         <rect>
-          <x>20</x>
-          <y>20</y>
-          <width>81</width>
-          <height>51</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Powrót</string>
-        </property>
-       </widget>
-       <widget class="QLabel" name="label_9">
-        <property name="geometry">
-         <rect>
-          <x>230</x>
-          <y>370</y>
-          <width>291</width>
-          <height>16</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Oceń jak dobrze zapamiętałeś daną fiszkę</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="repeatButton">
-        <property name="geometry">
-         <rect>
-          <x>110</x>
-          <y>390</y>
-          <width>81</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Zapomniana</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="hardButton">
-        <property name="geometry">
-         <rect>
-          <x>200</x>
-          <y>390</y>
-          <width>91</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Trudna</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="easyButton">
-        <property name="geometry">
-         <rect>
-          <x>500</x>
-          <y>390</y>
-          <width>91</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="text">
-         <string>Łatwa</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="mediumButton">
-        <property name="geometry">
-         <rect>
-          <x>400</x>
-          <y>390</y>
-          <width>91</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>8</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Umiarkowana</string>
-        </property>
-        <property name="iconSize">
-         <size>
-          <width>17</width>
-          <height>17</height>
-         </size>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="perfectButton">
-        <property name="geometry">
-         <rect>
-          <x>600</x>
-          <y>390</y>
-          <width>91</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="styleSheet">
-         <string notr="true">perfectButton::clicked {
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushContinueButton">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>330</y>
+        <width>241</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Utwórz zestaw fiszek</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="findSetsButton">
+      <property name="geometry">
+       <rect>
+        <x>50</x>
+        <y>330</y>
+        <width>241</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="layoutDirection">
+       <enum>Qt::LeftToRight</enum>
+      </property>
+      <property name="text">
+       <string>Wybierz zestaw fiszek</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_2">
+     <widget class="QListWidget" name="fileSetsList">
+      <property name="geometry">
+       <rect>
+        <x>90</x>
+        <y>130</y>
+        <width>221</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QListWidget" name="dbSetsList">
+      <property name="geometry">
+       <rect>
+        <x>480</x>
+        <y>130</y>
+        <width>221</width>
+        <height>221</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_6">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>50</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zestawy z plików</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_7">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>50</y>
+        <width>171</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zestawy z bazy danych</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="fileCardButton">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>390</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Wybierz zestaw</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="dbCardButton">
+      <property name="geometry">
+       <rect>
+        <x>520</x>
+        <y>390</y>
+        <width>121</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Wybierz zestaw</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_4">
+     <widget class="QPushButton" name="pushAddFlashcard">
+      <property name="geometry">
+       <rect>
+        <x>80</x>
+        <y>330</y>
+        <width>181</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Dodaj fiszkę</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="pushBeginLearning">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>330</y>
+        <width>191</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zacznij naukę</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="questionTextEdit">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>210</y>
+        <width>111</width>
+        <height>51</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_2">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>210</y>
+        <width>91</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pytanie:</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_3">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>270</y>
+        <width>81</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Odpowiedź:</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="answerTextEdit">
+      <property name="geometry">
+       <rect>
+        <x>150</x>
+        <y>270</y>
+        <width>111</width>
+        <height>51</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_4">
+      <property name="geometry">
+       <rect>
+        <x>60</x>
+        <y>20</y>
+        <width>601</width>
+        <height>151</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:24pt;&quot;&gt;Strona główna&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+      <property name="alignment">
+       <set>Qt::AlignCenter</set>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveToDbButton">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>130</y>
+        <width>181</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zapisz do bazy danych</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="saveToFileButton">
+      <property name="geometry">
+       <rect>
+        <x>490</x>
+        <y>180</y>
+        <width>181</width>
+        <height>41</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Zapisz do pliku</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_8">
+      <property name="geometry">
+       <rect>
+        <x>170</x>
+        <y>140</y>
+        <width>111</width>
+        <height>20</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Nazwa zestawu:</string>
+      </property>
+     </widget>
+     <widget class="QTextEdit" name="setNameTextEdit">
+      <property name="geometry">
+       <rect>
+        <x>290</x>
+        <y>140</y>
+        <width>161</width>
+        <height>31</height>
+       </rect>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="page_3">
+     <widget class="QPushButton" name="nextFlashcardButton">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>460</y>
+        <width>291</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Następna fiszka </string>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="questionBrowser">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>130</y>
+        <width>301</width>
+        <height>101</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QTextBrowser" name="answerBrowser">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>250</y>
+        <width>301</width>
+        <height>101</height>
+       </rect>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_5">
+      <property name="geometry">
+       <rect>
+        <x>240</x>
+        <y>30</y>
+        <width>241</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p align=&quot;center&quot;&gt;&lt;span style=&quot; font-size:24pt; font-weight:600;&quot;&gt;Tryb Nauki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="showAnswerButton">
+      <property name="geometry">
+       <rect>
+        <x>560</x>
+        <y>190</y>
+        <width>181</width>
+        <height>111</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pokaż odpowiedź</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="returnButton">
+      <property name="geometry">
+       <rect>
+        <x>20</x>
+        <y>20</y>
+        <width>81</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Powrót</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_9">
+      <property name="geometry">
+       <rect>
+        <x>230</x>
+        <y>370</y>
+        <width>291</width>
+        <height>16</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Oceń jak dobrze zapamiętałeś daną fiszkę</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="repeatButton">
+      <property name="geometry">
+       <rect>
+        <x>110</x>
+        <y>390</y>
+        <width>81</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Zapomniana</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="hardButton">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>390</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Trudna</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="easyButton">
+      <property name="geometry">
+       <rect>
+        <x>500</x>
+        <y>390</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Łatwa</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="mediumButton">
+      <property name="geometry">
+       <rect>
+        <x>400</x>
+        <y>390</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>8</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Umiarkowana</string>
+      </property>
+      <property name="iconSize">
+       <size>
+        <width>17</width>
+        <height>17</height>
+       </size>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="perfectButton">
+      <property name="geometry">
+       <rect>
+        <x>600</x>
+        <y>390</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="styleSheet">
+       <string notr="true">perfectButton::clicked {
 background-color: rgb(53, 132, 228);
 }</string>
-        </property>
-        <property name="text">
-         <string>Bardzo łatwa</string>
-        </property>
-       </widget>
-       <widget class="QPushButton" name="problematicButton">
-        <property name="geometry">
-         <rect>
-          <x>300</x>
-          <y>390</y>
-          <width>91</width>
-          <height>61</height>
-         </rect>
-        </property>
-        <property name="font">
-         <font>
-          <pointsize>9</pointsize>
-         </font>
-        </property>
-        <property name="text">
-         <string>Problematyczna</string>
-        </property>
-       </widget>
+      </property>
+      <property name="text">
+       <string>Bardzo łatwa</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="problematicButton">
+      <property name="geometry">
+       <rect>
+        <x>300</x>
+        <y>390</y>
+        <width>91</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>9</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Problematyczna</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="user_page">
+     <widget class="QLabel" name="label_10">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>60</y>
+        <width>501</width>
+        <height>121</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>20</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string>Witaj w aplikacji wspomagającej naukę</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="alreadyRegisteredButton">
+      <property name="geometry">
+       <rect>
+        <x>140</x>
+        <y>300</y>
+        <width>151</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Mam już konto</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="notRegisteredButton">
+      <property name="geometry">
+       <rect>
+        <x>470</x>
+        <y>300</y>
+        <width>161</width>
+        <height>91</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Chcę utworzyć konto</string>
+      </property>
+     </widget>
+     <widget class="QLabel" name="label_11">
+      <property name="geometry">
+       <rect>
+        <x>160</x>
+        <y>200</y>
+        <width>481</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>14</pointsize>
+        <weight>75</weight>
+        <italic>true</italic>
+        <bold>true</bold>
+        <underline>false</underline>
+        <strikeout>false</strikeout>
+        <kerning>true</kerning>
+       </font>
+      </property>
+      <property name="text">
+       <string>Aby kontynuować wybierz jedną z poniższych opcji</string>
+      </property>
+     </widget>
+    </widget>
+    <widget class="QWidget" name="registration_page">
+     <widget class="QGroupBox" name="groupBox_2">
+      <property name="geometry">
+       <rect>
+        <x>220</x>
+        <y>130</y>
+        <width>321</width>
+        <height>301</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Rejestracja</string>
+      </property>
+      <widget class="QLineEdit" name="lineEdit">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>90</y>
+         <width>113</width>
+         <height>25</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_14">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>90</y>
+         <width>141</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Nazwa użytkownika</string>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_3">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>200</y>
+         <width>113</width>
+         <height>25</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_4">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>240</y>
+         <width>113</width>
+         <height>25</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_15">
+       <property name="geometry">
+        <rect>
+         <x>50</x>
+         <y>200</y>
+         <width>71</width>
+         <height>20</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Hasło</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_16">
+       <property name="geometry">
+        <rect>
+         <x>30</x>
+         <y>240</y>
+         <width>101</width>
+         <height>21</height>
+        </rect>
+       </property>
+       <property name="text">
+        <string>Powtórz hasło</string>
+       </property>
       </widget>
      </widget>
-    </item>
-   </layout>
+    </widget>
+    <widget class="QWidget" name="login_page_2">
+     <widget class="QLabel" name="loginLabel">
+      <property name="geometry">
+       <rect>
+        <x>320</x>
+        <y>60</y>
+        <width>111</width>
+        <height>61</height>
+       </rect>
+      </property>
+      <property name="font">
+       <font>
+        <pointsize>15</pointsize>
+       </font>
+      </property>
+      <property name="text">
+       <string/>
+      </property>
+     </widget>
+     <widget class="QGroupBox" name="groupBox">
+      <property name="geometry">
+       <rect>
+        <x>200</x>
+        <y>100</y>
+        <width>411</width>
+        <height>351</height>
+       </rect>
+      </property>
+      <property name="title">
+       <string>Zaloguj się:</string>
+      </property>
+      <widget class="QLineEdit" name="password">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>80</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLineEdit" name="lineEdit_2">
+       <property name="geometry">
+        <rect>
+         <x>160</x>
+         <y>170</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_12">
+       <property name="geometry">
+        <rect>
+         <x>10</x>
+         <y>80</y>
+         <width>141</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Podaj nazwę użytkownika</string>
+       </property>
+      </widget>
+      <widget class="QLabel" name="label_13">
+       <property name="geometry">
+        <rect>
+         <x>40</x>
+         <y>170</y>
+         <width>101</width>
+         <height>41</height>
+        </rect>
+       </property>
+       <property name="font">
+        <font>
+         <pointsize>9</pointsize>
+        </font>
+       </property>
+       <property name="text">
+        <string>Podaj hasło</string>
+       </property>
+      </widget>
+     </widget>
+    </widget>
+   </widget>
   </widget>
   <widget class="QStatusBar" name="statusbar"/>
   <widget class="QMenuBar" name="menuBar">
