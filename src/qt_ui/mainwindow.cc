@@ -7,7 +7,7 @@
 #include "flashcardmanagement/Set.h"
 #include "db_connection/db_sets.cc"
 #include <memory>
-
+#include <QFile>
 #include "ui_mainwindow.h"
 
 
@@ -81,6 +81,10 @@ MainWindow::MainWindow(QWidget *parent)
         }
         lastClickedButton_ = ui->perfectButton;
         });
+
+
+    connect(ui->actionFullScreen, &QAction::triggered, this, &MainWindow::toggleFullScreen);
+    connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
 }
 
 void MainWindow::findSets() {
@@ -171,6 +175,32 @@ void MainWindow::updateFlashcard(unsigned int quality) {
     currentCard_->update(quality);
 }
 
+
+void MainWindow::toggleFullScreen() {
+    if (isFullScreen()) {
+        showNormal();
+    } else {
+        showFullScreen();
+    }
+}
+
+
+void MainWindow::showInfo() {
+    QString filename = "Requirements.md";
+    QFile file(filename);
+
+    if (!file.open(QIODevice::ReadOnly | QIODevice::Text)) {
+        QMessageBox::warning(this, "Readme", "Cannot open file: " + filename);
+        return;
+    }
+
+    QTextStream in(&file);
+    QString contents = in.readAll();
+    file.close();
+
+    // Display contents in a QMessageBox or another suitable widget
+    QMessageBox::information(this, "README", contents);
+}
 MainWindow::~MainWindow()
 {
     delete ui;
