@@ -198,7 +198,7 @@ void MainWindow::showInfo() {
     QString contents = in.readAll();
     file.close();
 
-    // Display contents in a QMessageBox or another suitable widget
+
     QMessageBox::information(this, "README", contents);
 }
 MainWindow::~MainWindow()

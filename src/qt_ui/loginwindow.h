@@ -21,7 +21,10 @@ class LoginWindow : public QMainWindow
 
     private slots:
         void login();
-        
+        void createNewUser();
+        void changeUserName();
+        void deleteUser();
+        void quitApp();
     private:
         Ui::LoginWindow *ui;
 };
