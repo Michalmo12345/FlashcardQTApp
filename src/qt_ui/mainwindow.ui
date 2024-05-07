@@ -29,10 +29,10 @@
 }</string>
     </property>
     <property name="currentIndex">
-     <number>5</number>
+     <number>4</number>
     </property>
     <widget class="QWidget" name="page">
-     <widget class="QLabel" name="label">
+     <widget class="QLabel" name="welcomeLabel">
       <property name="geometry">
        <rect>
         <x>30</x>
@@ -42,7 +42,7 @@
        </rect>
       </property>
       <property name="text">
-       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:26pt;&quot;&gt;Welcome to Flashcard App&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
+       <string>&lt;html&gt;&lt;head/&gt;&lt;body&gt;&lt;p&gt;&lt;span style=&quot; font-size:26pt;&quot;&gt;Witaj w aplikacji do nauki&lt;/span&gt;&lt;/p&gt;&lt;/body&gt;&lt;/html&gt;</string>
       </property>
       <property name="alignment">
        <set>Qt::AlignCenter</set>
@@ -485,247 +485,50 @@ background-color: rgb(53, 132, 228);
       </property>
      </widget>
     </widget>
-    <widget class="QWidget" name="user_page">
-     <widget class="QLabel" name="label_10">
+    <widget class="QWidget" name="userAccPage">
+     <widget class="QLabel" name="statsLabel">
       <property name="geometry">
        <rect>
-        <x>160</x>
-        <y>60</y>
-        <width>501</width>
-        <height>121</height>
+        <x>60</x>
+        <y>150</y>
+        <width>211</width>
+        <height>81</height>
        </rect>
       </property>
       <property name="font">
        <font>
-        <pointsize>20</pointsize>
+        <pointsize>16</pointsize>
        </font>
       </property>
       <property name="text">
-       <string>Witaj w aplikacji wspomagającej naukę</string>
+       <string>Oto twoje statystyki:</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="alreadyRegisteredButton">
+     <widget class="QPushButton" name="returnButton_2">
       <property name="geometry">
        <rect>
-        <x>140</x>
-        <y>300</y>
-        <width>151</width>
-        <height>91</height>
+        <x>0</x>
+        <y>20</y>
+        <width>89</width>
+        <height>25</height>
        </rect>
       </property>
       <property name="text">
-       <string>Mam już konto</string>
+       <string>Powrót </string>
       </property>
      </widget>
-     <widget class="QPushButton" name="notRegisteredButton">
+     <widget class="QLabel" name="label">
       <property name="geometry">
        <rect>
-        <x>470</x>
-        <y>300</y>
-        <width>161</width>
-        <height>91</height>
+        <x>300</x>
+        <y>50</y>
+        <width>67</width>
+        <height>17</height>
        </rect>
       </property>
       <property name="text">
-       <string>Chcę utworzyć konto</string>
+       <string>Witaj:</string>
       </property>
-     </widget>
-     <widget class="QLabel" name="label_11">
-      <property name="geometry">
-       <rect>
-        <x>160</x>
-        <y>200</y>
-        <width>481</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>14</pointsize>
-        <weight>75</weight>
-        <italic>true</italic>
-        <bold>true</bold>
-        <underline>false</underline>
-        <strikeout>false</strikeout>
-        <kerning>true</kerning>
-       </font>
-      </property>
-      <property name="text">
-       <string>Aby kontynuować wybierz jedną z poniższych opcji</string>
-      </property>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="registration_page">
-     <widget class="QGroupBox" name="groupBox_2">
-      <property name="geometry">
-       <rect>
-        <x>220</x>
-        <y>130</y>
-        <width>321</width>
-        <height>301</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Rejestracja</string>
-      </property>
-      <widget class="QLineEdit" name="lineEdit">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>90</y>
-         <width>113</width>
-         <height>25</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_14">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>90</y>
-         <width>141</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Nazwa użytkownika</string>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_3">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>200</y>
-         <width>113</width>
-         <height>25</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_4">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>240</y>
-         <width>113</width>
-         <height>25</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_15">
-       <property name="geometry">
-        <rect>
-         <x>50</x>
-         <y>200</y>
-         <width>71</width>
-         <height>20</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Hasło</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_16">
-       <property name="geometry">
-        <rect>
-         <x>30</x>
-         <y>240</y>
-         <width>101</width>
-         <height>21</height>
-        </rect>
-       </property>
-       <property name="text">
-        <string>Powtórz hasło</string>
-       </property>
-      </widget>
-     </widget>
-    </widget>
-    <widget class="QWidget" name="login_page_2">
-     <widget class="QLabel" name="loginLabel">
-      <property name="geometry">
-       <rect>
-        <x>320</x>
-        <y>60</y>
-        <width>111</width>
-        <height>61</height>
-       </rect>
-      </property>
-      <property name="font">
-       <font>
-        <pointsize>15</pointsize>
-       </font>
-      </property>
-      <property name="text">
-       <string/>
-      </property>
-     </widget>
-     <widget class="QGroupBox" name="groupBox">
-      <property name="geometry">
-       <rect>
-        <x>200</x>
-        <y>100</y>
-        <width>411</width>
-        <height>351</height>
-       </rect>
-      </property>
-      <property name="title">
-       <string>Zaloguj się:</string>
-      </property>
-      <widget class="QLineEdit" name="password">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>80</y>
-         <width>141</width>
-         <height>41</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLineEdit" name="lineEdit_2">
-       <property name="geometry">
-        <rect>
-         <x>160</x>
-         <y>170</y>
-         <width>141</width>
-         <height>41</height>
-        </rect>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_12">
-       <property name="geometry">
-        <rect>
-         <x>10</x>
-         <y>80</y>
-         <width>141</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Podaj nazwę użytkownika</string>
-       </property>
-      </widget>
-      <widget class="QLabel" name="label_13">
-       <property name="geometry">
-        <rect>
-         <x>40</x>
-         <y>170</y>
-         <width>101</width>
-         <height>41</height>
-        </rect>
-       </property>
-       <property name="font">
-        <font>
-         <pointsize>9</pointsize>
-        </font>
-       </property>
-       <property name="text">
-        <string>Podaj hasło</string>
-       </property>
-      </widget>
      </widget>
     </widget>
    </widget>

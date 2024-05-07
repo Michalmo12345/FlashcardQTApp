@@ -25,6 +25,7 @@ class LoginWindow : public QMainWindow
         void changeUserName();
         void deleteUser();
         void quitApp();
+    
     private:
         Ui::LoginWindow *ui;
 };

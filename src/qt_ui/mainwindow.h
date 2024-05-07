@@ -18,6 +18,7 @@ class MainWindow : public QMainWindow
         ~MainWindow();
 
     private slots:
+        void returnToMainPage();
         void findSets();
         void pushContinue();
         void readSetFromDB();
@@ -29,6 +30,7 @@ class MainWindow : public QMainWindow
         void saveToDB();
         void saveToFile();
         void updateFlashcard(unsigned int quality);
+        void goToStats();
         void toggleFullScreen();
         void showInfo();
     private:
