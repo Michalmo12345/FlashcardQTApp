@@ -1,7 +1,7 @@
 #include "userdialog.h"
 #include "ui_userdialog.h"
 #include "./ui_userdialog.h"
-
+#include <iostream>
 
 
 UserDialog::UserDialog(QWidget *parent) :
@@ -14,8 +14,11 @@ UserDialog::UserDialog(QWidget *parent) :
 
 void UserDialog::createUser()
 {
+    QString username = ui->usernameInput->text();
+    std::cout<<username.toStdString()<<std::endl;
+    this->close();
 }
- 
+
 UserDialog::~UserDialog()
 {
     delete ui;

@@ -16,6 +16,7 @@ LoginWindow::LoginWindow(QWidget *parent)
     , ui(new Ui::LoginWindow)
 {
     ui->setupUi(this);
+    ui->dbUsersWidget->setSelectionMode(QAbstractItemView::SingleSelection);
     auto userNames = getUsersFromDb();
     for (auto name : userNames) {
         ui->dbUsersWidget->addItem(QString::fromStdString(name));
@@ -39,9 +40,9 @@ void LoginWindow::login()
 
 void LoginWindow::createNewUser()
 {
-    userDialog_ = new UserDialog(this);
-    userDialog_->show();
-    
+    UserDialog dialog(this);
+    dialog.exec();
+
 }
 
 
@@ -52,6 +53,21 @@ void LoginWindow::changeUserName()
 
 void LoginWindow::deleteUser()
 {
+    QMessageBox msgBox;
+    msgBox.setWindowTitle("Usuń użytkownika");
+    msgBox.setText("Czy jesteś pewny, że chcesz usunąć tego użytkownika?");
+    msgBox.setIcon(QMessageBox::Warning);
+    QPushButton *buttonYes = msgBox.addButton("Tak", QMessageBox::YesRole);
+    msgBox.addButton("Nie", QMessageBox::NoRole);
+
+    msgBox.exec();
+    if (msgBox.clickedButton() == buttonYes) {
+        qDebug() << "User deletion confirmed.";
+        // Add deleteing the user from the database
+        // Update any UI components such as clearing a lineEdit, refreshing a list, etc.
+    } else {
+        qDebug() << "User deletion cancelled.";
+    }
 
 }
 
@@ -63,6 +79,6 @@ void LoginWindow::quitApp()
 
 LoginWindow::~LoginWindow()
 {
-    
+
     delete ui;
 }

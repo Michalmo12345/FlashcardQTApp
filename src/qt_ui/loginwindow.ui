@@ -7,7 +7,7 @@
     <x>0</x>
     <y>0</y>
     <width>800</width>
-    <height>586</height>
+    <height>437</height>
    </rect>
   </property>
   <property name="windowTitle">
@@ -44,7 +44,7 @@
      <item>
       <widget class="QPushButton" name="createNewButton">
        <property name="text">
-        <string>Utwórz nowgo uzytkownika</string>
+        <string>Utwórz nowego uzytkownika</string>
        </property>
       </widget>
      </item>

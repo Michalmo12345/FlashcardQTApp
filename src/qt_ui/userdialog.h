@@ -17,7 +17,4 @@ class UserDialog : public QDialog
         void createUser();
     private:
         Ui::UserDialog *ui;
-        QDialogButtonBox* buttonBox_;
-        QLineEdit* usernameInput_;
-        QLabel* errorLabel_;
 };
