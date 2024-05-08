@@ -9,7 +9,7 @@
 #include <QFile>
 #include "ui_loginwindow.h"
 #include "db_connection/db_users.cc"
-
+#include "userdialog.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -39,14 +39,20 @@ void LoginWindow::login()
 
 void LoginWindow::createNewUser()
 {
+    userDialog_ = new UserDialog(this);
+    userDialog_->show();
+    
 }
+
 
 void LoginWindow::changeUserName()
 {
+
 }
 
 void LoginWindow::deleteUser()
 {
+
 }
 
 void LoginWindow::quitApp()
@@ -57,5 +63,6 @@ void LoginWindow::quitApp()
 
 LoginWindow::~LoginWindow()
 {
+    
     delete ui;
 }
