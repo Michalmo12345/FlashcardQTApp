@@ -28,4 +28,5 @@ class LoginWindow : public QMainWindow
     
     private:
         Ui::LoginWindow *ui;
+        std::string selectedUser_;
 };
