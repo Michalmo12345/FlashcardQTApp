@@ -16,8 +16,10 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-
+    signals:
+        void switchUserSuccess();
     private slots:
+        void returnToMainPage();
         void findSets();
         void pushContinue();
         void readSetFromDB();
@@ -29,8 +31,10 @@ class MainWindow : public QMainWindow
         void saveToDB();
         void saveToFile();
         void updateFlashcard(unsigned int quality);
+        void goToStats();
         void toggleFullScreen();
         void showInfo();
+        void swichUser();
     private:
         Ui::MainWindow *ui;
         Set set_;

@@ -31,6 +31,7 @@ MainWindow::MainWindow(QWidget *parent)
         
     });
     connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
+    connect(ui->returnButton_2, SIGNAL(clicked()), this, SLOT(returnToMainPage()));
     connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
     connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
     connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
@@ -83,8 +84,11 @@ MainWindow::MainWindow(QWidget *parent)
         });
 
 
+    connect(ui->actionProfile, &QAction::triggered, this, &MainWindow::goToStats);
     connect(ui->actionFullScreen, &QAction::triggered, this, &MainWindow::toggleFullScreen);
     connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
+    connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionSwitchUser, &QAction::triggered, this, &MainWindow::swichUser);
 }
 
 void MainWindow::findSets() {
@@ -99,6 +103,10 @@ void MainWindow::findSets() {
     }
 }
 
+
+void MainWindow::returnToMainPage() {
+    ui->baseStack->setCurrentIndex(0);
+}
 void MainWindow::pushContinue() {
     ui->baseStack->setCurrentIndex(2);
 }
@@ -141,7 +149,6 @@ void MainWindow::goToNextFlashcard() {
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
-    
 }
 
 void MainWindow::showAnswer() {
@@ -165,6 +172,7 @@ void MainWindow::saveToDB() {
     set_.saveToDB();
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do bazy danych.");
 }
+
 void MainWindow::saveToFile() {
     set_.setName(ui->setNameTextEdit->toPlainText().toStdString());
     set_.saveToFile();
@@ -176,6 +184,10 @@ void MainWindow::updateFlashcard(unsigned int quality) {
 }
 
 
+void MainWindow::goToStats() {
+    ui->baseStack->setCurrentIndex(4);
+}
+
 void MainWindow::toggleFullScreen() {
     if (isFullScreen()) {
         showNormal();
@@ -183,7 +195,6 @@ void MainWindow::toggleFullScreen() {
         showFullScreen();
     }
 }
-
 
 void MainWindow::showInfo() {
     QString filename = "Requirements.md";
@@ -198,8 +209,13 @@ void MainWindow::showInfo() {
     QString contents = in.readAll();
     file.close();
 
-    // Display contents in a QMessageBox or another suitable widget
+
     QMessageBox::information(this, "README", contents);
+}
+
+
+void MainWindow::swichUser() {
+    emit switchUserSuccess();
 }
 MainWindow::~MainWindow()
 {

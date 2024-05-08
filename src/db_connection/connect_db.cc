@@ -29,8 +29,6 @@ void findUsers() {
       for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
          std::cout << "id = " << c[0].as<int>() << std::endl;
          std::cout << "Username = " << c[1].as<std::string>() << std::endl;
-         std::cout << "Password = " << c[2].as<std::string>() << std::endl;
-         std::cout << "Gender = " << c[3].as<std::string>() << std::endl;
       }
 
       std::cout << "Operation done successfully" << std::endl;
