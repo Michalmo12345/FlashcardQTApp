@@ -1,7 +1,10 @@
+#pragma once
 #include <QDialog>
 #include <QLineEdit>
 #include <QLabel>
 #include <QDialogButtonBox>
+
+
 QT_BEGIN_NAMESPACE
 namespace Ui { class UserDialog; }
 QT_END_NAMESPACE

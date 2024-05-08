@@ -10,6 +10,7 @@
 #include "ui_loginwindow.h"
 #include "db_connection/db_users.cc"
 #include "userdialog.h"
+#include "newnamedialog.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent)
@@ -33,7 +34,15 @@ LoginWindow::LoginWindow(QWidget *parent)
 }
 
 void LoginWindow::login()
-{
+{   
+    if (ui->dbUsersWidget->selectedItems().size() == 0) {
+        QMessageBox msgBox;
+        msgBox.setWindowTitle("Błąd logowania");
+        msgBox.setText("Nie wybrano użytkownika.");
+        msgBox.setIcon(QMessageBox::Warning);
+        msgBox.exec();
+        return;
+    }
     emit loginSuccess();
     this->close();
 }
@@ -48,6 +57,9 @@ void LoginWindow::createNewUser()
 
 void LoginWindow::changeUserName()
 {
+
+    NewNameDialog dialog(this);
+    dialog.exec();
 
 }
 
