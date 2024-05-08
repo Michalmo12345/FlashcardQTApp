@@ -15,7 +15,11 @@ int main(int argc, char *argv[])
         mainWindow.show();
         loginWindow.close();
     });
+
+    QObject::connect(&mainWindow, &MainWindow::switchUserSuccess, [&](){
+    loginWindow.show();  
+    mainWindow.close();  
+    });
     loginWindow.show();
-    
     return app.exec();
 }

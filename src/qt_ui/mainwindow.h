@@ -16,7 +16,8 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
-
+    signals:
+        void switchUserSuccess();
     private slots:
         void returnToMainPage();
         void findSets();
@@ -33,6 +34,7 @@ class MainWindow : public QMainWindow
         void goToStats();
         void toggleFullScreen();
         void showInfo();
+        void swichUser();
     private:
         Ui::MainWindow *ui;
         Set set_;

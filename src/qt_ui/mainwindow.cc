@@ -88,6 +88,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionFullScreen, &QAction::triggered, this, &MainWindow::toggleFullScreen);
     connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
+    connect(ui->actionSwitchUser, &QAction::triggered, this, &MainWindow::swichUser);
 }
 
 void MainWindow::findSets() {
@@ -212,6 +213,10 @@ void MainWindow::showInfo() {
     QMessageBox::information(this, "README", contents);
 }
 
+
+void MainWindow::swichUser() {
+    emit switchUserSuccess();
+}
 MainWindow::~MainWindow()
 {
     delete ui;
