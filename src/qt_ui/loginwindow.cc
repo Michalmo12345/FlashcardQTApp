@@ -13,6 +13,7 @@
 #include "newnamedialog.h"
 #include "ui_loginwindow.h"
 #include "userdialog.h"
+#include "users/User.h"
 
 LoginWindow::LoginWindow(QWidget *parent)
     : QMainWindow(parent), ui(new Ui::LoginWindow) {
@@ -64,14 +65,20 @@ void LoginWindow::changeUserName() {
 
 void LoginWindow::onUserCreated(const QString &username) {
   qDebug() << "New user created with username:" << username;
-  // Add the new user to the database
-  // Update any UI components such as adding the new user to a list, etc.
+  User newUser(username.toStdString());
+  newUser.saveToDb();
+  ui->dbUsersWidget->addItem(username);
 }
 
 void LoginWindow::onUserNameChanged(const QString &username) {
   qDebug() << "New username: " << username;
-  // Update the database with the new username
-  // Update the UI components such as changing the text of a label, etc.
+  QListWidgetItem *selectedItem = ui->dbUsersWidget->currentItem();
+  if (selectedItem) {
+    std::string oldUsername = selectedItem->text().toStdString();
+    User user(oldUsername);
+    user.updateInDb(username.toStdString());
+    selectedItem->setText(username);
+  }
 }
 
 void LoginWindow::deleteUser() {
@@ -85,6 +92,13 @@ void LoginWindow::deleteUser() {
   msgBox.exec();
   if (msgBox.clickedButton() == buttonYes) {
     qDebug() << "User deletion confirmed.";
+    QListWidgetItem *selectedItem = ui->dbUsersWidget->currentItem();
+    if (selectedItem) {
+      std::string username = selectedItem->text().toStdString();
+      User user(username);
+      user.deleteFromDb();
+      delete selectedItem;
+    }
     // Add deleteing the user from the database
     // Update any UI components such as clearing a lineEdit, refreshing a list,
     // etc.
