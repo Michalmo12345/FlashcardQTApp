@@ -9,6 +9,9 @@ class User {
         std::string username_;
     public:
         User(std::string username);
+        ~User();
         std::string getUsername();
         void setUsername(std::string username);
+        void saveToDb();
+        void deleteFromDb();
 };
