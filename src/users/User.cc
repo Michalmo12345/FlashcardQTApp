@@ -31,8 +31,8 @@ void User::updateInDb(const std::string &oldUsername) {
     pqxx::work txn(*conn);
     std::string query =
         "UPDATE app_user SET username = $1 WHERE username = $2;";
-    txn.exec_params(query, username_,
-                    oldUsername);  // username_ is the new username, oldUsername
+    txn.exec_params(query, oldUsername,
+                    username_);  // username_ is the new username, oldUsername
                                    // is the current username
     txn.commit();
     std::cout << "Updated user from: " << oldUsername << " to: " << username_
