@@ -25,3 +25,4 @@ class Set {
 Set readFromFile(const std::string& filename, const std::string& setName);
 Set getSetByName(const std::string& setName);
 std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath);
+std::string getFileType(const std::string& filePath);

@@ -76,9 +76,9 @@ void Set::saveToDB() const {
         int set_id = result[0][0].as<int>();
         
         std::string insertFlashcard = "INSERT INTO flashcard (set_id, question, answer) VALUES ($1, $2, $3)";
-        std::string insertFlashcardBothFiles = "INSERT INTO flashcard (set_id, question, answer, question_file, answer_file) VALUES ($1, $2, $3, $4, $5)";
-        std::string insertFlashcardQuestionFile = "INSERT INTO flashcard (set_id, question, answer, question_file) VALUES ($1, $2, $3, $4)";
-        std::string insertFlashcardAnswerFile = "INSERT INTO flashcard (set_id, question, answer, answer_file) VALUES ($1, $2, $3, $4)";
+        std::string insertFlashcardBothFiles = "INSERT INTO flashcard (set_id, question, answer, question_file, question_type, answer_file, answer_type) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+        std::string insertFlashcardQuestionFile = "INSERT INTO flashcard (set_id, question, answer, question_file, question_type) VALUES ($1, $2, $3, $4, $5)";
+        std::string insertFlashcardAnswerFile = "INSERT INTO flashcard (set_id, question, answer, answer_file, answer_type) VALUES ($1, $2, $3, $4, $5)";
         
         for (const auto& card : flashcards_) {
             if (card->getQuestionFile() == "" && card->getAnswerFile() == "") {
@@ -88,13 +88,13 @@ void Set::saveToDB() const {
                 auto questionData = getBinaryString(card->getQuestionFile());
                 auto answerData = getBinaryString(card->getAnswerFile());
                 if (questionData && answerData) {
-                    txn.exec_params(insertFlashcardBothFiles, set_id, card->getQuestion(), card->getAnswer(), *questionData, *answerData);
+                    txn.exec_params(insertFlashcardBothFiles, set_id, card->getQuestion(), card->getAnswer(), *questionData, getFileType(card->getQuestionFile()), *answerData, getFileType(card->getAnswerFile()));
                 }
                 else if (questionData && !answerData) {
-                    txn.exec_params(insertFlashcardQuestionFile, set_id, card->getQuestion(), card->getAnswer(), *questionData);
+                    txn.exec_params(insertFlashcardQuestionFile, set_id, card->getQuestion(), card->getAnswer(), *questionData, getFileType(card->getQuestionFile()));
                 }
                 else if (!questionData && answerData) {
-                    txn.exec_params(insertFlashcardAnswerFile, set_id, card->getQuestion(), card->getAnswer(), *answerData);
+                    txn.exec_params(insertFlashcardAnswerFile, set_id, card->getQuestion(), card->getAnswer(), *answerData, getFileType(card->getAnswerFile()));
                 }
                 else {
                     txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer());
@@ -169,4 +169,17 @@ std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath)
     }
 
     return std::make_unique<pqxx::binarystring>(buffer.data(), buffer.size());
+}
+
+std::string getFileType(const std::string& filePath) {
+    std::string lastFour = filePath.substr(filePath.size() - 4);
+    if (lastFour == ".png" || lastFour == ".jpg" || lastFour == ".bmp") {
+        return "img";
+    }
+    else if (lastFour == ".mp4" || lastFour == ".avi" || lastFour == ".mkv") {
+        return "video";
+    }
+    else {
+        return "audio";        
+    }
 }
