@@ -15,8 +15,10 @@ CREATE TABLE Set
 CREATE TABLE Flashcard
 (
   Id SERIAL PRIMARY KEY,
-  Question VARCHAR(64) NOT NULL,
-  Answer VARCHAR(64) NOT NULL,
+  Question VARCHAR(64),
+  Answer VARCHAR(64),
+  Question_file BYTEA,
+  Answer_file BYTEA,
   Set_id INT NOT NULL REFERENCES Set(Id)
 );
 

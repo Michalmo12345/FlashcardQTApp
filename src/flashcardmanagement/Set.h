@@ -4,6 +4,8 @@
 #include <string>
 #include "Flashcard.h"
 #include <memory>
+#include <pqxx/pqxx>
+
 class Set {
     private:
         std::vector<std::shared_ptr<Flashcard>> flashcards_;
@@ -22,3 +24,4 @@ class Set {
 
 Set readFromFile(const std::string& filename, const std::string& setName);
 Set getSetByName(const std::string& setName);
+std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath);

@@ -3,6 +3,7 @@
 #include <QDebug>
 #include <QWidget>
 #include <QStackedWidget>
+#include <QFileDialog>
 #include <QMessageBox>
 #include "flashcardmanagement/Set.h"
 #include "db_connection/db_sets.cc"
@@ -89,6 +90,18 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionSwitchUser, &QAction::triggered, this, &MainWindow::swichUser);
+    connect(ui->questionFileButton, &QPushButton::clicked, this, [this]() {
+        QString filePath = QFileDialog::getOpenFileName(this, "Wybierz plik", "", "Wszystkie pliki (*.*);;Obrazy (*.png *.jpg *.bmp);;Filmy (*.mp4 *.avi *.mkv);;Audio (*.mp3 *.wav *.ogg)");
+        if (!filePath.isEmpty()) {
+            ui->questionFilePath->setText(filePath);
+        }
+        });
+    connect(ui->answerFileButton, &QPushButton::clicked, this, [this]() {
+        QString filePath = QFileDialog::getOpenFileName(this, "Wybierz plik", "", "Wszystkie pliki (*.*);;Obrazy (*.png *.jpg *.bmp);;Filmy (*.mp4 *.avi *.mkv);;Audio (*.mp3 *.wav *.ogg)");
+        if (!filePath.isEmpty()) {
+            ui->answerFilePath->setText(filePath);
+        }
+        });
 }
 
 void MainWindow::findSets() {
@@ -161,10 +174,14 @@ void MainWindow::showAnswer() {
 void MainWindow::addFlashcard() {
     std::string question = ui->questionTextEdit->toPlainText().toStdString();
     std::string answer = ui->answerTextEdit->toPlainText().toStdString();
-    std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(question, answer);
+    std::string questionFile = ui->questionFilePath->text().toStdString();
+    std::string answerFile = ui->answerFilePath->text().toStdString();
+    std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(question, answer, questionFile, answerFile);
     set_.addCard(card);
     ui->questionTextEdit->clear();
     ui->answerTextEdit->clear();
+    ui->questionFilePath->clear();
+    ui->answerFilePath->clear();
 }
 
 void MainWindow::saveToDB() {
@@ -217,6 +234,7 @@ void MainWindow::showInfo() {
 void MainWindow::swichUser() {
     emit switchUserSuccess();
 }
+
 MainWindow::~MainWindow()
 {
     delete ui;

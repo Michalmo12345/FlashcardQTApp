@@ -39,6 +39,8 @@ class MainWindow : public QMainWindow
         Ui::MainWindow *ui;
         Set set_;
         std::shared_ptr<Flashcard> currentCard_;
+        std::string questionFilePath_;
+        std::string answerFilePath_;
         QPushButton* lastClickedButton_ = nullptr;
 
 };

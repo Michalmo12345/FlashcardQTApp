@@ -2,7 +2,10 @@
 #include <iostream>
 
 Flashcard::Flashcard(std::string question, std::string answer):
-    question(question), answer(answer), repetitions(0), interval(0), EFactor(2.5) {}
+    question(question), answer(answer), questionFile(""), answerFile(""), repetitions(0), interval(0), EFactor(2.5) {}
+
+Flashcard::Flashcard(std::string question, std::string answer, std::string questionFile, std::string answerFile):
+    question(question), answer(answer), questionFile(questionFile), answerFile(answerFile), repetitions(0), interval(0), EFactor(2.5) {}
 
 
 double Flashcard::calculateEFactor(double EFactor, int quality) {
@@ -43,5 +46,13 @@ std::string Flashcard::getQuestion() {
 
 std::string Flashcard::getAnswer() {
     return answer;
+}
+
+std::string Flashcard::getQuestionFile() {
+    return questionFile;
+}
+        
+std::string Flashcard::getAnswerFile() {
+    return answerFile;
 }
 

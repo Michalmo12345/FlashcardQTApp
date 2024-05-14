@@ -75,10 +75,31 @@ void Set::saveToDB() const {
         pqxx::result result = txn.exec("SELECT lastval()");
         int set_id = result[0][0].as<int>();
         
-        std::string insert_flashcard = "INSERT INTO flashcard (set_id, question, answer) VALUES ($1, $2, $3)";
+        std::string insertFlashcard = "INSERT INTO flashcard (set_id, question, answer) VALUES ($1, $2, $3)";
+        std::string insertFlashcardBothFiles = "INSERT INTO flashcard (set_id, question, answer, question_file, answer_file) VALUES ($1, $2, $3, $4, $5)";
+        std::string insertFlashcardQuestionFile = "INSERT INTO flashcard (set_id, question, answer, question_file) VALUES ($1, $2, $3, $4)";
+        std::string insertFlashcardAnswerFile = "INSERT INTO flashcard (set_id, question, answer, answer_file) VALUES ($1, $2, $3, $4)";
         
         for (const auto& card : flashcards_) {
-            txn.exec_params(insert_flashcard, set_id, card->getQuestion(), card->getAnswer());
+            if (card->getQuestionFile() == "" && card->getAnswerFile() == "") {
+                txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer());
+            }
+            else {
+                auto questionData = getBinaryString(card->getQuestionFile());
+                auto answerData = getBinaryString(card->getAnswerFile());
+                if (questionData && answerData) {
+                    txn.exec_params(insertFlashcardBothFiles, set_id, card->getQuestion(), card->getAnswer(), *questionData, *answerData);
+                }
+                else if (questionData && !answerData) {
+                    txn.exec_params(insertFlashcardQuestionFile, set_id, card->getQuestion(), card->getAnswer(), *questionData);
+                }
+                else if (!questionData && answerData) {
+                    txn.exec_params(insertFlashcardAnswerFile, set_id, card->getQuestion(), card->getAnswer(), *answerData);
+                }
+                else {
+                    txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer());
+                }
+            }
         }
 
         txn.commit();
@@ -130,4 +151,22 @@ Set getSetByName(const std::string& setName) {
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
+}
+
+
+std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath) {
+    std::ifstream file(filePath, std::ios::binary | std::ios::ate);
+    if (!file.is_open()) {
+        return nullptr;
+    }
+
+    std::streamsize size = file.tellg();
+    file.seekg(0, std::ios::beg);
+
+    std::vector<char> buffer(size);
+    if (!file.read(buffer.data(), size)) {
+        return nullptr;
+    }
+
+    return std::make_unique<pqxx::binarystring>(buffer.data(), buffer.size());
 }
