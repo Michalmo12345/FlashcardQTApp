@@ -29,7 +29,7 @@
 }</string>
     </property>
     <property name="currentIndex">
-     <number>2</number>
+     <number>3</number>
     </property>
     <widget class="QWidget" name="page">
      <widget class="QLabel" name="welcomeLabel">
@@ -528,6 +528,32 @@ background-color: rgb(53, 132, 228);
       </property>
       <property name="text">
        <string>Problematyczna</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="questionFileShowButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>160</y>
+        <width>181</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pokaż plik do pytania</string>
+      </property>
+     </widget>
+     <widget class="QPushButton" name="answerFileShowButton">
+      <property name="geometry">
+       <rect>
+        <x>10</x>
+        <y>270</y>
+        <width>181</width>
+        <height>51</height>
+       </rect>
+      </property>
+      <property name="text">
+       <string>Pokaż plik do odpowiedzi</string>
       </property>
      </widget>
     </widget>

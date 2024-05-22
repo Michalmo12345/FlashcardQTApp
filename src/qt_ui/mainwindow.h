@@ -6,6 +6,7 @@
 #include "flashcardmanagement/Set.h"
 #include <QPushButton>
 #include <QAction>
+#include <QProcess>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -35,6 +36,7 @@ class MainWindow : public QMainWindow
         void toggleFullScreen();
         void showInfo();
         void swichUser();
+        void playVideo();
     private:
         Ui::MainWindow *ui;
         Set set_;
@@ -42,6 +44,5 @@ class MainWindow : public QMainWindow
         std::string questionFilePath_;
         std::string answerFilePath_;
         QPushButton* lastClickedButton_ = nullptr;
-
+        QProcess* ffmpegProcess = nullptr;
 };
-

@@ -5,6 +5,7 @@
 #include <QStackedWidget>
 #include <QFileDialog>
 #include <QMessageBox>
+#include <QProcess>
 #include "flashcardmanagement/Set.h"
 #include "db_connection/db_sets.cc"
 #include <memory>
@@ -20,6 +21,8 @@ MainWindow::MainWindow(QWidget *parent)
 {
     ui->setupUi(this);
     ui->baseStack->setCurrentIndex(0);
+    ffmpegProcess = new QProcess(this);
+
     connect(ui->findSetsButton, SIGNAL(clicked()), this, SLOT(findSets()));
     connect(ui->pushContinueButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
     connect(ui->dbCardButton, SIGNAL(clicked()), this, SLOT(readSetFromDB()));
@@ -131,6 +134,7 @@ void MainWindow::readSetFromDB() {
         set_ = getSetByName(selectedText.toStdString());
         ui->baseStack->setCurrentIndex(3);
         currentCard_ = set_.giveRandomCard();
+        playVideo();
         ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
     }
 }
@@ -151,6 +155,7 @@ void MainWindow::beginLearning() {
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
+    playVideo();
 }
 
 void MainWindow::goToNextFlashcard() {
@@ -238,4 +243,14 @@ void MainWindow::swichUser() {
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::playVideo()
+{
+    QString program = "ffmpeg";
+    QStringList arguments = {"-re", "-i", "/home/szymon/Pobrane/20190323_135808.mp4", "-f", "sdl", "Video Output", "-f", "alsa", "default"};
+    ffmpegProcess->start(program, arguments);
+    if (!ffmpegProcess->waitForStarted()) {
+        QMessageBox::critical(this, "Error", "Failed to start ffmpeg process.");
+    }
 }
