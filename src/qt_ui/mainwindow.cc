@@ -6,6 +6,7 @@
 #include <QFileDialog>
 #include <QMessageBox>
 #include <QProcess>
+#include <QVBoxLayout>
 #include "flashcardmanagement/Set.h"
 #include "db_connection/db_sets.cc"
 #include <memory>
@@ -161,6 +162,12 @@ void MainWindow::beginLearning() {
     ui->baseStack->setCurrentIndex(3);
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
+    if (currentCard_->getQuestionFile() == "") {
+            ui->questionFileShowButton->setVisible(false);
+        }
+    if (currentCard_->getAnswerFile() == "") {
+        ui->answerFileShowButton->setVisible(false);
+    }
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
 }
 
@@ -265,13 +272,19 @@ MainWindow::~MainWindow()
 
 void MainWindow::showQuestionFile() {
     if (currentCard_->getQuestionFile() != "" && getFileType(currentCard_->getQuestionFile()) == "video") {
-        playVideo("flashcardFiles/" + set_.getName() + "/" + currentCard_->getQuestionFile());
+        playVideo(currentCard_->getQuestionFile());
+    }
+    else if (currentCard_->getQuestionFile() != "" && getFileType(currentCard_->getQuestionFile()) == "audio") {
+        playAudio(currentCard_->getQuestionFile());
     }
 }
 
 void MainWindow::showAnswerFile() {
     if (currentCard_->getAnswerFile() != "" && getFileType(currentCard_->getAnswerFile()) == "video") {
-        playVideo("flashcardFiles/" + set_.getName() + "/" + currentCard_->getAnswerFile());
+        playVideo(currentCard_->getAnswerFile());
+    }
+    else if (currentCard_->getAnswerFile() != "" && getFileType(currentCard_->getAnswerFile()) == "audio") {
+        playAudio(currentCard_->getAnswerFile());
     }
 }
 
@@ -283,4 +296,38 @@ void MainWindow::playVideo(const std::string& videoPath)
     if (!ffmpegProcess->waitForStarted()) {
         QMessageBox::critical(this, "Error", "Failed to start ffmpeg process.");
     }
+}
+
+void MainWindow::showPhoto(const std::string& photoPath)
+{
+}
+
+void MainWindow::playAudio(const std::string& audioPath)
+{
+    QString program = "ffmpeg";
+    QStringList arguments = {"-i", QString::fromStdString(audioPath), "-f", "alsa", "default"};
+    ffmpegProcess->start(program, arguments);
+    if (!ffmpegProcess->waitForStarted()) {
+        QMessageBox::critical(this, "Error", "Failed to start ffmpeg process.");
+    }
+    QDialog *audioDialog = new QDialog(this);
+    audioDialog->setWindowTitle("Audio Control");
+
+    QPushButton *stopButton = new QPushButton("Stop Audio", audioDialog);
+    connect(stopButton, &QPushButton::clicked, [this, audioDialog]() {
+        if (ffmpegProcess->state() == QProcess::Running) {
+            ffmpegProcess->kill(); 
+            ffmpegProcess->waitForFinished();
+        }
+        audioDialog->close(); 
+    });
+    QVBoxLayout *layout = new QVBoxLayout(audioDialog);
+    layout->addWidget(stopButton);
+
+    audioDialog->setLayout(layout);
+    audioDialog->exec();
+}
+
+void MainWindow::stopAudio() {
+
 }

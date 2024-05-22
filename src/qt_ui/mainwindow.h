@@ -37,8 +37,11 @@ class MainWindow : public QMainWindow
         void showInfo();
         void swichUser();
         void playVideo(const std::string& videoPath);
+        void showPhoto(const std::string& photoPath);
+        void playAudio(const std::string& audioPath);
         void showQuestionFile();
         void showAnswerFile();
+        void stopAudio();
     private:
         Ui::MainWindow *ui;
         Set set_;

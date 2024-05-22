@@ -150,11 +150,11 @@ Set getSetByName(const std::string& setName) {
         }
         
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
-            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), c[2].as<std::string>(), c[3].as<std::string>());
-            if (card->getQuestionFile() != "" && !std::filesystem::exists(setPath+"/"+card->getQuestionFile()))
-                downloadFileFromDatabase(N, setPath, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
-            if (card->getAnswerFile() != "" && !std::filesystem::exists(setPath+"/"+card->getAnswerFile()))
-                downloadFileFromDatabase(N, setPath, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
+            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), setPath+"/"+c[2].as<std::string>(), setPath+"/"+c[3].as<std::string>());
+            if (card->getQuestionFile() != "" && !std::filesystem::exists(card->getQuestionFile()))
+                downloadFileFromDatabase(N, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
+            if (card->getAnswerFile() != "" && !std::filesystem::exists(card->getAnswerFile()))
+                downloadFileFromDatabase(N, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
             set.addCard(card);
         }
         return set;
@@ -202,13 +202,13 @@ std::string trimFromLastSlash(const std::string& str) {
     return str;
 }
 
-void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& path, const std::string& fileName, int id, const std::string& querry) {
+void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& fileName, int id, const std::string& querry) {
     pqxx::result result(N.exec_params(querry, id));
     if (!result.empty()) {
         pqxx::binarystring bytea_data(result[0][0]);
 
         // Utwórz strumień do zapisu danych do pliku
-        std::ofstream file(path + "/" + fileName, std::ios::binary);
+        std::ofstream file(fileName, std::ios::binary);
         // Zapisz dane bytea do pliku
         file.write(reinterpret_cast<const char*>(bytea_data.data()), bytea_data.size());
         // Zamknij plik
