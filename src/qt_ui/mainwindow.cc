@@ -113,10 +113,12 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::findSets() {
     ui->baseStack->setCurrentIndex(1);
     auto db_names = getSetNamesFromDb();
+    ui->dbSetsList->clear();
     for (auto name : db_names) {
         ui->dbSetsList->addItem(QString::fromStdString(name));
     }
     auto file_names = getSetNamesFromFiles();
+    ui->fileSetsList->clear();
     for (auto name : file_names) {
         ui->fileSetsList->addItem(QString::fromStdString(name));
     }
@@ -140,8 +142,14 @@ void MainWindow::readSetFromDB() {
         if (currentCard_->getQuestionFile() == "") {
             ui->questionFileShowButton->setVisible(false);
         }
+        else {
+            ui->questionFileShowButton->setVisible(true);
+        }
         if (currentCard_->getAnswerFile() == "") {
             ui->answerFileShowButton->setVisible(false);
+        }
+        else {
+            ui->answerFileShowButton->setVisible(true);
         }
         ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
     }
@@ -163,10 +171,16 @@ void MainWindow::beginLearning() {
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     if (currentCard_->getQuestionFile() == "") {
-            ui->questionFileShowButton->setVisible(false);
-        }
+        ui->questionFileShowButton->setVisible(false);
+    }
+    else {
+        ui->questionFileShowButton->setVisible(true);
+    }
     if (currentCard_->getAnswerFile() == "") {
         ui->answerFileShowButton->setVisible(false);
+    }
+    else {
+        ui->answerFileShowButton->setVisible(true);
     }
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
 }
@@ -277,6 +291,9 @@ void MainWindow::showQuestionFile() {
     else if (currentCard_->getQuestionFile() != "" && getFileType(currentCard_->getQuestionFile()) == "audio") {
         playAudio(currentCard_->getQuestionFile());
     }
+    else if (currentCard_->getQuestionFile() != "" && getFileType(currentCard_->getQuestionFile()) == "img") {
+        showPhoto(currentCard_->getQuestionFile());
+    }
 }
 
 void MainWindow::showAnswerFile() {
@@ -285,6 +302,9 @@ void MainWindow::showAnswerFile() {
     }
     else if (currentCard_->getAnswerFile() != "" && getFileType(currentCard_->getAnswerFile()) == "audio") {
         playAudio(currentCard_->getAnswerFile());
+    }
+    else if (currentCard_->getAnswerFile() != "" && getFileType(currentCard_->getAnswerFile()) == "img") {
+        showPhoto(currentCard_->getAnswerFile());
     }
 }
 
@@ -300,6 +320,20 @@ void MainWindow::playVideo(const std::string& videoPath)
 
 void MainWindow::showPhoto(const std::string& photoPath)
 {
+    QPixmap image(QString::fromStdString(photoPath));
+
+    QDialog *imageDialog = new QDialog(this);
+    imageDialog->setWindowTitle("Wyświetlanie obrazu");
+
+    QLabel *imageLabel = new QLabel(imageDialog);
+    imageLabel->setPixmap(image);
+    imageLabel->setAlignment(Qt::AlignCenter);
+
+    QVBoxLayout *layout = new QVBoxLayout(imageDialog);
+    layout->addWidget(imageLabel);
+
+    imageDialog->setLayout(layout);
+    imageDialog->exec(); 
 }
 
 void MainWindow::playAudio(const std::string& audioPath)
