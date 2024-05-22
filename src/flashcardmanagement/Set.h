@@ -26,3 +26,5 @@ Set readFromFile(const std::string& filename, const std::string& setName);
 Set getSetByName(const std::string& setName);
 std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath);
 std::string getFileType(const std::string& filePath);
+std::string trimFromLastSlash(const std::string& str);
+void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& setName, const std::string& fileName, int id, const std::string& querry);

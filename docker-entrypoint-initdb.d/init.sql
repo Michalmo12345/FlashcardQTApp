@@ -18,9 +18,9 @@ CREATE TABLE Flashcard
   Question VARCHAR(64),
   Answer VARCHAR(64),
   Question_file BYTEA,
-  Question_type VARCHAR(16),
+  Question_file_name VARCHAR(64),
   Answer_file BYTEA,
-  Answer_type VARCHAR(16),
+  Answer_file_name VARCHAR(64),
   Set_id INT NOT NULL REFERENCES Set(Id)
 );
 

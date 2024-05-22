@@ -37,6 +37,7 @@ class MainWindow : public QMainWindow
         void showInfo();
         void swichUser();
         void playVideo();
+        void showFile();
     private:
         Ui::MainWindow *ui;
         Set set_;

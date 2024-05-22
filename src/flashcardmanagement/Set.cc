@@ -75,30 +75,25 @@ void Set::saveToDB() const {
         pqxx::result result = txn.exec("SELECT lastval()");
         int set_id = result[0][0].as<int>();
         
-        std::string insertFlashcard = "INSERT INTO flashcard (set_id, question, answer) VALUES ($1, $2, $3)";
-        std::string insertFlashcardBothFiles = "INSERT INTO flashcard (set_id, question, answer, question_file, question_type, answer_file, answer_type) VALUES ($1, $2, $3, $4, $5, $6, $7)";
-        std::string insertFlashcardQuestionFile = "INSERT INTO flashcard (set_id, question, answer, question_file, question_type) VALUES ($1, $2, $3, $4, $5)";
-        std::string insertFlashcardAnswerFile = "INSERT INTO flashcard (set_id, question, answer, answer_file, answer_type) VALUES ($1, $2, $3, $4, $5)";
+        std::string insertFlashcard = "INSERT INTO flashcard (set_id, question, answer, question_file_name, answer_file_name) VALUES ($1, $2, $3, $4, $5)";
+        std::string insertFlashcardBothFiles = "INSERT INTO flashcard (set_id, question, answer, question_file, question_file_name, answer_file, answer_file_name) VALUES ($1, $2, $3, $4, $5, $6, $7)";
+        std::string insertFlashcardQuestionFile = "INSERT INTO flashcard (set_id, question, answer, question_file, question_file_name, answer_file_name) VALUES ($1, $2, $3, $4, $5, $6)";
+        std::string insertFlashcardAnswerFile = "INSERT INTO flashcard (set_id, question, answer, question_file_name, answer_file, answer_file_name) VALUES ($1, $2, $3, $4, $5, $6)";
         
         for (const auto& card : flashcards_) {
-            if (card->getQuestionFile() == "" && card->getAnswerFile() == "") {
-                txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer());
+            auto questionData = getBinaryString(card->getQuestionFile());
+            auto answerData = getBinaryString(card->getAnswerFile());
+            if (questionData && answerData) {
+                txn.exec_params(insertFlashcardBothFiles, set_id, card->getQuestion(), card->getAnswer(), *questionData, trimFromLastSlash(card->getQuestionFile()), *answerData, trimFromLastSlash(card->getAnswerFile()));
+            }
+            else if (questionData && !answerData) {
+                txn.exec_params(insertFlashcardQuestionFile, set_id, card->getQuestion(), card->getAnswer(), *questionData, trimFromLastSlash(card->getQuestionFile()), trimFromLastSlash(card->getAnswerFile()));
+            }
+            else if (!questionData && answerData) {
+                txn.exec_params(insertFlashcardAnswerFile, set_id, card->getQuestion(), card->getAnswer(), trimFromLastSlash(card->getQuestionFile()), *answerData, trimFromLastSlash(card->getAnswerFile()));
             }
             else {
-                auto questionData = getBinaryString(card->getQuestionFile());
-                auto answerData = getBinaryString(card->getAnswerFile());
-                if (questionData && answerData) {
-                    txn.exec_params(insertFlashcardBothFiles, set_id, card->getQuestion(), card->getAnswer(), *questionData, getFileType(card->getQuestionFile()), *answerData, getFileType(card->getAnswerFile()));
-                }
-                else if (questionData && !answerData) {
-                    txn.exec_params(insertFlashcardQuestionFile, set_id, card->getQuestion(), card->getAnswer(), *questionData, getFileType(card->getQuestionFile()));
-                }
-                else if (!questionData && answerData) {
-                    txn.exec_params(insertFlashcardAnswerFile, set_id, card->getQuestion(), card->getAnswer(), *answerData, getFileType(card->getAnswerFile()));
-                }
-                else {
-                    txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer());
-                }
+                txn.exec_params(insertFlashcard, set_id, card->getQuestion(), card->getAnswer(), trimFromLastSlash(card->getQuestionFile()), trimFromLastSlash(card->getAnswerFile()));
             }
         }
 
@@ -135,16 +130,31 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
 Set getSetByName(const std::string& setName) {
     try {        
         auto conn = connectToDatabase();
-        std::string sql = "SELECT flashcard.question, flashcard.answer \
+        std::string sql = "SELECT flashcard.question, flashcard.answer, flashcard.question_file_name, flashcard.answer_file_name, flashcard.id \
                            FROM flashcard JOIN set \
                            ON flashcard.set_id = set.id \
                            WHERE set.name = $1;";
+        std::string question_file_sql = "SELECT question_file \
+                           FROM flashcard \
+                           WHERE flashcard.id = $1;";
+        std::string answer_file_sql = "SELECT answer_file \
+                           FROM flashcard \
+                           WHERE flashcard.id= $1;";
         pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec_params(sql, setName));
         Set set(setName);
+        std::string setPath = "flashcardFiles/" + setName;
+
+        if (!std::filesystem::exists(setPath)) {
+            std::filesystem::create_directory(setPath);
+        }
         
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
-            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>());
+            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), c[2].as<std::string>(), c[3].as<std::string>());
+            if (card->getQuestionFile() != "" && !std::filesystem::exists(setPath+card->getQuestionFile()))
+                downloadFileFromDatabase(N, setPath, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
+            if (card->getAnswerFile() != "" && !std::filesystem::exists(setPath+card->getAnswerFile()))
+                downloadFileFromDatabase(N, setPath, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
             set.addCard(card);
         }
         return set;
@@ -171,15 +181,54 @@ std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath)
     return std::make_unique<pqxx::binarystring>(buffer.data(), buffer.size());
 }
 
-std::string getFileType(const std::string& filePath) {
-    std::string lastFour = filePath.substr(filePath.size() - 4);
-    if (lastFour == ".png" || lastFour == ".jpg" || lastFour == ".bmp") {
-        return "img";
+// std::string getFileType(const std::string& filePath) {
+//     std::string lastFour = filePath.substr(filePath.size() - 4);
+//     if (lastFour == ".png" || lastFour == ".jpg" || lastFour == ".bmp") {
+//         return "img";
+//     }
+//     else if (lastFour == ".mp4" || lastFour == ".avi" || lastFour == ".mkv") {
+//         return "video";
+//     }
+//     else {
+//         return "audio";        
+//     }
+// }
+
+std::string trimFromLastSlash(const std::string& str) {
+    size_t lastSlashPos = str.find_last_of("/");
+    if (lastSlashPos != std::string::npos) {
+        return str.substr(lastSlashPos + 1);
     }
-    else if (lastFour == ".mp4" || lastFour == ".avi" || lastFour == ".mkv") {
-        return "video";
-    }
-    else {
-        return "audio";        
+    return str;
+}
+
+void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& path, const std::string& fileName, int id, const std::string& querry) {
+    // pqxx::work txn(conn);
+    // pqxx::result result = txn.exec_params(querry, id);
+    
+    // if (result.size() == 0) {
+    //     std::cerr << "File not found in database!" << std::endl;
+    //     return;
+    // }
+
+    // pqxx::binarystring fileData = result[0][0].as<pqxx::binarystring>();
+    // std::ofstream outFile(path + "/" + fileName, std::ios::binary);
+    // for (auto byte : fileData) {
+    //     outFile.put(byte);
+    // }
+    pqxx::result result(N.exec_params(querry, id));
+    if (!result.empty()) {
+        pqxx::binarystring bytea_data(result[0][0]);
+
+        // Utwórz strumień do zapisu danych do pliku
+        std::ofstream file(path + "/" + fileName, std::ios::binary);
+        // Zapisz dane bytea do pliku
+        file.write(reinterpret_cast<const char*>(bytea_data.data()), bytea_data.size());
+        // Zamknij plik
+        file.close();
+
+        std::cout << "Bytea data saved to file successfully." << std::endl;
+    } else {
+        std::cerr << "No data found." << std::endl;
     }
 }

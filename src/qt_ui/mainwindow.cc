@@ -105,6 +105,8 @@ MainWindow::MainWindow(QWidget *parent)
             ui->answerFilePath->setText(filePath);
         }
         });
+    connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showFile()));
+    connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showFile()));
 }
 
 void MainWindow::findSets() {
@@ -134,7 +136,6 @@ void MainWindow::readSetFromDB() {
         set_ = getSetByName(selectedText.toStdString());
         ui->baseStack->setCurrentIndex(3);
         currentCard_ = set_.giveRandomCard();
-        playVideo();
         ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
     }
 }
@@ -155,7 +156,6 @@ void MainWindow::beginLearning() {
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
-    playVideo();
 }
 
 void MainWindow::goToNextFlashcard() {
@@ -243,6 +243,10 @@ void MainWindow::swichUser() {
 MainWindow::~MainWindow()
 {
     delete ui;
+}
+
+void MainWindow::showFile() {
+    
 }
 
 void MainWindow::playVideo()
