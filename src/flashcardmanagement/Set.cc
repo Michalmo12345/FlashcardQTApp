@@ -104,8 +104,8 @@ void Set::saveToDB() const {
     }
 }
 
-Set readFromFile(const std::string& filename, const std::string& setName) {
-    Set set(setName);
+std::unique_ptr<Set> readFromFile(const std::string& filename, const std::string& setName) {
+    std::unique_ptr<Set> set = std::make_unique<Set>(setName);
     std::ifstream file("sets/" + filename);
 
     if (file.is_open()) {
@@ -115,7 +115,7 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
             std::string question, answer;
             if (std::getline(iss, question, ',') && std::getline(iss, answer)) {
                 std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(question, answer);
-                set.addCard(card);
+                set->addCard(card);
             }
         }
         file.close();
@@ -127,7 +127,7 @@ Set readFromFile(const std::string& filename, const std::string& setName) {
     return set;
 }
 
-Set getSetByName(const std::string& setName) {
+std::unique_ptr<Set> getSetByName(const std::string& setName) {
     try {        
         auto conn = connectToDatabase();
         std::string sql = "SELECT flashcard.question, flashcard.answer, flashcard.question_file_name, flashcard.answer_file_name, flashcard.id \
@@ -142,7 +142,7 @@ Set getSetByName(const std::string& setName) {
                            WHERE flashcard.id= $1;";
         pqxx::nontransaction N(*conn);
         pqxx::result R(N.exec_params(sql, setName));
-        Set set(setName);
+        std::unique_ptr<Set> set = std::make_unique<Set>(setName);
         std::string setPath = "flashcardFiles/" + setName;
 
         if (!std::filesystem::exists(setPath)) {
@@ -150,12 +150,20 @@ Set getSetByName(const std::string& setName) {
         }
         
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
-            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), setPath+"/"+c[2].as<std::string>(), setPath+"/"+c[3].as<std::string>());
-            if (card->getQuestionFile() != "" && !std::filesystem::exists(card->getQuestionFile()))
-                downloadFileFromDatabase(N, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
-            if (card->getAnswerFile() != "" && !std::filesystem::exists(card->getAnswerFile()))
-                downloadFileFromDatabase(N, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
-            set.addCard(card);
+            std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), c[2].as<std::string>(), c[3].as<std::string>());
+            if (card->getQuestionFile() != "") {
+                card->setQuestionFile(setPath+"/"+card->getQuestionFile());
+                if (!std::filesystem::exists(card->getQuestionFile())) {
+                    downloadFileFromDatabase(N, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
+                }
+            }
+            if (card->getAnswerFile() != ""){
+                card->setAnswerFile(setPath+"/"+card->getAnswerFile());
+                if (!std::filesystem::exists(card->getAnswerFile())) {
+                    downloadFileFromDatabase(N, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
+                }
+            }
+            set->addCard(card);
         }
         return set;
     } catch (const std::exception &e) {

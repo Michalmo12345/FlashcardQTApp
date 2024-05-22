@@ -44,7 +44,7 @@ class MainWindow : public QMainWindow
         void stopAudio();
     private:
         Ui::MainWindow *ui;
-        Set set_;
+        std::unique_ptr<Set> set_;
         std::shared_ptr<Flashcard> currentCard_;
         std::string questionFilePath_;
         std::string answerFilePath_;

@@ -23,6 +23,8 @@ class Flashcard {
         unsigned int getInterval();
         std::string getQuestion();
         std::string getAnswer();
+        void setQuestionFile(const std::string& fileName);
         std::string getQuestionFile();
+        void setAnswerFile(const std::string& fileName);
         std::string getAnswerFile();
 };

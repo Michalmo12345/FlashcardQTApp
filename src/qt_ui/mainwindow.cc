@@ -17,7 +17,7 @@
 MainWindow::MainWindow(QWidget *parent)
     : QMainWindow(parent)
     , ui(new Ui::MainWindow),
-    set_("Zestaw"),
+    set_(std::make_unique<Set>("Zestaw")),
     currentCard_(nullptr)
 {
     ui->setupUi(this);
@@ -129,16 +129,20 @@ void MainWindow::returnToMainPage() {
     ui->baseStack->setCurrentIndex(0);
 }
 void MainWindow::pushContinue() {
+    set_ = std::make_unique<Set>("Zestaw");
+    ui->setNameTextEdit->clear();
     ui->baseStack->setCurrentIndex(2);
 }
 
 void MainWindow::readSetFromDB() {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
     QListWidgetItem *selectedItem = ui->dbSetsList->currentItem();
     if (selectedItem) {
         QString selectedText = selectedItem->text();
         set_ = getSetByName(selectedText.toStdString());
         ui->baseStack->setCurrentIndex(3);
-        currentCard_ = set_.giveRandomCard();
+        currentCard_ = set_->giveRandomCard();
         if (currentCard_->getQuestionFile() == "") {
             ui->questionFileShowButton->setVisible(false);
         }
@@ -156,20 +160,24 @@ void MainWindow::readSetFromDB() {
 }
 
 void MainWindow::readSetFromFile() {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
     QListWidgetItem *selectedItem = ui->fileSetsList->currentItem();
     if (selectedItem) {
         QString selectedText = selectedItem->text();
         set_ = readFromFile(selectedText.toStdString() + ".txt", selectedText.toStdString());
         ui->baseStack->setCurrentIndex(3);
-        currentCard_ = set_.giveRandomCard();
+        currentCard_ = set_->giveRandomCard();
         ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
     }
 }
 
 void MainWindow::beginLearning() {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
     ui->baseStack->setCurrentIndex(3);
     // auto card = set_.giveRandomCard();
-    currentCard_ = set_.giveRandomCard();
+    currentCard_ = set_->giveRandomCard();
     if (currentCard_->getQuestionFile() == "") {
         ui->questionFileShowButton->setVisible(false);
     }
@@ -186,13 +194,14 @@ void MainWindow::beginLearning() {
 }
 
 void MainWindow::goToNextFlashcard() {
+    ui->questionBrowser->clear();
     ui->answerBrowser->clear();
     if (lastClickedButton_ != nullptr) {
         lastClickedButton_->setStyleSheet("");
         lastClickedButton_ = nullptr;
     }
     // auto card = set_.giveRandomCard();
-    currentCard_ = set_.giveRandomCard();
+    currentCard_ = set_->giveRandomCard();
     if (currentCard_->getQuestionFile() == "") {
         ui->questionFileShowButton->setVisible(false);
     }
@@ -221,7 +230,7 @@ void MainWindow::addFlashcard() {
     std::string questionFile = ui->questionFilePath->text().toStdString();
     std::string answerFile = ui->answerFilePath->text().toStdString();
     std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(question, answer, questionFile, answerFile);
-    set_.addCard(card);
+    set_->addCard(card);
     ui->questionTextEdit->clear();
     ui->answerTextEdit->clear();
     ui->questionFilePath->clear();
@@ -229,14 +238,15 @@ void MainWindow::addFlashcard() {
 }
 
 void MainWindow::saveToDB() {
-    set_.setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_.saveToDB();
+    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+    set_->saveToDB();
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do bazy danych.");
 }
 
 void MainWindow::saveToFile() {
-    set_.setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_.saveToFile();
+    
+    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+    set_->saveToFile();
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do pliku.");
 }
 

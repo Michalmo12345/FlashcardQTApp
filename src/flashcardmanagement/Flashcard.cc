@@ -56,3 +56,11 @@ std::string Flashcard::getAnswerFile() {
     return answerFile;
 }
 
+void Flashcard::setQuestionFile(const std::string& fileName) {
+    this->questionFile = questionFile;
+}
+        
+void Flashcard::setAnswerFile(const std::string& fileName) {
+    this->answerFile = answerFile;
+}
+
