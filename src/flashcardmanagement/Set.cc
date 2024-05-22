@@ -151,9 +151,9 @@ Set getSetByName(const std::string& setName) {
         
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
             std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), c[2].as<std::string>(), c[3].as<std::string>());
-            if (card->getQuestionFile() != "" && !std::filesystem::exists(setPath+card->getQuestionFile()))
+            if (card->getQuestionFile() != "" && !std::filesystem::exists(setPath+"/"+card->getQuestionFile()))
                 downloadFileFromDatabase(N, setPath, card->getQuestionFile(), c[4].as<int>(), question_file_sql);
-            if (card->getAnswerFile() != "" && !std::filesystem::exists(setPath+card->getAnswerFile()))
+            if (card->getAnswerFile() != "" && !std::filesystem::exists(setPath+"/"+card->getAnswerFile()))
                 downloadFileFromDatabase(N, setPath, card->getAnswerFile(), c[4].as<int>(), answer_file_sql);
             set.addCard(card);
         }

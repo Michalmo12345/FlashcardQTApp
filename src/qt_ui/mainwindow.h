@@ -36,8 +36,9 @@ class MainWindow : public QMainWindow
         void toggleFullScreen();
         void showInfo();
         void swichUser();
-        void playVideo();
-        void showFile();
+        void playVideo(const std::string& videoPath);
+        void showQuestionFile();
+        void showAnswerFile();
     private:
         Ui::MainWindow *ui;
         Set set_;

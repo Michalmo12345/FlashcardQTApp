@@ -105,8 +105,8 @@ MainWindow::MainWindow(QWidget *parent)
             ui->answerFilePath->setText(filePath);
         }
         });
-    connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showFile()));
-    connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showFile()));
+    connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showQuestionFile()));
+    connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showAnswerFile()));
 }
 
 void MainWindow::findSets() {
@@ -136,6 +136,12 @@ void MainWindow::readSetFromDB() {
         set_ = getSetByName(selectedText.toStdString());
         ui->baseStack->setCurrentIndex(3);
         currentCard_ = set_.giveRandomCard();
+        if (currentCard_->getQuestionFile() == "") {
+            ui->questionFileShowButton->setVisible(false);
+        }
+        if (currentCard_->getAnswerFile() == "") {
+            ui->answerFileShowButton->setVisible(false);
+        }
         ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
     }
 }
@@ -166,6 +172,18 @@ void MainWindow::goToNextFlashcard() {
     }
     // auto card = set_.giveRandomCard();
     currentCard_ = set_.giveRandomCard();
+    if (currentCard_->getQuestionFile() == "") {
+        ui->questionFileShowButton->setVisible(false);
+    }
+    else {
+        ui->questionFileShowButton->setVisible(true);
+    }
+    if (currentCard_->getAnswerFile() == "") {
+        ui->answerFileShowButton->setVisible(false);
+    }
+    else {
+        ui->answerFileShowButton->setVisible(true);
+    }
     ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
 }
 
@@ -245,14 +263,22 @@ MainWindow::~MainWindow()
     delete ui;
 }
 
-void MainWindow::showFile() {
-    
+void MainWindow::showQuestionFile() {
+    if (currentCard_->getQuestionFile() != "" && getFileType(currentCard_->getQuestionFile()) == "video") {
+        playVideo("flashcardFiles/" + set_.getName() + "/" + currentCard_->getQuestionFile());
+    }
 }
 
-void MainWindow::playVideo()
+void MainWindow::showAnswerFile() {
+    if (currentCard_->getAnswerFile() != "" && getFileType(currentCard_->getAnswerFile()) == "video") {
+        playVideo("flashcardFiles/" + set_.getName() + "/" + currentCard_->getAnswerFile());
+    }
+}
+
+void MainWindow::playVideo(const std::string& videoPath)
 {
     QString program = "ffmpeg";
-    QStringList arguments = {"-re", "-i", "/home/szymon/Pobrane/20190323_135808.mp4", "-f", "sdl", "Video Output", "-f", "alsa", "default"};
+    QStringList arguments = {"-re", "-i", QString::fromStdString(videoPath), "-f", "sdl", "Video Output", "-f", "alsa", "default"};
     ffmpegProcess->start(program, arguments);
     if (!ffmpegProcess->waitForStarted()) {
         QMessageBox::critical(this, "Error", "Failed to start ffmpeg process.");
