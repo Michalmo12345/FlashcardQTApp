@@ -181,18 +181,18 @@ std::unique_ptr<pqxx::binarystring> getBinaryString(const std::string& filePath)
     return std::make_unique<pqxx::binarystring>(buffer.data(), buffer.size());
 }
 
-// std::string getFileType(const std::string& filePath) {
-//     std::string lastFour = filePath.substr(filePath.size() - 4);
-//     if (lastFour == ".png" || lastFour == ".jpg" || lastFour == ".bmp") {
-//         return "img";
-//     }
-//     else if (lastFour == ".mp4" || lastFour == ".avi" || lastFour == ".mkv") {
-//         return "video";
-//     }
-//     else {
-//         return "audio";        
-//     }
-// }
+std::string getFileType(const std::string& filePath) {
+    std::string lastFour = filePath.substr(filePath.size() - 4);
+    if (lastFour == ".png" || lastFour == ".jpg" || lastFour == ".bmp") {
+        return "img";
+    }
+    else if (lastFour == ".mp4" || lastFour == ".avi" || lastFour == ".mkv") {
+        return "video";
+    }
+    else {
+        return "audio";        
+    }
+}
 
 std::string trimFromLastSlash(const std::string& str) {
     size_t lastSlashPos = str.find_last_of("/");
@@ -203,19 +203,6 @@ std::string trimFromLastSlash(const std::string& str) {
 }
 
 void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& path, const std::string& fileName, int id, const std::string& querry) {
-    // pqxx::work txn(conn);
-    // pqxx::result result = txn.exec_params(querry, id);
-    
-    // if (result.size() == 0) {
-    //     std::cerr << "File not found in database!" << std::endl;
-    //     return;
-    // }
-
-    // pqxx::binarystring fileData = result[0][0].as<pqxx::binarystring>();
-    // std::ofstream outFile(path + "/" + fileName, std::ios::binary);
-    // for (auto byte : fileData) {
-    //     outFile.put(byte);
-    // }
     pqxx::result result(N.exec_params(querry, id));
     if (!result.empty()) {
         pqxx::binarystring bytea_data(result[0][0]);
