@@ -10,7 +10,7 @@ build/
 data/
 flashcardFiles/
 FlashcardApp
-
+.VSCodeCounter
 .
 FlashcardApp_autogen/
 _deps/

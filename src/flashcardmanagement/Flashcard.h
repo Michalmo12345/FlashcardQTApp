@@ -1,8 +1,8 @@
 #pragma once
+#include <chrono>
 #include <cmath>
 #include <iostream>
 #include <string>
-
 class Flashcard {
  private:
   std::string question;
@@ -12,6 +12,8 @@ class Flashcard {
   unsigned int repetitions;  // number of repetitions
   unsigned int interval;     // interval between repetitions
   double EFactor;            // easiness factor
+  std::chrono::system_clock::time_point lastReview;
+
  public:
   Flashcard(std::string question, std::string answer);
   Flashcard(std::string question, std::string answer, std::string questionFile,
@@ -28,4 +30,6 @@ class Flashcard {
   std::string getQuestionFile() const;
   void setAnswerFile(const std::string& fileName);
   std::string getAnswerFile() const;
+  std::chrono::system_clock::time_point getLastReview() const;
+  void setLastReview(std::chrono::system_clock::time_point time);
 };

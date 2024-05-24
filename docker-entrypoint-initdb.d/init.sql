@@ -34,8 +34,11 @@ CREATE TABLE Users_sets
 
 CREATE TABLE User_flashcard
 (
-  Importance INT NOT NULL,
   Flashcard_id INT NOT NULL REFERENCES Flashcard(Id),
   Users_sets_id INT NOT NULL REFERENCES Users_sets(Id),
+  EFactor FLOAT DEFAULT 2.5,
+  Interval INT DEFAULT 0,
+  Repetitions INT DEFAULT 0,
+  LastReview TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (Flashcard_id, Users_sets_id)
 );

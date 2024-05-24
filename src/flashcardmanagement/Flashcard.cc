@@ -9,7 +9,8 @@ Flashcard::Flashcard(std::string question, std::string answer)
       answerFile(""),
       repetitions(0),
       interval(0),
-      EFactor(2.5) {}
+      EFactor(2.5),
+      lastReview(std::chrono::system_clock::now()) {}
 
 Flashcard::Flashcard(std::string question, std::string answer,
                      std::string questionFile, std::string answerFile)
@@ -19,7 +20,8 @@ Flashcard::Flashcard(std::string question, std::string answer,
       answerFile(answerFile),
       repetitions(0),
       interval(0),
-      EFactor(2.5) {}
+      EFactor(2.5),
+      lastReview(std::chrono::system_clock::now()) {}
 
 double Flashcard::calculateEFactor(double EFactor, int quality) {
   return std::max(
@@ -41,6 +43,7 @@ void Flashcard::update(unsigned int quality) {
   EFactor = calculateEFactor(EFactor, quality);
   interval = calculateInterval(repetitions, EFactor);
   repetitions++;
+  lastReview = std::chrono::system_clock::now();
 }
 
 double Flashcard::getEFactor() const { return EFactor; }
@@ -62,4 +65,12 @@ void Flashcard::setQuestionFile(const std::string& fileName) {
 
 void Flashcard::setAnswerFile(const std::string& fileName) {
   this->answerFile = fileName;
+}
+
+std::chrono::system_clock::time_point Flashcard::getLastReview() const {
+  return lastReview;
+}
+
+void Flashcard::setLastReview(std::chrono::system_clock::time_point time) {
+  lastReview = time;
 }
