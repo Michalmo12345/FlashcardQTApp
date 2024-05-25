@@ -14,10 +14,20 @@
 
 Set::Set(std::string name): name_(std::move(name)) {}
 
+Set::Set(std::string name, std::string creationDate, std::string creatorUsername): name_(std::move(name)), creationDate_(std::move(creationDate)), creatorUsername_(std::move(creatorUsername)) {}
+
 Set::~Set() = default;
 
 std::string Set::getName() const {
     return name_;
+}
+
+std::string Set::getCreationDate() const {
+    return creationDate_;
+}
+
+std::string Set::getCreatorUsername() const {
+    return creatorUsername_;
 }
 
 void Set::setName(const std::string& name) {
@@ -132,8 +142,7 @@ std::unique_ptr<Set> readFromFile(const std::string& filename, const std::string
 }
 
 std::unique_ptr<Set> getSetByName(const std::string& setName) {
-    try {        
-        auto conn = connectToDatabase();
+    try {
         std::string sql = "SELECT flashcard.question, flashcard.answer, flashcard.question_file_name, flashcard.answer_file_name, flashcard.id \
                            FROM flashcard JOIN set \
                            ON flashcard.set_id = set.id \
@@ -144,15 +153,17 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
         std::string answer_file_sql = "SELECT answer_file \
                            FROM flashcard \
                            WHERE flashcard.id= $1;";
+
+        auto set = getSetInfo(setName);
+        auto conn = connectToDatabase();
         pqxx::nontransaction N(*conn);
-        pqxx::result R(N.exec_params(sql, setName));
-        std::unique_ptr<Set> set = std::make_unique<Set>(setName);
         std::string setPath = "flashcardFiles/" + setName;
 
         if (!std::filesystem::exists(setPath)) {
             std::filesystem::create_directory(setPath);
         }
         
+        pqxx::result R(N.exec_params(sql, setName));
         for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
             std::shared_ptr<Flashcard> card = std::make_shared<Flashcard>(c[0].as<std::string>(), c[1].as<std::string>(), c[2].as<std::string>(), c[3].as<std::string>());
             if (card->getQuestionFile() != "") {
@@ -173,6 +184,19 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     } catch (const std::exception &e) {
         std::cerr << e.what() << std::endl;
     }
+}
+
+std::unique_ptr<Set> getSetInfo(const std::string& setName) {
+    std::string set_info = "SELECT set.creation_date, set.creator_id, app_user.username \
+                           FROM set JOIN app_user \
+                           ON set.creator_id = app_user.id \
+                           WHERE set.name = $1;";
+
+    auto conn = connectToDatabase();
+    pqxx::nontransaction N(*conn);
+    pqxx::result R(N.exec_params(set_info, setName));
+    std::unique_ptr<Set> set = std::make_unique<Set>(setName, R[0][0].as<std::string>(), R[0][1].as<std::string>());
+    return set;
 }
 
 

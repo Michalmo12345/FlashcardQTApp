@@ -42,6 +42,7 @@ class MainWindow : public QMainWindow
         void playAudio(const std::string& audioPath);
         void showQuestionFile();
         void showAnswerFile();
+        void showItemInfo();
     private:
         Ui::MainWindow *ui;
         std::unique_ptr<Set> set_;

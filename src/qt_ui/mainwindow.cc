@@ -108,6 +108,7 @@ MainWindow::MainWindow(QWidget *parent)
         });
     connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showQuestionFile()));
     connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showAnswerFile()));
+    connect(ui->dbSetsList, &QListWidget::itemClicked, this, &MainWindow::showItemInfo);
 }
 
 void MainWindow::findSets() {
@@ -122,6 +123,14 @@ void MainWindow::findSets() {
     for (auto name : file_names) {
         ui->fileSetsList->addItem(QString::fromStdString(name));
     }
+}
+
+void MainWindow::showItemInfo() {
+    QString setName = ui->dbSetsList->currentItem()->text();
+    auto set = getSetInfo(setName.toStdString());
+    ui->infoSetText->setPlainText(QString::fromStdString("Nick autora zestawu: " + set->getCreatorUsername()));
+    ui->infoSetText->insertPlainText(QString::fromStdString("Nazwa zestawu: " + set->getName() + "\n"));
+    ui->infoSetText->insertPlainText(QString::fromStdString("Data utworzenia zestawu: " + set->getCreationDate() + "\n"));
 }
 
 
