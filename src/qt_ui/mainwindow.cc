@@ -120,7 +120,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::findSets() {
     ui->baseStack->setCurrentIndex(1);
 
-    auto db_names = getSetNamesFromDb();
+    auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUser_));
     ui->dbSetsList->clear();
     for (auto name : db_names) {
         ui->dbSetsList->addItem(QString::fromStdString(name));
