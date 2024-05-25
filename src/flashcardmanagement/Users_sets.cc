@@ -8,8 +8,17 @@ void saveUsersSetToDb(int setId, int userId) {
     try {        
         auto conn = connectToDatabase();
         pqxx::work txn(*conn); 
-        std::string insert_users_set = "INSERT INTO users_sets (user_id, set_id) VALUES ($1, $2)";
-        txn.exec_params(insert_users_set, userId, setId);
+        std::string insertUsersSet = "INSERT INTO users_sets (user_id, set_id) VALUES ($1, $2)";
+        std::string insertUserFlashcard = "INSERT INTO user_flashcard (flashcard_id, users_sets_id) VALUES ($1, $2)";
+        txn.exec_params(insertUsersSet, userId, setId);
+
+        pqxx::result result = txn.exec("SELECT lastval()");
+        int usersSetId = result[0][0].as<int>();
+        std::vector<int> flashcardIds = getFlashcardIds(setId);
+
+        for (auto flashcardId : flashcardIds) {
+          txn.exec_params(insertUserFlashcard, flashcardId, usersSetId);
+        }
 
         txn.commit();
         std::cout << "User set saved successfully to database." << std::endl;

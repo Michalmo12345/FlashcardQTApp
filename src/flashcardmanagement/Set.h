@@ -37,3 +37,4 @@ void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& fileNa
 std::string getCurrentDate();
 std::unique_ptr<Set> getSetInfo(const std::string& setName);
 int getSetId(const std::string& setName);
+std::vector<int> getFlashcardIds(int setId);

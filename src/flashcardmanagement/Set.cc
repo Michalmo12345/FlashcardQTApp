@@ -275,3 +275,23 @@ std::string getCurrentDate() {
     oss << std::put_time(&now_tm, "%Y-%m-%d");
     return oss.str();
 }
+
+std::vector<int> getFlashcardIds(int setId) {
+    try {
+        std::string sql = "SELECT id \
+                           FROM flashcard \
+                           WHERE set_id = $1;";
+
+        auto conn = connectToDatabase();
+        pqxx::nontransaction N(*conn);
+        std::vector<int> flashcardIds;
+        pqxx::result R(N.exec_params(sql, setId));
+        for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
+            flashcardIds.push_back(c[0].as<int>());
+        }
+        return flashcardIds;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return {};
+    }
+}
