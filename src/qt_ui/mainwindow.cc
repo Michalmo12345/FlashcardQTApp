@@ -239,7 +239,7 @@ void MainWindow::addFlashcard() {
 
 void MainWindow::saveToDB() {
     set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_->saveToDB();
+    set_->saveToDB(currentUser_);
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do bazy danych.");
 }
 

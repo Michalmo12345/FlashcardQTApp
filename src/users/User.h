@@ -18,3 +18,4 @@ class User {
 };
 
 bool checkUsernameInDb(const std::string &username);
+int getUserId(const std::string &username);

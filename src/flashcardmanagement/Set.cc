@@ -6,7 +6,11 @@
 #include <memory>
 #include <filesystem>
 #include "../db_connection/connect_db.cc"
+#include "users/User.h"
 #include <pqxx/pqxx>
+#include <chrono>
+#include <ctime>
+#include <iomanip>
 
 Set::Set(std::string name): name_(std::move(name)) {}
 
@@ -65,12 +69,12 @@ void Set::saveToFile() const {
     }
 }
 
-void Set::saveToDB() const {
+void Set::saveToDB(const std::string& username) const {
     try {        
         auto conn = connectToDatabase();
         pqxx::work txn(*conn); 
-        std::string insert_set = "INSERT INTO set (name) VALUES ($1)";
-        txn.exec_params(insert_set, name_);
+        std::string insert_set = "INSERT INTO set (name, creation_date, creator_id) VALUES ($1, $2, $3)";
+        txn.exec_params(insert_set, name_, getCurrentDate(), getUserId(username));
 
         pqxx::result result = txn.exec("SELECT lastval()");
         int set_id = result[0][0].as<int>();
@@ -226,4 +230,14 @@ void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& fileNa
     } else {
         std::cerr << "No data found." << std::endl;
     }
+}
+
+std::string getCurrentDate() {
+    auto now = std::chrono::system_clock::now();
+    std::time_t now_time = std::chrono::system_clock::to_time_t(now);
+    std::tm now_tm = *std::localtime(&now_time);
+
+    std::ostringstream oss;
+    oss << std::put_time(&now_tm, "%Y-%m-%d");
+    return oss.str();
 }
