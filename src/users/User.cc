@@ -54,3 +54,19 @@ void User::deleteFromDb() {
     std::cerr << "Error: " << e.what() << std::endl;
   }
 }
+
+bool checkUsernameInDb(const std::string &username) {
+  try {
+    auto conn = connectToDatabase();
+    std::string query = "SELECT FROM app_user WHERE username = $1;";
+    pqxx::nontransaction N(*conn);
+    pqxx::result R(N.exec_params(query, username));
+    if (R.empty()) {
+      return true;
+    }
+    return false;
+  } catch (const std::exception &e) {
+    std::cerr << "Error: " << e.what() << std::endl;
+    return false;
+  }
+}

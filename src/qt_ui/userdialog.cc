@@ -2,8 +2,10 @@
 
 #include <iostream>
 
+#include "users/User.h"
 #include "./ui_userdialog.h"
 #include "ui_userdialog.h"
+#include <QMessageBox>
 
 UserDialog::UserDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::UserDialog) {
@@ -16,8 +18,15 @@ void UserDialog::createUser() {
   QString username = ui->usernameInput->text();
 
   if (!username.trimmed().isEmpty()) {
-    emit userCreated(username);
-    this->close();
+    if (checkUsernameInDb(username.toStdString())) {
+      emit userCreated(username);
+      this->close();
+    } else {
+      QMessageBox::warning(this, tr("Nazwa użytkownika zajęta"),
+                          tr("Wpisz nazwę użytkownika, której jeszcze nie ma"));
+      ui->usernameInput->clear();
+      ui->usernameInput->setFocus();
+    }
   }
 }
 
