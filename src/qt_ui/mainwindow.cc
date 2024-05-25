@@ -12,6 +12,7 @@
 #include <memory>
 #include <QFile>
 #include "ui_mainwindow.h"
+#include <QButtonGroup>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -94,6 +95,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionSwitchUser, &QAction::triggered, this, &MainWindow::swichUser);
+    connect(ui->actionAllSets, &QAction::triggered, this, &MainWindow::seeAllSets);
     connect(ui->questionFileButton, &QPushButton::clicked, this, [this]() {
         QString filePath = QFileDialog::getOpenFileName(this, "Wybierz plik", "", "Wszystkie pliki (*.*);;Obrazy (*.png *.jpg *.bmp);;Filmy (*.mp4 *.avi *.mkv);;Audio (*.mp3 *.wav *.ogg)");
         if (!filePath.isEmpty()) {
@@ -109,10 +111,12 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showQuestionFile()));
     connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showAnswerFile()));
     connect(ui->dbSetsList, &QListWidget::itemClicked, this, &MainWindow::showItemInfo);
+    connect(ui->dbSetsList2, &QListWidget::itemClicked, this, &MainWindow::showItemInfoAllSets);
 }
 
 void MainWindow::findSets() {
     ui->baseStack->setCurrentIndex(1);
+
     auto db_names = getSetNamesFromDb();
     ui->dbSetsList->clear();
     for (auto name : db_names) {
@@ -123,6 +127,24 @@ void MainWindow::findSets() {
     for (auto name : file_names) {
         ui->fileSetsList->addItem(QString::fromStdString(name));
     }
+}
+
+void MainWindow::seeAllSets() {
+    ui->baseStack->setCurrentIndex(5);
+
+    auto db_names = getSetNamesFromDb();
+    ui->dbSetsList2->clear();
+    for (auto name : db_names) {
+        ui->dbSetsList2->addItem(QString::fromStdString(name));
+    }
+}
+
+void MainWindow::showItemInfoAllSets() {
+    QString setName = ui->dbSetsList2->currentItem()->text();
+    auto set = getSetInfo(setName.toStdString());
+    ui->infoSetText2->setPlainText(QString::fromStdString("Nick autora zestawu: " + set->getCreatorUsername()));
+    ui->infoSetText2->insertPlainText(QString::fromStdString("Nazwa zestawu: " + set->getName() + "\n"));
+    ui->infoSetText2->insertPlainText(QString::fromStdString("Data utworzenia zestawu: " + set->getCreationDate() + "\n"));
 }
 
 void MainWindow::showItemInfo() {

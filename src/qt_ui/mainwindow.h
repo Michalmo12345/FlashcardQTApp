@@ -43,6 +43,8 @@ class MainWindow : public QMainWindow
         void showQuestionFile();
         void showAnswerFile();
         void showItemInfo();
+        void showItemInfoAllSets();
+        void seeAllSets();
     private:
         Ui::MainWindow *ui;
         std::unique_ptr<Set> set_;

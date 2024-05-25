@@ -187,7 +187,7 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
 }
 
 std::unique_ptr<Set> getSetInfo(const std::string& setName) {
-    std::string set_info = "SELECT set.creation_date, set.creator_id, app_user.username \
+    std::string set_info = "SELECT set.creation_date, app_user.username \
                            FROM set JOIN app_user \
                            ON set.creator_id = app_user.id \
                            WHERE set.name = $1;";
