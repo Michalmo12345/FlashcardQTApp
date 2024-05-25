@@ -6,6 +6,7 @@
 #include "flashcardmanagement/Set.h"
 #include <QPushButton>
 #include <QAction>
+#include <QProcess>
 QT_BEGIN_NAMESPACE
 namespace Ui { class MainWindow; }
 QT_END_NAMESPACE
@@ -35,11 +36,18 @@ class MainWindow : public QMainWindow
         void toggleFullScreen();
         void showInfo();
         void swichUser();
+        void playVideo(const std::string& videoPath);
+        void showPhoto(const std::string& photoPath);
+        void playAudio(const std::string& audioPath);
+        void showQuestionFile();
+        void showAnswerFile();
+        void stopAudio();
     private:
         Ui::MainWindow *ui;
-        Set set_;
+        std::unique_ptr<Set> set_;
         std::shared_ptr<Flashcard> currentCard_;
+        std::string questionFilePath_;
+        std::string answerFilePath_;
         QPushButton* lastClickedButton_ = nullptr;
-
+        QProcess* ffmpegProcess = nullptr;
 };
-

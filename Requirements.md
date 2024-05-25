@@ -37,6 +37,11 @@ Do kompilacji używamy narzędzia cmake. Należy upewnić się że jest ono pobr
 
 ```sudo apt-get install cmake```
 
+
+Należy też zainstalować pakiet fmmpeg:
+```sudo apt install ffmpeg```
+oraz Qtmultimedia
+```sudo apt-get install qtmultimedia5-dev``
 CMakeLists pozwala na dwa tryby budowania:
 - budowanie aplikacji
 - budowanie testów

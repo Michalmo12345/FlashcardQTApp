@@ -15,8 +15,12 @@ CREATE TABLE Set
 CREATE TABLE Flashcard
 (
   Id SERIAL PRIMARY KEY,
-  Question VARCHAR(64) NOT NULL,
-  Answer VARCHAR(64) NOT NULL,
+  Question VARCHAR(64),
+  Answer VARCHAR(64),
+  Question_file BYTEA,
+  Question_file_name VARCHAR(64),
+  Answer_file BYTEA,
+  Answer_file_name VARCHAR(64),
   Set_id INT NOT NULL REFERENCES Set(Id)
 );
 
@@ -30,8 +34,11 @@ CREATE TABLE Users_sets
 
 CREATE TABLE User_flashcard
 (
-  Importance INT NOT NULL,
   Flashcard_id INT NOT NULL REFERENCES Flashcard(Id),
   Users_sets_id INT NOT NULL REFERENCES Users_sets(Id),
+  EFactor FLOAT DEFAULT 2.5,
+  Interval INT DEFAULT 0,
+  Repetitions INT DEFAULT 0,
+  LastReview TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (Flashcard_id, Users_sets_id)
 );
