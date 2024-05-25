@@ -372,6 +372,7 @@ void MainWindow::playAudio(const std::string& audioPath)
     audioDialog->exec();
 }
 
-void MainWindow::stopAudio() {
-
+void MainWindow::setUser(const std::string &username)
+{
+    currentUser_ = username;
 }
