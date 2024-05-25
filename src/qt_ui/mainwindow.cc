@@ -8,7 +8,9 @@
 #include <QProcess>
 #include <QVBoxLayout>
 #include "flashcardmanagement/Set.h"
+#include "flashcardmanagement/Users_sets.cc"
 #include "db_connection/db_sets.cc"
+#include "users/User.h"
 #include <memory>
 #include <QFile>
 #include "ui_mainwindow.h"
@@ -112,6 +114,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showAnswerFile()));
     connect(ui->dbSetsList, &QListWidget::itemClicked, this, &MainWindow::showItemInfo);
     connect(ui->dbSetsList2, &QListWidget::itemClicked, this, &MainWindow::showItemInfoAllSets);
+    connect(ui->subscribeSetButton, SIGNAL(clicked()), this, SLOT(subscribeSet()));
 }
 
 void MainWindow::findSets() {
@@ -155,6 +158,17 @@ void MainWindow::showItemInfo() {
     ui->infoSetText->insertPlainText(QString::fromStdString("Data utworzenia zestawu: " + set->getCreationDate() + "\n"));
 }
 
+void MainWindow::subscribeSet() {
+    QString set_name = ui->dbSetsList2->currentItem()->text();
+    int set_id = getSetId(set_name.toStdString());
+    int user_id = getUserId(currentUser_);
+    if (checkIsSetSubscribed(set_id, user_id)) {
+        saveUsersSetToDb(set_id, user_id);
+    } else {
+      QMessageBox::warning(this, tr("Zestaw już zaobserwowany"),
+                          tr("Nie możesz już tego zestawu zaobserwować"));
+    }
+}
 
 void MainWindow::returnToMainPage() {
     ui->baseStack->setCurrentIndex(0);

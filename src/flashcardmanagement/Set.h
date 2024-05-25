@@ -36,3 +36,4 @@ std::string trimFromLastSlash(const std::string& str);
 void downloadFileFromDatabase(pqxx::nontransaction& N, const std::string& fileName, int id, const std::string& querry);
 std::string getCurrentDate();
 std::unique_ptr<Set> getSetInfo(const std::string& setName);
+int getSetId(const std::string& setName);

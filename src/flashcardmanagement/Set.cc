@@ -186,6 +186,16 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     }
 }
 
+int getSetId(const std::string& setName) {
+    std::string set_id = "SELECT id \
+                           FROM set \
+                           WHERE name = $1;";
+    auto conn = connectToDatabase();
+    pqxx::nontransaction N(*conn);
+    pqxx::result R(N.exec_params(set_id, setName));
+    return R[0][0].as<int>();
+}
+
 std::unique_ptr<Set> getSetInfo(const std::string& setName) {
     std::string set_info = "SELECT set.creation_date, app_user.username \
                            FROM set JOIN app_user \
