@@ -46,6 +46,7 @@ class MainWindow : public QMainWindow
         void showItemInfoAllSets();
         void seeAllSets();
         void subscribeSet();
+        void learnFromAllSets();
     private:
         Ui::MainWindow *ui;
         std::unique_ptr<Set> set_;

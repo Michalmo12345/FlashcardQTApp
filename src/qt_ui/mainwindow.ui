@@ -627,9 +627,9 @@ background-color: rgb(53, 132, 228);
      <widget class="QPushButton" name="subscribeSetButton">
       <property name="geometry">
        <rect>
-        <x>220</x>
+        <x>210</x>
         <y>460</y>
-        <width>101</width>
+        <width>111</width>
         <height>41</height>
        </rect>
       </property>
@@ -637,17 +637,17 @@ background-color: rgb(53, 132, 228);
        <string>Zaobserwuj</string>
       </property>
      </widget>
-     <widget class="QPushButton" name="rateSetButton">
+     <widget class="QPushButton" name="loadSetButton">
       <property name="geometry">
        <rect>
         <x>460</x>
         <y>460</y>
-        <width>101</width>
+        <width>121</width>
         <height>41</height>
        </rect>
       </property>
       <property name="text">
-       <string>Oceń</string>
+       <string>Załaduj zestaw</string>
       </property>
      </widget>
      <widget class="QPlainTextEdit" name="infoSetText2">

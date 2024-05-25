@@ -115,6 +115,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->dbSetsList, &QListWidget::itemClicked, this, &MainWindow::showItemInfo);
     connect(ui->dbSetsList2, &QListWidget::itemClicked, this, &MainWindow::showItemInfoAllSets);
     connect(ui->subscribeSetButton, SIGNAL(clicked()), this, SLOT(subscribeSet()));
+    connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
 }
 
 void MainWindow::findSets() {
@@ -183,6 +184,31 @@ void MainWindow::readSetFromDB() {
     ui->questionBrowser->clear();
     ui->answerBrowser->clear();
     QListWidgetItem *selectedItem = ui->dbSetsList->currentItem();
+    if (selectedItem) {
+        QString selectedText = selectedItem->text();
+        set_ = getSetByName(selectedText.toStdString());
+        ui->baseStack->setCurrentIndex(3);
+        currentCard_ = set_->giveRandomCard();
+        if (currentCard_->getQuestionFile() == "") {
+            ui->questionFileShowButton->setVisible(false);
+        }
+        else {
+            ui->questionFileShowButton->setVisible(true);
+        }
+        if (currentCard_->getAnswerFile() == "") {
+            ui->answerFileShowButton->setVisible(false);
+        }
+        else {
+            ui->answerFileShowButton->setVisible(true);
+        }
+        ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
+    }
+}
+
+void MainWindow::learnFromAllSets() {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
+    QListWidgetItem *selectedItem = ui->dbSetsList2->currentItem();
     if (selectedItem) {
         QString selectedText = selectedItem->text();
         set_ = getSetByName(selectedText.toStdString());
