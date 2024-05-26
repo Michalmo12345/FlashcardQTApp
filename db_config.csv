@@ -1,0 +1,6 @@
+key,value
+host,52.143.171.205
+port,5433
+user,admin
+password,admin
+database,postgres
