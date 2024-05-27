@@ -33,4 +33,9 @@ class Flashcard {
   std::string getAnswerFile() const;
   std::chrono::system_clock::time_point getLastReview() const;
   void setLastReview(std::chrono::system_clock::time_point time);
+  std::chrono::system_clock::time_point getNextReviewDate() const;
+
+  bool isNew() const;
+  bool isLearned() const;
+  bool isPending() const;
 };

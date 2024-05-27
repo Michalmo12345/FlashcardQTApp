@@ -75,3 +75,14 @@ std::chrono::system_clock::time_point Flashcard::getLastReview() const {
 void Flashcard::setLastReview(std::chrono::system_clock::time_point time) {
   lastReview = time;
 }
+
+bool Flashcard::isNew() const { return repetitions == 0; }
+
+bool Flashcard::isLearned() const {
+  return repetitions > 0 && std::chrono::system_clock::now() < next_review_date;
+}
+
+bool Flashcard::isPending() const {
+  return repetitions > 0 &&
+         std::chrono::system_clock::now() >= next_review_date;
+}
