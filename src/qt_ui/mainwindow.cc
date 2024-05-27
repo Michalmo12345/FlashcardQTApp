@@ -146,7 +146,7 @@ MainWindow::MainWindow(QWidget *parent)
 void MainWindow::findSets() {
   ui->baseStack->setCurrentIndex(1);
 
-  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUser_));
+  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUserName_));
   ui->dbSetsList->clear();
   for (auto name : db_names) {
     ui->dbSetsList->addItem(QString::fromStdString(name));
@@ -193,7 +193,7 @@ void MainWindow::showItemInfo() {
 void MainWindow::subscribeSet() {
   QString set_name = ui->dbSetsList2->currentItem()->text();
   int set_id = getSetId(set_name.toStdString());
-  int user_id = getUserId(currentUser_);
+  int user_id = getUserId(currentUserName_);
   if (checkIsSetSubscribed(set_id, user_id)) {
     saveUsersSetToDb(set_id, user_id);
   } else {
@@ -218,16 +218,7 @@ void MainWindow::readSetFromDB() {
     set_ = getSetByName(selectedText.toStdString());
     ui->baseStack->setCurrentIndex(3);
     currentCard_ = set_->giveRandomCard();
-    if (currentCard_->getQuestionFile() == "") {
-      ui->questionFileShowButton->setVisible(false);
-    } else {
-      ui->questionFileShowButton->setVisible(true);
-    }
-    if (currentCard_->getAnswerFile() == "") {
-      ui->answerFileShowButton->setVisible(false);
-    } else {
-      ui->answerFileShowButton->setVisible(true);
-    }
+    updateFileShowButtons();
     ui->questionBrowser->setText(
         QString::fromStdString(currentCard_->getQuestion()));
   }
@@ -242,16 +233,7 @@ void MainWindow::learnFromAllSets() {
     set_ = getSetByName(selectedText.toStdString());
     ui->baseStack->setCurrentIndex(3);
     currentCard_ = set_->giveRandomCard();
-    if (currentCard_->getQuestionFile() == "") {
-      ui->questionFileShowButton->setVisible(false);
-    } else {
-      ui->questionFileShowButton->setVisible(true);
-    }
-    if (currentCard_->getAnswerFile() == "") {
-      ui->answerFileShowButton->setVisible(false);
-    } else {
-      ui->answerFileShowButton->setVisible(true);
-    }
+    updateFileShowButtons();
     ui->questionBrowser->setText(
         QString::fromStdString(currentCard_->getQuestion()));
   }
@@ -279,16 +261,7 @@ void MainWindow::beginLearning() {
   // auto card = set_.giveRandomCard();
   isSuperMemoLearning_ = false;
   currentCard_ = set_->giveRandomCard();
-  if (currentCard_->getQuestionFile() == "") {
-    ui->questionFileShowButton->setVisible(false);
-  } else {
-    ui->questionFileShowButton->setVisible(true);
-  }
-  if (currentCard_->getAnswerFile() == "") {
-    ui->answerFileShowButton->setVisible(false);
-  } else {
-    ui->answerFileShowButton->setVisible(true);
-  }
+  updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
 }
@@ -313,16 +286,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   }
   currentSessionFlashcards_ = pendingFlashcards;
   currentCard_ = set_->giveRandomCard();
-  if (currentCard_->getQuestionFile() == "") {
-    ui->questionFileShowButton->setVisible(false);
-  } else {
-    ui->questionFileShowButton->setVisible(true);
-  }
-  if (currentCard_->getAnswerFile() == "") {
-    ui->answerFileShowButton->setVisible(false);
-  } else {
-    ui->answerFileShowButton->setVisible(true);
-  }
+  updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
 }
@@ -368,7 +332,7 @@ void MainWindow::addFlashcard() {
 
 void MainWindow::saveToDB() {
   set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToDB(currentUser_);
+  set_->saveToDB(currentUserName_);
   QMessageBox::information(this, "Zapisano",
                            "Zestaw został zapisany do bazy danych.");
 }
@@ -498,11 +462,12 @@ void MainWindow::playAudio(const std::string &audioPath) {
 }
 
 void MainWindow::setUser(const std::string &username) {
-  currentUser_ = username;
+  currentUserName_ = username;
+  ui->usernameLabel->setText(QString::fromStdString(username));
 }
 
 void MainWindow::updateStatsWidget() {
-  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUser_));
+  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUserName_));
   ui->tableWidget->clearContents();
   ui->tableWidget->setRowCount(db_names.size());
   for (std::vector<std::string>::size_type i = 0; i < db_names.size(); ++i) {
@@ -568,12 +533,12 @@ void MainWindow::goToNextSuperMemoFlashcard() {
 }
 
 void MainWindow::updateFileShowButtons() {
-  if (currentCard_->getQuestionFile().empty()) {
+  if (currentCard_->getQuestionFile() == "") {
     ui->questionFileShowButton->setVisible(false);
   } else {
     ui->questionFileShowButton->setVisible(true);
   }
-  if (currentCard_->getAnswerFile().empty()) {
+  if (currentCard_->getAnswerFile() == "") {
     ui->answerFileShowButton->setVisible(false);
   } else {
     ui->answerFileShowButton->setVisible(true);

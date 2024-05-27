@@ -563,9 +563,9 @@ background-color: rgb(53, 132, 228);
        <widget class="QTableWidget" name="tableWidget">
         <property name="geometry">
          <rect>
-          <x>190</x>
+          <x>70</x>
           <y>150</y>
-          <width>421</width>
+          <width>621</width>
           <height>192</height>
          </rect>
         </property>
@@ -576,19 +576,50 @@ background-color: rgb(53, 132, 228);
         </column>
         <column>
          <property name="text">
-          <string>Nowe</string>
+          <string>Fiszki nowe</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Uczone</string>
+          <string>Fiszki uczone</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Oczekujące</string>
+          <string>Fiszki oczekujące</string>
          </property>
         </column>
+       </widget>
+       <widget class="QTextEdit" name="usernameLabel">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>30</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>30</y>
+          <width>67</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Witaj: </string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_5">
