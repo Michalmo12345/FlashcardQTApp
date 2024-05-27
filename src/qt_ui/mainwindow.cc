@@ -478,14 +478,14 @@ void MainWindow::updateStatsWidget() {
   for (std::vector<Set>::size_type i = 0; i < db_names.size(); ++i) {
     ui->tableWidget->setItem(
         i, 0, new QTableWidgetItem(QString::fromStdString(db_names[i])));
-
+    set_ = getSetByName(db_names[i]);
     int newCount = 0, learningCount = 0, pendingCount = 0;
-    for (const auto &flashcard : db_names[i].flashcards) {
-      if (/* condition for new */) {
+    for (const auto &flashcard : set_->getFlashcards()) {
+      if (flashcard->isNew()) {
         ++newCount;
-      } else if (/* condition for learning */) {
+      } else if (flashcard->isLearned()) {
         ++learningCount;
-      } else if (/* condition for pending */) {
+      } else if (flashcard->isPending()) {
         ++pendingCount;
       }
     }
