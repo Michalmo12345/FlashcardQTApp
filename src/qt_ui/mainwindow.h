@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow {
   void beginLearning();
   void addFlashcard();
   void goToNextFlashcard();
-
   void showAnswer();
   void saveToDB();
   void saveToFile();
@@ -53,6 +52,7 @@ class MainWindow : public QMainWindow {
   void learnFromAllSets();
   void beginSuperMemoLearning(const QString& setName);
   void onTableItemClicked(int row, int column);
+  void goToSMSets();
 
  private:
   void updateStatsWidget();
@@ -66,7 +66,8 @@ class MainWindow : public QMainWindow {
   std::string answerFilePath_;
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
-  std::string currentUser_;
+  std::string currentUserName_;
+  // User currentUser_;
   bool isSuperMemoLearning_ = false;
   int currentSuperMemoIndex_ = 5;
 };

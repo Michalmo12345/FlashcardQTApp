@@ -42,12 +42,19 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
+             <widget class="QPushButton" name="usersFavButton">
+              <property name="text">
+               <string>Obserwowane zestawy</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="findSetsButton">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
-               <string>Wybierz zestaw fiszek</string>
+               <string>Dodaj zestaw fiszek</string>
               </property>
              </widget>
             </item>
@@ -563,9 +570,9 @@ background-color: rgb(53, 132, 228);
        <widget class="QTableWidget" name="tableWidget">
         <property name="geometry">
          <rect>
-          <x>190</x>
+          <x>170</x>
           <y>150</y>
-          <width>421</width>
+          <width>411</width>
           <height>192</height>
          </rect>
         </property>
@@ -576,12 +583,12 @@ background-color: rgb(53, 132, 228);
         </column>
         <column>
          <property name="text">
-          <string>Nowe</string>
+          <string>Fiszki nowe</string>
          </property>
         </column>
         <column>
          <property name="text">
-          <string>Uczone</string>
+          <string>Fiszki uczone</string>
          </property>
         </column>
         <column>
@@ -589,6 +596,37 @@ background-color: rgb(53, 132, 228);
           <string>Oczekujące</string>
          </property>
         </column>
+       </widget>
+       <widget class="QTextEdit" name="usernameLabel">
+        <property name="geometry">
+         <rect>
+          <x>330</x>
+          <y>30</y>
+          <width>111</width>
+          <height>41</height>
+         </rect>
+        </property>
+        <property name="textInteractionFlags">
+         <set>Qt::NoTextInteraction</set>
+        </property>
+       </widget>
+       <widget class="QLabel" name="label">
+        <property name="geometry">
+         <rect>
+          <x>260</x>
+          <y>30</y>
+          <width>67</width>
+          <height>31</height>
+         </rect>
+        </property>
+        <property name="font">
+         <font>
+          <pointsize>14</pointsize>
+         </font>
+        </property>
+        <property name="text">
+         <string>Witaj: </string>
+        </property>
        </widget>
       </widget>
       <widget class="QWidget" name="page_5">
