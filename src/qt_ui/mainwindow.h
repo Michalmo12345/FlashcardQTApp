@@ -32,6 +32,7 @@ class MainWindow : public QMainWindow {
   void beginLearning();
   void addFlashcard();
   void goToNextFlashcard();
+
   void showAnswer();
   void saveToDB();
   void saveToFile();
@@ -55,8 +56,11 @@ class MainWindow : public QMainWindow {
 
  private:
   void updateStatsWidget();
+  void goToNextSuperMemoFlashcard();
+  void updateFileShowButtons();
   Ui::MainWindow* ui;
   std::unique_ptr<Set> set_;
+  std::vector<std::shared_ptr<Flashcard>> currentSessionFlashcards_;
   std::shared_ptr<Flashcard> currentCard_;
   std::string questionFilePath_;
   std::string answerFilePath_;

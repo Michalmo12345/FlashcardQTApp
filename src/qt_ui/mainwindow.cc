@@ -291,21 +291,20 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   ui->answerBrowser->clear();
   ui->baseStack->setCurrentIndex(3);
   set_ = getSetByName(setName.toStdString());
-  // auto card = set_.giveRandomCard();
-  currentCard_ = set_->giveRandomCard();
-  if (currentCard_->getQuestionFile() == "") {
-    ui->questionFileShowButton->setVisible(false);
-  } else {
-    ui->questionFileShowButton->setVisible(true);
+  std::vector<std::shared_ptr<Flashcard>> pendingFlashcards;
+  for (const auto &flashcard : set_->getFlashcards()) {
+    if (flashcard->isPending()) {
+      pendingFlashcards.push_back(flashcard);
+    }
   }
-  if (currentCard_->getAnswerFile() == "") {
-    ui->answerFileShowButton->setVisible(false);
-  } else {
-    ui->answerFileShowButton->setVisible(true);
+  if (pendingFlashcards.empty()) {
+    QMessageBox::information(this, "Brak Fiszek",
+                             "Nie masz obecnie fiszek wymagających nauki");
+    return;
   }
-  ui->questionBrowser->setText(
-      QString::fromStdString(currentCard_->getQuestion()));
+  currentSessionFlashcards_ = pendingFlashcards;
 }
+
 void MainWindow::goToNextFlashcard() {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
@@ -529,5 +528,31 @@ void MainWindow::onTableItemClicked(int row, int column) {
   if (column == 0) {
     QString setName = ui->tableWidget->item(row, column)->text();
     beginSuperMemoLearning(setName);
+  }
+}
+
+void MainWindow::goToNextSuperMemoFlashcard() {
+  if (currentSessionFlashcards_.empty()) {
+    QMessageBox::information(
+        this, "Session Completed",
+        "All flashcards for this session have been reviewed.");
+    return;
+  }
+  currentCard_ = currentSessionFlashcards_.back();
+  currentSessionFlashcards_.pop_back();
+  updateFileShowButtons();
+  ui->questionBrowser->setText(
+      QString::fromStdString(currentCard_->getQuestion()));
+}
+void MainWindow::updateFileShowButtons() {
+  if (currentCard_->getQuestionFile().empty()) {
+    ui->questionFileShowButton->setVisible(false);
+  } else {
+    ui->questionFileShowButton->setVisible(true);
+  }
+  if (currentCard_->getAnswerFile().empty()) {
+    ui->answerFileShowButton->setVisible(false);
+  } else {
+    ui->answerFileShowButton->setVisible(true);
   }
 }
