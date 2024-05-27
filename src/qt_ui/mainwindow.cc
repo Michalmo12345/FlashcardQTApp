@@ -293,7 +293,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   set_ = getSetByName(setName.toStdString());
   std::vector<std::shared_ptr<Flashcard>> pendingFlashcards;
   for (const auto &flashcard : set_->getFlashcards()) {
-    if (flashcard->isPending()) {
+    if (flashcard->isPending() || flashcard->isNew()) {
       pendingFlashcards.push_back(flashcard);
     }
   }
@@ -303,6 +303,19 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
     return;
   }
   currentSessionFlashcards_ = pendingFlashcards;
+  currentCard_ = set_->giveRandomCard();
+  if (currentCard_->getQuestionFile() == "") {
+    ui->questionFileShowButton->setVisible(false);
+  } else {
+    ui->questionFileShowButton->setVisible(true);
+  }
+  if (currentCard_->getAnswerFile() == "") {
+    ui->answerFileShowButton->setVisible(false);
+  } else {
+    ui->answerFileShowButton->setVisible(true);
+  }
+  ui->questionBrowser->setText(
+      QString::fromStdString(currentCard_->getQuestion()));
 }
 
 void MainWindow::goToNextFlashcard() {
