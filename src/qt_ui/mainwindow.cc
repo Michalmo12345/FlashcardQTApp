@@ -46,6 +46,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
   connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
     ui->repeatButton->setStyleSheet("QPushButton { background-color: black; }");
+    currentSuperMemoIndex_ = 0;
     updateFlashcard(0);
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
@@ -55,6 +56,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->hardButton, &QPushButton::clicked, this, [this]() {
     ui->hardButton->setStyleSheet("QPushButton { background-color: red; }");
     updateFlashcard(1);
+    currentSuperMemoIndex_ = 1;
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
     }
@@ -63,6 +65,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->problematicButton, &QPushButton::clicked, this, [this]() {
     ui->problematicButton->setStyleSheet(
         "QPushButton { background-color: orange; }");
+    currentSuperMemoIndex_ = 2;
     updateFlashcard(2);
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
@@ -72,6 +75,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->mediumButton, &QPushButton::clicked, this, [this]() {
     ui->mediumButton->setStyleSheet(
         "QPushButton { background-color: yellow; }");
+    currentSuperMemoIndex_ = 3;
     updateFlashcard(3);
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
@@ -80,6 +84,7 @@ MainWindow::MainWindow(QWidget *parent)
   });
   connect(ui->easyButton, &QPushButton::clicked, this, [this]() {
     ui->easyButton->setStyleSheet("QPushButton { background-color: green; }");
+    currentSuperMemoIndex_ = 4;
     updateFlashcard(4);
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
@@ -88,6 +93,7 @@ MainWindow::MainWindow(QWidget *parent)
   });
   connect(ui->perfectButton, &QPushButton::clicked, this, [this]() {
     ui->perfectButton->setStyleSheet("QPushButton { background-color: blue; }");
+    currentSuperMemoIndex_ = 5;
     updateFlashcard(5);
     if (lastClickedButton_ != nullptr) {
       lastClickedButton_->setStyleSheet("");
@@ -271,6 +277,7 @@ void MainWindow::beginLearning() {
   ui->answerBrowser->clear();
   ui->baseStack->setCurrentIndex(3);
   // auto card = set_.giveRandomCard();
+  isSuperMemoLearning_ = false;
   currentCard_ = set_->giveRandomCard();
   if (currentCard_->getQuestionFile() == "") {
     ui->questionFileShowButton->setVisible(false);
@@ -291,6 +298,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   ui->answerBrowser->clear();
   ui->baseStack->setCurrentIndex(3);
   set_ = getSetByName(setName.toStdString());
+  isSuperMemoLearning_ = true;
   std::vector<std::shared_ptr<Flashcard>> pendingFlashcards;
   for (const auto &flashcard : set_->getFlashcards()) {
     if (flashcard->isPending() || flashcard->isNew()) {
@@ -300,6 +308,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   if (pendingFlashcards.empty()) {
     QMessageBox::information(this, "Brak Fiszek",
                              "Nie masz obecnie fiszek wymagających nauki");
+    ui->baseStack->setCurrentIndex(4);
     return;
   }
   currentSessionFlashcards_ = pendingFlashcards;
@@ -325,18 +334,13 @@ void MainWindow::goToNextFlashcard() {
     lastClickedButton_->setStyleSheet("");
     lastClickedButton_ = nullptr;
   }
+  if (isSuperMemoLearning_) {
+    goToNextSuperMemoFlashcard();
+    return;
+  }
   // auto card = set_.giveRandomCard();
   currentCard_ = set_->giveRandomCard();
-  if (currentCard_->getQuestionFile() == "") {
-    ui->questionFileShowButton->setVisible(false);
-  } else {
-    ui->questionFileShowButton->setVisible(true);
-  }
-  if (currentCard_->getAnswerFile() == "") {
-    ui->answerFileShowButton->setVisible(false);
-  } else {
-    ui->answerFileShowButton->setVisible(true);
-  }
+  updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
 }
@@ -552,11 +556,17 @@ void MainWindow::goToNextSuperMemoFlashcard() {
     return;
   }
   currentCard_ = currentSessionFlashcards_.back();
-  currentSessionFlashcards_.pop_back();
+  if (currentSuperMemoIndex_ >= 4) {
+    currentSessionFlashcards_.pop_back();
+  } else {
+    currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
+                                     currentCard_);
+  }
   updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
 }
+
 void MainWindow::updateFileShowButtons() {
   if (currentCard_->getQuestionFile().empty()) {
     ui->questionFileShowButton->setVisible(false);

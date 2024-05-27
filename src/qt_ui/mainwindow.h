@@ -67,4 +67,6 @@ class MainWindow : public QMainWindow {
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
   std::string currentUser_;
+  bool isSuperMemoLearning_ = false;
+  int currentSuperMemoIndex_ = 5;
 };
