@@ -50,6 +50,8 @@ class MainWindow : public QMainWindow {
   void seeAllSets();
   void subscribeSet();
   void learnFromAllSets();
+  void beginSuperMemoLearning(const QString& setName);
+  void onTableItemClicked(int row, int column);
 
  private:
   void updateStatsWidget();
@@ -61,5 +63,4 @@ class MainWindow : public QMainWindow {
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
   std::string currentUser_;
-  //   QTableWidget* tableWidget_;
 };

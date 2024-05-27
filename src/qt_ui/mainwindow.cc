@@ -133,14 +133,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->subscribeSetButton, SIGNAL(clicked()), this,
           SLOT(subscribeSet()));
   connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
-  //   tableWidget_ = new QTableWidget(this);
-
-  //   // Konfiguracja QTableWidget
-  //   configureTableWidget();
-
-  //   // Dodanie tabeli do układu
-  //   ui->centralWidget->layout()->addWidget(tableWidget_);
-  //
+  connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this,
+          SLOT(onTableItemClicked(int, int)));
 }
 
 void MainWindow::findSets() {
@@ -292,6 +286,26 @@ void MainWindow::beginLearning() {
       QString::fromStdString(currentCard_->getQuestion()));
 }
 
+void MainWindow::beginSuperMemoLearning(const QString &setName) {
+  ui->questionBrowser->clear();
+  ui->answerBrowser->clear();
+  ui->baseStack->setCurrentIndex(3);
+  set_ = getSetByName(setName.toStdString());
+  // auto card = set_.giveRandomCard();
+  currentCard_ = set_->giveRandomCard();
+  if (currentCard_->getQuestionFile() == "") {
+    ui->questionFileShowButton->setVisible(false);
+  } else {
+    ui->questionFileShowButton->setVisible(true);
+  }
+  if (currentCard_->getAnswerFile() == "") {
+    ui->answerFileShowButton->setVisible(false);
+  } else {
+    ui->answerFileShowButton->setVisible(true);
+  }
+  ui->questionBrowser->setText(
+      QString::fromStdString(currentCard_->getQuestion()));
+}
 void MainWindow::goToNextFlashcard() {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
@@ -475,9 +489,12 @@ void MainWindow::updateStatsWidget() {
   auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUser_));
   ui->tableWidget->clearContents();
   ui->tableWidget->setRowCount(db_names.size());
-  for (std::vector<Set>::size_type i = 0; i < db_names.size(); ++i) {
-    ui->tableWidget->setItem(
-        i, 0, new QTableWidgetItem(QString::fromStdString(db_names[i])));
+  for (std::vector<std::string>::size_type i = 0; i < db_names.size(); ++i) {
+    QTableWidgetItem *nameItem =
+        new QTableWidgetItem(QString::fromStdString(db_names[i]));
+    nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(i, 0, nameItem);
+
     set_ = getSetByName(db_names[i]);
     int newCount = 0, learningCount = 0, pendingCount = 0;
     for (const auto &flashcard : set_->getFlashcards()) {
@@ -490,13 +507,27 @@ void MainWindow::updateStatsWidget() {
       }
     }
 
-    ui->tableWidget->setItem(i, 1,
-                             new QTableWidgetItem(QString::number(newCount)));
+    QTableWidgetItem *newCountItem =
+        new QTableWidgetItem(QString::number(newCount));
+    newCountItem->setFlags(newCountItem->flags() & ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(i, 1, newCountItem);
 
-    ui->tableWidget->setItem(
-        i, 2, new QTableWidgetItem(QString::number(learningCount)));
+    QTableWidgetItem *learningCountItem =
+        new QTableWidgetItem(QString::number(learningCount));
+    learningCountItem->setFlags(learningCountItem->flags() &
+                                ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(i, 2, learningCountItem);
 
-    ui->tableWidget->setItem(
-        i, 3, new QTableWidgetItem(QString::number(pendingCount)));
+    QTableWidgetItem *pendingCountItem =
+        new QTableWidgetItem(QString::number(pendingCount));
+    pendingCountItem->setFlags(pendingCountItem->flags() & ~Qt::ItemIsEditable);
+    ui->tableWidget->setItem(i, 3, pendingCountItem);
+  }
+}
+
+void MainWindow::onTableItemClicked(int row, int column) {
+  if (column == 0) {
+    QString setName = ui->tableWidget->item(row, column)->text();
+    beginSuperMemoLearning(setName);
   }
 }
