@@ -4,8 +4,13 @@
 #include <pqxx/pqxx>
 
 #include "../db_connection/connect_db.h"
-User::User(std::string username) : username_(username) {}
 
+User::User(const std::string &username)
+    : username_(username),
+      totalLearningTimeToday_(0),
+      totalLearningTime_(0),
+      flashcardsReviewedToday_(0),
+      currentLearningDate_(QDate::currentDate()) {}
 User::~User() = default;
 
 std::string User::getUsername() { return username_; }
@@ -33,7 +38,7 @@ void User::updateInDb(const std::string &oldUsername) {
         "UPDATE app_user SET username = $1 WHERE username = $2;";
     txn.exec_params(query, oldUsername,
                     username_);  // username_ is the new username, oldUsername
-                                   // is the current username
+                                 // is the current username
     txn.commit();
     std::cout << "Updated user from: " << oldUsername << " to: " << username_
               << std::endl;
@@ -53,6 +58,44 @@ void User::deleteFromDb() {
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
+}
+
+void User::startLearningSession() {
+  sessionStartTime_ = std::chrono::steady_clock::now();
+}
+
+void User::endLearningSession() {
+  auto sessionEndTime = std::chrono::steady_clock::now();
+  auto sessionDuration = std::chrono::duration_cast<std::chrono::seconds>(
+      sessionEndTime - sessionStartTime_);
+
+  totalLearningTime_ += sessionDuration;
+
+  if (currentLearningDate_ == QDate::currentDate()) {
+    totalLearningTimeToday_ += sessionDuration;
+  } else {
+    currentLearningDate_ = QDate::currentDate();
+    totalLearningTimeToday_ = sessionDuration;
+    flashcardsReviewedToday_ = 0;
+  }
+}
+
+void User::incrementFlashcardsReviewed() {
+  if (currentLearningDate_ == QDate::currentDate()) {
+    flashcardsReviewedToday_++;
+  } else {
+    currentLearningDate_ = QDate::currentDate();
+    flashcardsReviewedToday_ = 1;
+    totalLearningTimeToday_ = std::chrono::seconds(0);
+  }
+}
+
+std::chrono::seconds User::getTotalLearningTime() const {
+  return totalLearningTime_;
+}
+
+int User::getFlashcardsReviewedToday() const {
+  return flashcardsReviewedToday_;
 }
 
 bool checkUsernameInDb(const std::string &username) {
@@ -78,13 +121,13 @@ int getUserId(const std::string &username) {
     pqxx::nontransaction N(*conn);
     pqxx::result R(N.exec_params(query, username));
     if (!R.empty()) {
-        pqxx::row row = R[0];
-        int id = row["id"].as<int>();
-        std::cout << "User ID: " << id << std::endl;
-        return id;
+      pqxx::row row = R[0];
+      int id = row["id"].as<int>();
+      std::cout << "User ID: " << id << std::endl;
+      return id;
     } else {
-        std::cout << "No user found with username: " << username << std::endl;
-        return -1;
+      std::cout << "No user found with username: " << username << std::endl;
+      return -1;
     }
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
