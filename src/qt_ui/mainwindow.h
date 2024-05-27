@@ -32,7 +32,6 @@ class MainWindow : public QMainWindow {
   void beginLearning();
   void addFlashcard();
   void goToNextFlashcard();
-
   void showAnswer();
   void saveToDB();
   void saveToFile();
@@ -53,6 +52,7 @@ class MainWindow : public QMainWindow {
   void learnFromAllSets();
   void beginSuperMemoLearning(const QString& setName);
   void onTableItemClicked(int row, int column);
+  void goToSMSets();
 
  private:
   void updateStatsWidget();

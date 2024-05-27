@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->findSetsButton, SIGNAL(clicked()), this, SLOT(findSets()));
   connect(ui->pushContinueButton, SIGNAL(clicked()), this,
           SLOT(pushContinue()));
+  connect(ui->usersFavButton, SIGNAL(clicked()), this, SLOT(goToSMSets()));
   connect(ui->dbCardButton, SIGNAL(clicked()), this, SLOT(readSetFromDB()));
   connect(ui->fileCardButton, SIGNAL(clicked()), this, SLOT(readSetFromFile()));
   connect(ui->pushBeginLearning, SIGNAL(clicked()), this,
@@ -167,7 +168,10 @@ void MainWindow::seeAllSets() {
     ui->dbSetsList2->addItem(QString::fromStdString(name));
   }
 }
-
+void MainWindow::goToSMSets() {
+  ui->baseStack->setCurrentIndex(4);
+  updateStatsWidget();
+}
 void MainWindow::showItemInfoAllSets() {
   QString setName = ui->dbSetsList2->currentItem()->text();
   auto set = getSetInfo(setName.toStdString());

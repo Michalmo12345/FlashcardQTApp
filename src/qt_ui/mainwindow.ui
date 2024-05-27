@@ -42,12 +42,19 @@
           <item>
            <layout class="QHBoxLayout" name="horizontalLayout_2">
             <item>
+             <widget class="QPushButton" name="usersFavButton">
+              <property name="text">
+               <string>Obserwowane zestawy</string>
+              </property>
+             </widget>
+            </item>
+            <item>
              <widget class="QPushButton" name="findSetsButton">
               <property name="layoutDirection">
                <enum>Qt::LeftToRight</enum>
               </property>
               <property name="text">
-               <string>Wybierz zestaw fiszek</string>
+               <string>Dodaj zestaw fiszek</string>
               </property>
              </widget>
             </item>
@@ -563,9 +570,9 @@ background-color: rgb(53, 132, 228);
        <widget class="QTableWidget" name="tableWidget">
         <property name="geometry">
          <rect>
-          <x>70</x>
+          <x>170</x>
           <y>150</y>
-          <width>621</width>
+          <width>411</width>
           <height>192</height>
          </rect>
         </property>
@@ -586,7 +593,7 @@ background-color: rgb(53, 132, 228);
         </column>
         <column>
          <property name="text">
-          <string>Fiszki oczekujące</string>
+          <string>Oczekujące</string>
          </property>
         </column>
        </widget>
