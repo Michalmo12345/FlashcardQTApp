@@ -16,3 +16,6 @@ class User {
   void updateInDb(const std::string &oldUsername);
   void deleteFromDb();
 };
+
+bool checkUsernameInDb(const std::string &username);
+int getUserId(const std::string &username);

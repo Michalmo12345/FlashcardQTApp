@@ -24,6 +24,27 @@ std::vector<std::string> getSetNamesFromDb() {
     }
 }
 
+std::vector<std::string> getSubscribedSetNamesFromDb(int userId) {
+    try {        
+        auto conn = connectToDatabase();
+        std::string sql = "SELECT set.name \
+                           FROM set JOIN users_sets \
+                           ON set.id = users_sets.set_id \
+                           WHERE users_sets.user_id = $1";
+        pqxx::nontransaction N(*conn);
+        pqxx::result R(N.exec_params(sql, userId));
+        std::vector<std::string> set_names;
+        
+        for (pqxx::result::const_iterator c = R.begin(); c != R.end(); ++c) {
+            set_names.push_back(c[0].as<std::string>());
+        }
+        return set_names;
+    } catch (const std::exception &e) {
+        std::cerr << e.what() << std::endl;
+        return {};
+    }
+}
+
 std::vector<std::string> getSetNamesFromFiles() {
     std::string dir = "sets";
     std::vector<std::string> setNames;

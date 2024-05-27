@@ -2,8 +2,10 @@
 
 #include <iostream>
 
+#include "users/User.h"
 #include "./ui_newnamedialog.h"
 #include "ui_newnamedialog.h"
+#include <QMessageBox>
 
 NewNameDialog::NewNameDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::NewNameDialog) {
@@ -15,9 +17,16 @@ NewNameDialog::NewNameDialog(QWidget *parent)
 void NewNameDialog::changeUserName() {
   QString username = ui->newUsername->text();
   if (!username.trimmed().isEmpty()) {
-    emit userNameChanged(username);
+    if (checkUsernameInDb(username.toStdString())) {
+      emit userNameChanged(username);
+      this->close();
+    } else {
+      QMessageBox::warning(this, tr("Nazwa użytkownika zajęta"),
+                          tr("Wpisz nazwę użytkownika, której jeszcze nie ma"));
+      ui->newUsername->clear();
+      ui->newUsername->setFocus();
+    }
   }
-  this->close();
 }
 
 NewNameDialog::~NewNameDialog() { delete ui; }

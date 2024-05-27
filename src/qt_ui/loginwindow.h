@@ -18,7 +18,7 @@ class LoginWindow : public QMainWindow {
   ~LoginWindow();
 
  signals:
-  void loginSuccess();
+  void loginSuccess(const std::string &username);
 
  private slots:
   void login();

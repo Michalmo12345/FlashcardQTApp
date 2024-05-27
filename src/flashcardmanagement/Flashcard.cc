@@ -44,6 +44,7 @@ void Flashcard::update(unsigned int quality) {
   interval = calculateInterval(repetitions, EFactor);
   repetitions++;
   lastReview = std::chrono::system_clock::now();
+  next_review_date = lastReview + std::chrono::hours(24 * interval);
 }
 
 double Flashcard::getEFactor() const { return EFactor; }

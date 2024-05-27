@@ -46,7 +46,8 @@ void LoginWindow::login() {
     msgBox.exec();
     return;
   }
-  emit loginSuccess();
+  std::string username = ui->dbUsersWidget->currentItem()->text().toStdString();
+  emit loginSuccess(username);
   this->close();
 }
 

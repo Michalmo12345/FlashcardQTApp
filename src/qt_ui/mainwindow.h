@@ -17,6 +17,7 @@ class MainWindow : public QMainWindow
     public:
         MainWindow(QWidget *parent = nullptr);
         ~MainWindow();
+        void setUser(const std::string &username);
     signals:
         void switchUserSuccess();
     private slots:
@@ -41,7 +42,11 @@ class MainWindow : public QMainWindow
         void playAudio(const std::string& audioPath);
         void showQuestionFile();
         void showAnswerFile();
-        void stopAudio();
+        void showItemInfo();
+        void showItemInfoAllSets();
+        void seeAllSets();
+        void subscribeSet();
+        void learnFromAllSets();
     private:
         Ui::MainWindow *ui;
         std::unique_ptr<Set> set_;
@@ -50,4 +55,5 @@ class MainWindow : public QMainWindow
         std::string answerFilePath_;
         QPushButton* lastClickedButton_ = nullptr;
         QProcess* ffmpegProcess = nullptr;
+        std::string currentUser_;
 };

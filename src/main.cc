@@ -11,7 +11,8 @@ int main(int argc, char *argv[])
     LoginWindow loginWindow;
     MainWindow mainWindow;
 
-    QObject::connect(&loginWindow, &LoginWindow::loginSuccess, [&](){
+    QObject::connect(&loginWindow, &LoginWindow::loginSuccess, [&](const std::string &username){
+        mainWindow.setUser(username);
         mainWindow.show();
         loginWindow.close();
     });

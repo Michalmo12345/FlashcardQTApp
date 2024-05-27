@@ -8,10 +8,13 @@
 #include <QProcess>
 #include <QVBoxLayout>
 #include "flashcardmanagement/Set.h"
+#include "flashcardmanagement/Users_sets.cc"
 #include "db_connection/db_sets.cc"
+#include "users/User.h"
 #include <memory>
 #include <QFile>
 #include "ui_mainwindow.h"
+#include <QButtonGroup>
 
 
 MainWindow::MainWindow(QWidget *parent)
@@ -94,6 +97,7 @@ MainWindow::MainWindow(QWidget *parent)
     connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
     connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
     connect(ui->actionSwitchUser, &QAction::triggered, this, &MainWindow::swichUser);
+    connect(ui->actionAllSets, &QAction::triggered, this, &MainWindow::seeAllSets);
     connect(ui->questionFileButton, &QPushButton::clicked, this, [this]() {
         QString filePath = QFileDialog::getOpenFileName(this, "Wybierz plik", "", "Wszystkie pliki (*.*);;Obrazy (*.png *.jpg *.bmp);;Filmy (*.mp4 *.avi *.mkv);;Audio (*.mp3 *.wav *.ogg)");
         if (!filePath.isEmpty()) {
@@ -108,11 +112,16 @@ MainWindow::MainWindow(QWidget *parent)
         });
     connect(ui->questionFileShowButton, SIGNAL(clicked()), this, SLOT(showQuestionFile()));
     connect(ui->answerFileShowButton, SIGNAL(clicked()), this, SLOT(showAnswerFile()));
+    connect(ui->dbSetsList, &QListWidget::itemClicked, this, &MainWindow::showItemInfo);
+    connect(ui->dbSetsList2, &QListWidget::itemClicked, this, &MainWindow::showItemInfoAllSets);
+    connect(ui->subscribeSetButton, SIGNAL(clicked()), this, SLOT(subscribeSet()));
+    connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
 }
 
 void MainWindow::findSets() {
     ui->baseStack->setCurrentIndex(1);
-    auto db_names = getSetNamesFromDb();
+
+    auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUser_));
     ui->dbSetsList->clear();
     for (auto name : db_names) {
         ui->dbSetsList->addItem(QString::fromStdString(name));
@@ -124,6 +133,43 @@ void MainWindow::findSets() {
     }
 }
 
+void MainWindow::seeAllSets() {
+    ui->baseStack->setCurrentIndex(5);
+
+    auto db_names = getSetNamesFromDb();
+    ui->dbSetsList2->clear();
+    for (auto name : db_names) {
+        ui->dbSetsList2->addItem(QString::fromStdString(name));
+    }
+}
+
+void MainWindow::showItemInfoAllSets() {
+    QString setName = ui->dbSetsList2->currentItem()->text();
+    auto set = getSetInfo(setName.toStdString());
+    ui->infoSetText2->setPlainText(QString::fromStdString("Nick autora zestawu: " + set->getCreatorUsername()));
+    ui->infoSetText2->insertPlainText(QString::fromStdString("Nazwa zestawu: " + set->getName() + "\n"));
+    ui->infoSetText2->insertPlainText(QString::fromStdString("Data utworzenia zestawu: " + set->getCreationDate() + "\n"));
+}
+
+void MainWindow::showItemInfo() {
+    QString setName = ui->dbSetsList->currentItem()->text();
+    auto set = getSetInfo(setName.toStdString());
+    ui->infoSetText->setPlainText(QString::fromStdString("Nick autora zestawu: " + set->getCreatorUsername()));
+    ui->infoSetText->insertPlainText(QString::fromStdString("Nazwa zestawu: " + set->getName() + "\n"));
+    ui->infoSetText->insertPlainText(QString::fromStdString("Data utworzenia zestawu: " + set->getCreationDate() + "\n"));
+}
+
+void MainWindow::subscribeSet() {
+    QString set_name = ui->dbSetsList2->currentItem()->text();
+    int set_id = getSetId(set_name.toStdString());
+    int user_id = getUserId(currentUser_);
+    if (checkIsSetSubscribed(set_id, user_id)) {
+        saveUsersSetToDb(set_id, user_id);
+    } else {
+      QMessageBox::warning(this, tr("Zestaw już zaobserwowany"),
+                          tr("Nie możesz już tego zestawu zaobserwować"));
+    }
+}
 
 void MainWindow::returnToMainPage() {
     ui->baseStack->setCurrentIndex(0);
@@ -138,6 +184,31 @@ void MainWindow::readSetFromDB() {
     ui->questionBrowser->clear();
     ui->answerBrowser->clear();
     QListWidgetItem *selectedItem = ui->dbSetsList->currentItem();
+    if (selectedItem) {
+        QString selectedText = selectedItem->text();
+        set_ = getSetByName(selectedText.toStdString());
+        ui->baseStack->setCurrentIndex(3);
+        currentCard_ = set_->giveRandomCard();
+        if (currentCard_->getQuestionFile() == "") {
+            ui->questionFileShowButton->setVisible(false);
+        }
+        else {
+            ui->questionFileShowButton->setVisible(true);
+        }
+        if (currentCard_->getAnswerFile() == "") {
+            ui->answerFileShowButton->setVisible(false);
+        }
+        else {
+            ui->answerFileShowButton->setVisible(true);
+        }
+        ui->questionBrowser->setText(QString::fromStdString(currentCard_->getQuestion()));
+    }
+}
+
+void MainWindow::learnFromAllSets() {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
+    QListWidgetItem *selectedItem = ui->dbSetsList2->currentItem();
     if (selectedItem) {
         QString selectedText = selectedItem->text();
         set_ = getSetByName(selectedText.toStdString());
@@ -239,7 +310,7 @@ void MainWindow::addFlashcard() {
 
 void MainWindow::saveToDB() {
     set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_->saveToDB();
+    set_->saveToDB(currentUser_);
     QMessageBox::information(this, "Zapisano", "Zestaw został zapisany do bazy danych.");
 }
 
@@ -372,6 +443,7 @@ void MainWindow::playAudio(const std::string& audioPath)
     audioDialog->exec();
 }
 
-void MainWindow::stopAudio() {
-
+void MainWindow::setUser(const std::string &username)
+{
+    currentUser_ = username;
 }
