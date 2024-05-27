@@ -39,6 +39,6 @@ CREATE TABLE User_flashcard
   EFactor FLOAT DEFAULT 2.5,
   Interval INT DEFAULT 0,
   Repetitions INT DEFAULT 0,
-  LastReview TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
+  NextReview TIMESTAMP DEFAULT CURRENT_TIMESTAMP,
   PRIMARY KEY (Flashcard_id, Users_sets_id)
 );

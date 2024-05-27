@@ -13,6 +13,7 @@ class Flashcard {
   unsigned int interval;     // interval between repetitions
   double EFactor;            // easiness factor
   std::chrono::system_clock::time_point lastReview;
+  std::chrono::system_clock::time_point next_review_date;
 
  public:
   Flashcard(std::string question, std::string answer);
