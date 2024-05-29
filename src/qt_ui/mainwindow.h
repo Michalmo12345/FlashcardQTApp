@@ -7,8 +7,11 @@
 #include <QPushButton>
 #include <QTableWidget>
 #include <list>
+#include <memory>
 
+#include "enumpage.h"
 #include "flashcardmanagement/Set.h"
+#include "users/User.h"
 QT_BEGIN_NAMESPACE
 namespace Ui {
 class MainWindow;
@@ -24,7 +27,7 @@ class MainWindow : public QMainWindow {
  signals:
   void switchUserSuccess();
  private slots:
-  void returnToMainPage();
+  void navigateToPage(Page page);
   void findSets();
   void pushContinue();
   void readSetFromDB();
@@ -66,8 +69,8 @@ class MainWindow : public QMainWindow {
   std::string answerFilePath_;
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
-  std::string currentUserName_;
-  // User currentUser_;
+  // std::string currentUserName_;
+  std::unique_ptr<User> user;
   bool isSuperMemoLearning_ = false;
   int currentSuperMemoIndex_ = 5;
 };

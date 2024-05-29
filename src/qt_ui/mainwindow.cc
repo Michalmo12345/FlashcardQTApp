@@ -41,12 +41,12 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->showAnswerButton, &QPushButton::clicked, this,
           [this]() { showAnswer(); });
   connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
-  connect(ui->returnButton_2, SIGNAL(clicked()), this,
-          SLOT(returnToMainPage()));
+  connect(ui->returnButton_2, &QPushButton::clicked, this,
+          [this]() { navigateToPage(HomePage); });
   connect(ui->saveToDbButton, SIGNAL(clicked()), this, SLOT(saveToDB()));
   connect(ui->saveToFileButton, SIGNAL(clicked()), this, SLOT(saveToFile()));
   connect(ui->repeatButton, &QPushButton::clicked, this, [this]() {
-    ui->repeatButton->setStyleSheet("QPushButton { background-color: black; }");
+    ui->repeatButton->setStyleSheet("QPushButton { background-color: grey; }");
     currentSuperMemoIndex_ = 0;
     updateFlashcard(0);
     if (lastClickedButton_ != nullptr) {
@@ -144,10 +144,12 @@ MainWindow::MainWindow(QWidget *parent)
           SLOT(onTableItemClicked(int, int)));
 }
 
+void MainWindow::navigateToPage(Page page) {
+  ui->baseStack->setCurrentIndex(static_cast<int>(page));
+}
 void MainWindow::findSets() {
-  ui->baseStack->setCurrentIndex(1);
-
-  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUserName_));
+  navigateToPage(ChooseSetPage);
+  auto db_names = getSubscribedSetNamesFromDb(getUserId(user->getUsername()));
   ui->dbSetsList->clear();
   for (auto name : db_names) {
     ui->dbSetsList->addItem(QString::fromStdString(name));
@@ -160,18 +162,19 @@ void MainWindow::findSets() {
 }
 
 void MainWindow::seeAllSets() {
-  ui->baseStack->setCurrentIndex(5);
-
+  navigateToPage(ObserveSetPage);
   auto db_names = getSetNamesFromDb();
   ui->dbSetsList2->clear();
   for (auto name : db_names) {
     ui->dbSetsList2->addItem(QString::fromStdString(name));
   }
 }
+
 void MainWindow::goToSMSets() {
-  ui->baseStack->setCurrentIndex(4);
+  navigateToPage(UserPage);
   updateStatsWidget();
 }
+
 void MainWindow::showItemInfoAllSets() {
   QString setName = ui->dbSetsList2->currentItem()->text();
   auto set = getSetInfo(setName.toStdString());
@@ -197,7 +200,7 @@ void MainWindow::showItemInfo() {
 void MainWindow::subscribeSet() {
   QString set_name = ui->dbSetsList2->currentItem()->text();
   int set_id = getSetId(set_name.toStdString());
-  int user_id = getUserId(currentUserName_);
+  int user_id = getUserId(user->getUsername());
   if (checkIsSetSubscribed(set_id, user_id)) {
     saveUsersSetToDb(set_id, user_id);
   } else {
@@ -206,11 +209,10 @@ void MainWindow::subscribeSet() {
   }
 }
 
-void MainWindow::returnToMainPage() { ui->baseStack->setCurrentIndex(0); }
 void MainWindow::pushContinue() {
   set_ = std::make_unique<Set>("Zestaw");
   ui->setNameTextEdit->clear();
-  ui->baseStack->setCurrentIndex(2);
+  navigateToPage(CreateSetPage);
 }
 
 void MainWindow::readSetFromDB() {
@@ -235,7 +237,7 @@ void MainWindow::learnFromAllSets() {
   if (selectedItem) {
     QString selectedText = selectedItem->text();
     set_ = getSetByName(selectedText.toStdString());
-    ui->baseStack->setCurrentIndex(3);
+    navigateToPage(LearningPage);
     currentCard_ = set_->giveRandomCard();
     updateFileShowButtons();
     ui->questionBrowser->setText(
@@ -251,7 +253,7 @@ void MainWindow::readSetFromFile() {
     QString selectedText = selectedItem->text();
     set_ = readFromFile(selectedText.toStdString() + ".txt",
                         selectedText.toStdString());
-    ui->baseStack->setCurrentIndex(3);
+    navigateToPage(LearningPage);
     currentCard_ = set_->giveRandomCard();
     ui->questionBrowser->setText(
         QString::fromStdString(currentCard_->getQuestion()));
@@ -261,8 +263,7 @@ void MainWindow::readSetFromFile() {
 void MainWindow::beginLearning() {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
-  ui->baseStack->setCurrentIndex(3);
-  // auto card = set_.giveRandomCard();
+  navigateToPage(LearningPage);
   isSuperMemoLearning_ = false;
   currentCard_ = set_->giveRandomCard();
   updateFileShowButtons();
@@ -273,8 +274,8 @@ void MainWindow::beginLearning() {
 void MainWindow::beginSuperMemoLearning(const QString &setName) {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
-  ui->baseStack->setCurrentIndex(3);
-  set_ = getSetByName(setName.toStdString());
+  navigateToPage(LearningPage);
+  set_ = getUserSetByName(setName.toStdString(), user->getUsername());
   isSuperMemoLearning_ = true;
   std::vector<std::shared_ptr<Flashcard>> pendingFlashcards;
   for (const auto &flashcard : set_->getFlashcards()) {
@@ -285,7 +286,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   if (pendingFlashcards.empty()) {
     QMessageBox::information(this, "Brak Fiszek",
                              "Nie masz obecnie fiszek wymagających nauki");
-    ui->baseStack->setCurrentIndex(4);
+    navigateToPage(UserPage);
     return;
   }
   currentSessionFlashcards_ = pendingFlashcards;
@@ -336,7 +337,7 @@ void MainWindow::addFlashcard() {
 
 void MainWindow::saveToDB() {
   set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToDB(currentUserName_);
+  set_->saveToDB(user->getUsername());
   QMessageBox::information(this, "Zapisano",
                            "Zestaw został zapisany do bazy danych.");
 }
@@ -353,7 +354,7 @@ void MainWindow::updateFlashcard(unsigned int quality) {
 }
 
 void MainWindow::goToStats() {
-  ui->baseStack->setCurrentIndex(4);
+  navigateToPage(UserPage);
   updateStatsWidget();
 }
 
@@ -466,12 +467,12 @@ void MainWindow::playAudio(const std::string &audioPath) {
 }
 
 void MainWindow::setUser(const std::string &username) {
-  currentUserName_ = username;
+  user = std::make_unique<User>(username);
   ui->usernameLabel->setText(QString::fromStdString(username));
 }
 
 void MainWindow::updateStatsWidget() {
-  auto db_names = getSubscribedSetNamesFromDb(getUserId(currentUserName_));
+  auto db_names = getSubscribedSetNamesFromDb(getUserId(user->getUsername()));
   ui->tableWidget->clearContents();
   ui->tableWidget->setRowCount(db_names.size());
   for (std::vector<std::string>::size_type i = 0; i < db_names.size(); ++i) {
@@ -479,8 +480,7 @@ void MainWindow::updateStatsWidget() {
         new QTableWidgetItem(QString::fromStdString(db_names[i]));
     nameItem->setFlags(nameItem->flags() & ~Qt::ItemIsEditable);
     ui->tableWidget->setItem(i, 0, nameItem);
-
-    set_ = getSetByName(db_names[i]);
+    set_ = getUserSetByName(db_names[i], user->getUsername());
     int newCount = 0, learningCount = 0, pendingCount = 0;
     for (const auto &flashcard : set_->getFlashcards()) {
       if (flashcard->isNew()) {
@@ -491,7 +491,6 @@ void MainWindow::updateStatsWidget() {
         ++pendingCount;
       }
     }
-
     QTableWidgetItem *newCountItem =
         new QTableWidgetItem(QString::number(newCount));
     newCountItem->setFlags(newCountItem->flags() & ~Qt::ItemIsEditable);
@@ -519,9 +518,11 @@ void MainWindow::onTableItemClicked(int row, int column) {
 
 void MainWindow::goToNextSuperMemoFlashcard() {
   if (currentSessionFlashcards_.empty()) {
-    QMessageBox::information(
-        this, "Session Completed",
-        "All flashcards for this session have been reviewed.");
+    QMessageBox::information(this, "Zakończono sesję nauki",
+                             "Wszystkie fiszki zostały powtórzone.");
+
+    set_->updateAllUserFlashcardInDB();
+    goToSMSets();
     return;
   }
   currentCard_ = currentSessionFlashcards_.back();

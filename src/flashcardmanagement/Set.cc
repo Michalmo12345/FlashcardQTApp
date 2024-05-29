@@ -134,6 +134,29 @@ void Set::saveToDB(const std::string& username) const {
   }
 }
 
+void Set::updateAllUserFlashcardInDB() const {
+  try {
+    auto conn = connectToDatabase();
+    pqxx::work txn(*conn);
+    std::string update_user_flashcard =
+        "UPDATE User_flashcard \
+         SET EFactor = $1, Interval = $2, Repetitions = $3, \
+         LastReview = $4, NextReview = $5 WHERE Id = $6";
+
+    for (const auto& card : flashcards_) {
+      txn.exec_params(
+          update_user_flashcard, card->getEFactor(), card->getInterval(),
+          card->getRepetitions(), to_string(card->getLastReview()),
+          to_string(card->getNextReviewDate()), card->getUserFlashcardId());
+    }
+
+    txn.commit();
+    std::cout << "Set updated successfully to database." << std::endl;
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+  }
+}
+
 std::vector<std::shared_ptr<Flashcard>> Set::getFlashcards() const {
   return flashcards_;
 }
@@ -329,4 +352,12 @@ std::vector<int> getFlashcardIds(int setId) {
     std::cerr << e.what() << std::endl;
     return {};
   }
+}
+
+std::string to_string(std::chrono::system_clock::time_point tp) {
+  std::time_t time = std::chrono::system_clock::to_time_t(tp);
+  std::tm* tm = std::localtime(&time);
+  std::ostringstream oss;
+  oss << std::put_time(tm, "%Y-%m-%d %H:%M:%S");
+  return oss.str();
 }
