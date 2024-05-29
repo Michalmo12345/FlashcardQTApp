@@ -10,7 +10,8 @@ Flashcard::Flashcard(std::string question, std::string answer)
       repetitions(0),
       interval(0),
       EFactor(2.5),
-      lastReview(std::chrono::system_clock::now()) {}
+      lastReview(std::chrono::system_clock::now()),
+      userFlashcardId(0) {}
 
 Flashcard::Flashcard(std::string question, std::string answer,
                      std::string questionFile, std::string answerFile)
@@ -21,7 +22,26 @@ Flashcard::Flashcard(std::string question, std::string answer,
       repetitions(0),
       interval(0),
       EFactor(2.5),
-      lastReview(std::chrono::system_clock::now()) {}
+      lastReview(std::chrono::system_clock::now()),
+      userFlashcardId(0) {}
+
+Flashcard::Flashcard(std::string question, std::string answer,
+                     std::string questionFile, std::string answerFile,
+                     double EFactor, unsigned int interval,
+                     unsigned int repetitions,
+                     std::chrono::system_clock::time_point lastReview,
+                     std::chrono::system_clock::time_point next_review_date,
+                     int userFlashcardId)
+    : question(question),
+      answer(answer),
+      questionFile(questionFile),
+      answerFile(answerFile),
+      repetitions(repetitions),
+      interval(interval),
+      EFactor(EFactor),
+      lastReview(lastReview),
+      next_review_date(next_review_date),
+      userFlashcardId(userFlashcardId) {}
 
 double Flashcard::calculateEFactor(double EFactor, int quality) {
   return std::max(
@@ -60,6 +80,10 @@ std::string Flashcard::getQuestionFile() const { return questionFile; }
 
 std::string Flashcard::getAnswerFile() const { return answerFile; }
 
+void Flashcard::setUserFlashcardId(int id) { userFlashcardId = id; }
+
+int Flashcard::getUserFlashcardId() const { return userFlashcardId; }
+
 void Flashcard::setQuestionFile(const std::string& fileName) {
   this->questionFile = fileName;
 }
@@ -74,6 +98,10 @@ std::chrono::system_clock::time_point Flashcard::getLastReview() const {
 
 void Flashcard::setLastReview(std::chrono::system_clock::time_point time) {
   lastReview = time;
+}
+
+std::chrono::system_clock::time_point Flashcard::getNextReviewDate() const {
+  return next_review_date;
 }
 
 bool Flashcard::isNew() const { return repetitions == 0; }

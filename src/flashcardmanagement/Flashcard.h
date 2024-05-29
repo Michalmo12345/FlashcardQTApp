@@ -14,11 +14,18 @@ class Flashcard {
   double EFactor;            // easiness factor
   std::chrono::system_clock::time_point lastReview;
   std::chrono::system_clock::time_point next_review_date;
+  int userFlashcardId;
 
  public:
   Flashcard(std::string question, std::string answer);
   Flashcard(std::string question, std::string answer, std::string questionFile,
             std::string answerFile);
+  Flashcard(std::string question, std::string answer, std::string questionFile,
+            std::string answerFile, double EFactor, unsigned int interval,
+            unsigned int repetitions,
+            std::chrono::system_clock::time_point lastReview,
+            std::chrono::system_clock::time_point next_review_date,
+            int userFlashcardId);
   double calculateEFactor(double EFactor, int quality);
   unsigned int calculateInterval(unsigned int repetitions, double EFactor);
   void update(unsigned int quality);
@@ -27,6 +34,8 @@ class Flashcard {
   unsigned int getInterval() const;
   std::string getQuestion() const;
   std::string getAnswer() const;
+  void setUserFlashcardId(int id);
+  int getUserFlashcardId() const;
   void setQuestionFile(const std::string& fileName);
   std::string getQuestionFile() const;
   void setAnswerFile(const std::string& fileName);

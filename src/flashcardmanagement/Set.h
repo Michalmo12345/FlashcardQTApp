@@ -28,6 +28,7 @@ class Set {
   void saveToFile() const;
   void saveToDB(const std::string& username) const;
   std::vector<std::shared_ptr<Flashcard>> getFlashcards() const;
+  void updateAllUserFlashcardInDB() const;
 };
 
 std::unique_ptr<Set> readFromFile(const std::string& filename,
@@ -44,3 +45,4 @@ std::string getCurrentDate();
 std::unique_ptr<Set> getSetInfo(const std::string& setName);
 int getSetId(const std::string& setName);
 std::vector<int> getFlashcardIds(int setId);
+std::string to_string(std::chrono::system_clock::time_point tp);
