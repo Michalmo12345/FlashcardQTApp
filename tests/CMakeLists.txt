@@ -1,5 +1,13 @@
 cmake_minimum_required(VERSION 3.10)
 
+find_package(Qt5 REQUIRED COMPONENTS Core)
+
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${Qt5Core_INCLUDE_DIRS})
+include_directories(${CMAKE_SOURCE_DIR}/src)
+include_directories(${CMAKE_SOURCE_DIR}/src/users)
+include_directories(${CMAKE_SOURCE_DIR}/src/flashcardmanagement)
+
 add_executable(
     tests 
     test_main.cc 
@@ -12,7 +20,7 @@ add_executable(
 
   )
 
-target_link_libraries(tests gtest_main ${LIBPQXX_LIBRARIES} pq)
+target_link_libraries(tests gtest_main Qt5::Core ${LIBPQXX_LIBRARIES} pq)
 
 include(GoogleTest)
 gtest_discover_tests(tests)
