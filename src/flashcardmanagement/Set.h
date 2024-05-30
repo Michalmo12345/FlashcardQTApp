@@ -45,4 +45,4 @@ std::string getCurrentDate();
 std::unique_ptr<Set> getSetInfo(const std::string& setName);
 int getSetId(const std::string& setName);
 std::vector<int> getFlashcardIds(int setId);
-std::string to_string(std::chrono::system_clock::time_point tp);
+std::string toString(std::chrono::system_clock::time_point tp);
