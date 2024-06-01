@@ -75,5 +75,6 @@ class MainWindow : public QMainWindow {
   // std::string currentUserName_;
   std::unique_ptr<User> user;
   bool isSuperMemoLearning_ = false;
+  bool isFlashcardValidated_ = false;
   int currentSuperMemoIndex_ = 5;
 };

@@ -36,8 +36,21 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->pushBeginLearning, SIGNAL(clicked()), this,
           SLOT(beginLearning()));
   connect(ui->pushAddFlashcard, SIGNAL(clicked()), this, SLOT(addFlashcard()));
-  connect(ui->nextFlashcardButton, SIGNAL(clicked()), this,
-          SLOT(goToNextFlashcard()));
+  connect(ui->nextFlashcardButton, &QPushButton::clicked, this, [this]() {
+    if (isSuperMemoLearning_) {
+      if (!isFlashcardValidated_) {
+        QMessageBox::warning(this, "Wymagana ocena",
+                             "W trybie super memo musisz ocenić fiszkę");
+        return;
+      } else {
+        goToNextFlashcard();
+        isFlashcardValidated_ = false;
+      }
+    } else {
+      goToNextFlashcard();
+    }
+  });
+
   connect(ui->showAnswerButton, &QPushButton::clicked, this,
           [this]() { showAnswer(); });
   connect(ui->returnButton, SIGNAL(clicked()), this, SLOT(pushContinue()));
@@ -353,7 +366,10 @@ void MainWindow::saveToFile() {
 }
 
 void MainWindow::updateFlashcard(unsigned int quality) {
-  currentCard_->update(quality);
+  isFlashcardValidated_ = true;
+  if (isSuperMemoLearning_) {
+    currentCard_->update(quality);
+  }
 }
 
 void MainWindow::goToStats() {
