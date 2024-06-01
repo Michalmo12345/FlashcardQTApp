@@ -305,8 +305,8 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
     return;
   }
   currentSessionFlashcards_ = pendingFlashcards;
-  currentCard_ = set_->giveRandomCard();
-  updateFileShowButtons();
+  // currentCard_ = set_->giveRandomCard();
+  currentCard_ = currentSessionFlashcards_.back();
   user->startLearningSession();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
@@ -569,12 +569,18 @@ void MainWindow::goToNextSuperMemoFlashcard() {
     return;
   }
   currentCard_ = currentSessionFlashcards_.back();
-  if (currentSuperMemoIndex_ >= 4) {
-    currentSessionFlashcards_.pop_back();
-  } else {
+  currentSessionFlashcards_.pop_back();
+  if (currentSuperMemoIndex_ < 4) {
     currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
                                      currentCard_);
   }
+  // if (currentSuperMemoIndex_ >= 4) {
+  //   currentSessionFlashcards_.pop_back();
+  // } else {
+  //   currentSessionFlashcards_.pop_back();
+  //   currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
+  //                                    currentCard_);
+  // }
   updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
