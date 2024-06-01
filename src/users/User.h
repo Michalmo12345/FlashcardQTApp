@@ -8,11 +8,11 @@ class User {
  private:
   std::string username_;
   std::chrono::time_point<std::chrono::steady_clock> sessionStartTime_;
-  std::chrono::seconds totalLearningTimeToday_;
-  std::chrono::seconds totalLearningTime_;
-  int flashcardsReviewedToday_;
+  std::chrono::seconds totalLearningTimeToday_ = std::chrono::seconds(0);
+  // std::chrono::seconds totalLearningTime_;
+  int flashcardsReviewedToday_ = 0;
   QDate currentLearningDate_;
-  bool currentlyLearning_;
+  bool currentlyLearning_ = false;
 
  public:
   User(const std::string &username);
@@ -26,7 +26,7 @@ class User {
   void endLearningSession();
   void incrementFlashcardsReviewed();
 
-  std::chrono::seconds getTotalLearningTime() const;
+  // std::chrono::seconds getTotalLearningTime() const;
   int getFlashcardsReviewedToday() const;
   std::chrono::seconds getTotalLearningTimeToday() const;
 };

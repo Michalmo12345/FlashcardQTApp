@@ -526,17 +526,15 @@ void MainWindow::updateUserStats() {
   int flashcardsToday = user->getFlashcardsReviewedToday();
   std::chrono::seconds totalLearningTimeToday =
       user->getTotalLearningTimeToday();
-  std::chrono::seconds totalLearningTime = user->getTotalLearningTime();
+  // std::chrono::seconds totalLearningTime = user->getTotalLearningTime();
 
-  QString text = QString(
-                     "Przejrzałeś dzisiaj łącznie %1 fiszek w %2. Łącznie od "
-                     "rejestracji uczyłeś się %3.")
+  QString text = QString("Przejrzałeś dzisiaj łącznie %1 fiszek w %2.")
                      .arg(flashcardsToday)
-                     .arg(formatTime(totalLearningTimeToday))
-                     .arg(formatTime(totalLearningTime));
+                     .arg(formatTime(totalLearningTimeToday));
 
   ui->statsEdit->setText(text);
 }
+
 void MainWindow::onTableItemClicked(int row, int column) {
   if (column == 0) {
     QString setName = ui->tableWidget->item(row, column)->text();

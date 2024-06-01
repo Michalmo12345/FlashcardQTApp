@@ -7,8 +7,7 @@
 
 User::User(const std::string &username)
     : username_(username),
-      totalLearningTimeToday_(0),
-      totalLearningTime_(0),
+      totalLearningTimeToday_(std::chrono::seconds(0)),
       flashcardsReviewedToday_(0),
       currentLearningDate_(QDate::currentDate()) {}
 User::~User() = default;
@@ -73,7 +72,7 @@ void User::endLearningSession() {
   auto sessionDuration = std::chrono::duration_cast<std::chrono::seconds>(
       sessionEndTime - sessionStartTime_);
 
-  totalLearningTime_ += sessionDuration;
+  // totalLearningTime_ += sessionDuration;
 
   if (currentLearningDate_ == QDate::currentDate()) {
     totalLearningTimeToday_ += sessionDuration;
@@ -95,9 +94,9 @@ void User::incrementFlashcardsReviewed() {
   }
 }
 
-std::chrono::seconds User::getTotalLearningTime() const {
-  return totalLearningTime_;
-}
+// std::chrono::seconds User::getTotalLearningTime() const {
+//   return totalLearningTime_;
+// }
 
 int User::getFlashcardsReviewedToday() const {
   return flashcardsReviewedToday_;
