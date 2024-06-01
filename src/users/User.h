@@ -12,6 +12,7 @@ class User {
   std::chrono::seconds totalLearningTime_;
   int flashcardsReviewedToday_;
   QDate currentLearningDate_;
+  bool currentlyLearning_;
 
  public:
   User(const std::string &username);
@@ -27,6 +28,7 @@ class User {
 
   std::chrono::seconds getTotalLearningTime() const;
   int getFlashcardsReviewedToday() const;
+  std::chrono::seconds getTotalLearningTimeToday() const;
 };
 
 bool checkUsernameInDb(const std::string &username);

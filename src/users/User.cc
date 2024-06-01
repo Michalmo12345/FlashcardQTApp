@@ -62,9 +62,13 @@ void User::deleteFromDb() {
 
 void User::startLearningSession() {
   sessionStartTime_ = std::chrono::steady_clock::now();
+  currentlyLearning_ = true;
 }
 
 void User::endLearningSession() {
+  if (!currentlyLearning_) {
+    return;
+  }
   auto sessionEndTime = std::chrono::steady_clock::now();
   auto sessionDuration = std::chrono::duration_cast<std::chrono::seconds>(
       sessionEndTime - sessionStartTime_);
@@ -78,6 +82,7 @@ void User::endLearningSession() {
     totalLearningTimeToday_ = sessionDuration;
     flashcardsReviewedToday_ = 0;
   }
+  currentlyLearning_ = false;
 }
 
 void User::incrementFlashcardsReviewed() {
@@ -96,6 +101,10 @@ std::chrono::seconds User::getTotalLearningTime() const {
 
 int User::getFlashcardsReviewedToday() const {
   return flashcardsReviewedToday_;
+}
+
+std::chrono::seconds User::getTotalLearningTimeToday() const {
+  return totalLearningTimeToday_;
 }
 
 bool checkUsernameInDb(const std::string &username) {

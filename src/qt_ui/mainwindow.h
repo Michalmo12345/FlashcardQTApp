@@ -24,6 +24,7 @@ class MainWindow : public QMainWindow {
   MainWindow(QWidget* parent = nullptr);
   ~MainWindow();
   void setUser(const std::string& username);
+
  signals:
   void switchUserSuccess();
  private slots:
@@ -61,6 +62,8 @@ class MainWindow : public QMainWindow {
   void updateStatsWidget();
   void goToNextSuperMemoFlashcard();
   void updateFileShowButtons();
+  QString formatTime(std::chrono::seconds time);
+  void updateUserStats();
   Ui::MainWindow* ui;
   std::unique_ptr<Set> set_;
   std::vector<std::shared_ptr<Flashcard>> currentSessionFlashcards_;

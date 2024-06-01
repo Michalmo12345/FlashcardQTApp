@@ -172,6 +172,7 @@ void MainWindow::seeAllSets() {
 
 void MainWindow::goToSMSets() {
   navigateToPage(UserPage);
+  updateUserStats();
   updateStatsWidget();
 }
 
@@ -269,6 +270,7 @@ void MainWindow::beginLearning() {
   updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
+  user->startLearningSession();
 }
 
 void MainWindow::beginSuperMemoLearning(const QString &setName) {
@@ -292,6 +294,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   currentSessionFlashcards_ = pendingFlashcards;
   currentCard_ = set_->giveRandomCard();
   updateFileShowButtons();
+  user->startLearningSession();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
 }
@@ -299,6 +302,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
 void MainWindow::goToNextFlashcard() {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
+  user->incrementFlashcardsReviewed();
   if (lastClickedButton_ != nullptr) {
     lastClickedButton_->setStyleSheet("");
     lastClickedButton_ = nullptr;
@@ -307,7 +311,6 @@ void MainWindow::goToNextFlashcard() {
     goToNextSuperMemoFlashcard();
     return;
   }
-  // auto card = set_.giveRandomCard();
   currentCard_ = set_->giveRandomCard();
   updateFileShowButtons();
   ui->questionBrowser->setText(
@@ -508,7 +511,32 @@ void MainWindow::updateStatsWidget() {
     ui->tableWidget->setItem(i, 3, pendingCountItem);
   }
 }
+QString MainWindow::formatTime(std::chrono::seconds secs) {
+  int hours = std::chrono::duration_cast<std::chrono::hours>(secs).count();
+  secs -= std::chrono::hours(hours);
+  int minutes = std::chrono::duration_cast<std::chrono::minutes>(secs).count();
+  secs -= std::chrono::minutes(minutes);
+  int seconds = secs.count();
+  return QString("%1 godz. %2 min. %3 sek.")
+      .arg(hours)
+      .arg(minutes)
+      .arg(seconds);
+}
+void MainWindow::updateUserStats() {
+  int flashcardsToday = user->getFlashcardsReviewedToday();
+  std::chrono::seconds totalLearningTimeToday =
+      user->getTotalLearningTimeToday();
+  std::chrono::seconds totalLearningTime = user->getTotalLearningTime();
 
+  QString text = QString(
+                     "Przejrzałeś dzisiaj łącznie %1 fiszek w %2. Łącznie od "
+                     "rejestracji uczyłeś się %3.")
+                     .arg(flashcardsToday)
+                     .arg(formatTime(totalLearningTimeToday))
+                     .arg(formatTime(totalLearningTime));
+
+  ui->statsEdit->setText(text);
+}
 void MainWindow::onTableItemClicked(int row, int column) {
   if (column == 0) {
     QString setName = ui->tableWidget->item(row, column)->text();
@@ -522,6 +550,7 @@ void MainWindow::goToNextSuperMemoFlashcard() {
                              "Wszystkie fiszki zostały powtórzone.");
 
     set_->updateAllUserFlashcardInDB();
+    user->endLearningSession();
     goToSMSets();
     return;
   }
