@@ -31,6 +31,8 @@ void saveUsersSetToDb(int setId, int userId) {
 
     txn.commit();
     std::cout << "User set saved successfully to database." << std::endl;
+    QMessageBox::information(nullptr, "Sukces",
+                             "Pomyślnie zapisano zestaw do ulubionych.");
   } catch (const std::exception &e) {
     std::cerr << e.what() << std::endl;
   }

@@ -307,6 +307,7 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
   currentSessionFlashcards_ = pendingFlashcards;
   // currentCard_ = set_->giveRandomCard();
   currentCard_ = currentSessionFlashcards_.back();
+  updateFileShowButtons();
   user->startLearningSession();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
@@ -559,6 +560,11 @@ void MainWindow::onTableItemClicked(int row, int column) {
 }
 
 void MainWindow::goToNextSuperMemoFlashcard() {
+  currentSessionFlashcards_.pop_back();
+  if (currentSuperMemoIndex_ < 4) {
+    currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
+                                     currentCard_);
+  }
   if (currentSessionFlashcards_.empty()) {
     QMessageBox::information(this, "Zakończono sesję nauki",
                              "Wszystkie fiszki zostały powtórzone.");
@@ -569,18 +575,7 @@ void MainWindow::goToNextSuperMemoFlashcard() {
     return;
   }
   currentCard_ = currentSessionFlashcards_.back();
-  currentSessionFlashcards_.pop_back();
-  if (currentSuperMemoIndex_ < 4) {
-    currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
-                                     currentCard_);
-  }
-  // if (currentSuperMemoIndex_ >= 4) {
-  //   currentSessionFlashcards_.pop_back();
-  // } else {
-  //   currentSessionFlashcards_.pop_back();
-  //   currentSessionFlashcards_.insert(currentSessionFlashcards_.begin(),
-  //                                    currentCard_);
-  // }
+
   updateFileShowButtons();
   ui->questionBrowser->setText(
       QString::fromStdString(currentCard_->getQuestion()));
