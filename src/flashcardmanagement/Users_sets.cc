@@ -94,6 +94,10 @@ std::unique_ptr<Set> getUserSetByName(const std::string &setName,
 
     std::string setPath = "flashcardFiles/" + setName;
 
+    if (!std::filesystem::exists("flashcardFiles/")) {
+      std::filesystem::create_directory("flashcardFiles/");
+    }
+
     if (!std::filesystem::exists(setPath)) {
       std::filesystem::create_directory(setPath);
     }

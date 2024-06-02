@@ -368,9 +368,15 @@ void MainWindow::saveToDB() {
     }
     else {
       set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-      set_->saveToDB(user->getUsername());
-      QMessageBox::information(this, "Zapisano",
-                              "Zestaw został zapisany do bazy danych.");
+      if (set_->checkSetNameInDb()) {
+        set_->saveToDB(user->getUsername());
+        QMessageBox::information(this, "Zapisano",
+                                "Zestaw został zapisany do bazy danych.");
+      }
+      else {
+        QMessageBox::information(this, "Istniejąca nazwa",
+                                "Istnieje już zestaw o tej nazwie. Wybierz inną nazwę.");
+      }
     }
   }
   else {

@@ -157,6 +157,23 @@ void Set::updateAllUserFlashcardInDB() const {
   }
 }
 
+bool Set::checkSetNameInDb() const {
+  try {
+    auto conn = connectToDatabase();
+    pqxx::nontransaction N(*conn);
+    std::string setNameCheck =
+        "SELECT * \
+         FROM Set \
+         WHERE Name = $1";
+
+    auto result = N.exec_params(setNameCheck, name_);
+    return result.empty();
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return false;
+  }
+}
+
 std::vector<std::shared_ptr<Flashcard>> Set::getFlashcards() const {
   return flashcards_;
 }
@@ -207,6 +224,10 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     auto conn = connectToDatabase();
     pqxx::nontransaction N(*conn);
     std::string setPath = "flashcardFiles/" + setName;
+
+    if (!std::filesystem::exists("flashcardFiles/")) {
+      std::filesystem::create_directory("flashcardFiles/");
+    }
 
     if (!std::filesystem::exists(setPath)) {
       std::filesystem::create_directory(setPath);
