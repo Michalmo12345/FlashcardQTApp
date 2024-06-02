@@ -95,6 +95,7 @@ std::unique_ptr<Set> getUserSetByName(const std::string &setName,
     return set;
   } catch (const std::exception &e) {
     std::cerr << e.what() << std::endl;
+    return nullptr;
   }
 }
 
