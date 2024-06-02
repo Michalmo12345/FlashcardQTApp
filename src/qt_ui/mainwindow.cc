@@ -277,15 +277,21 @@ void MainWindow::readSetFromFile() {
 }
 
 void MainWindow::beginLearning() {
-  ui->questionBrowser->clear();
-  ui->answerBrowser->clear();
-  navigateToPage(LearningPage);
-  isSuperMemoLearning_ = false;
-  currentCard_ = set_->giveRandomCard();
-  updateFileShowButtons();
-  ui->questionBrowser->setText(
-      QString::fromStdString(currentCard_->getQuestion()));
-  user->startLearningSession();
+  if (set_->getFlashcards().empty()) {
+    QMessageBox::information(this, "Brak fiszek",
+                          "By zacząć naukę dodaj fiszkę.");
+  }
+  else {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
+    navigateToPage(LearningPage);
+    isSuperMemoLearning_ = false;
+    currentCard_ = set_->giveRandomCard();
+    updateFileShowButtons();
+    ui->questionBrowser->setText(
+        QString::fromStdString(currentCard_->getQuestion()));
+    user->startLearningSession();
+  }
 }
 
 void MainWindow::beginSuperMemoLearning(const QString &setName) {
@@ -356,10 +362,16 @@ void MainWindow::addFlashcard() {
 
 void MainWindow::saveToDB() {
   if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
-    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_->saveToDB(user->getUsername());
-    QMessageBox::information(this, "Zapisano",
-                            "Zestaw został zapisany do bazy danych.");
+    if (set_->getFlashcards().empty()) {
+      QMessageBox::information(this, "Brak fiszek",
+                            "By zapisać zestaw do bazy danych dodaj fiszkę.");
+    }
+    else {
+      set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+      set_->saveToDB(user->getUsername());
+      QMessageBox::information(this, "Zapisano",
+                              "Zestaw został zapisany do bazy danych.");
+    }
   }
   else {
     QMessageBox::information(this, "Brak nazwy",
@@ -369,10 +381,16 @@ void MainWindow::saveToDB() {
 
 void MainWindow::saveToFile() {
   if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
-    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-    set_->saveToFile();
-    QMessageBox::information(this, "Zapisano",
-                            "Zestaw został zapisany do pliku.");
+    if (set_->getFlashcards().empty()) {
+      QMessageBox::information(this, "Brak fiszek",
+                            "By zapisać zestaw do pliku dodaj fiszkę.");
+    }
+    else {
+      set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+      set_->saveToFile();
+      QMessageBox::information(this, "Zapisano",
+                              "Zestaw został zapisany do pliku.");
+    }
   }
   else {
     QMessageBox::information(this, "Brak nazwy",
