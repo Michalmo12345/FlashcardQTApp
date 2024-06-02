@@ -355,17 +355,29 @@ void MainWindow::addFlashcard() {
 }
 
 void MainWindow::saveToDB() {
-  set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToDB(user->getUsername());
-  QMessageBox::information(this, "Zapisano",
-                           "Zestaw został zapisany do bazy danych.");
+  if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
+    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+    set_->saveToDB(user->getUsername());
+    QMessageBox::information(this, "Zapisano",
+                            "Zestaw został zapisany do bazy danych.");
+  }
+  else {
+    QMessageBox::information(this, "Brak nazwy",
+                            "By zapisać zestaw do bazy danych nadaj nazwę.");
+  }
 }
 
 void MainWindow::saveToFile() {
-  set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToFile();
-  QMessageBox::information(this, "Zapisano",
-                           "Zestaw został zapisany do pliku.");
+  if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
+    set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+    set_->saveToFile();
+    QMessageBox::information(this, "Zapisano",
+                            "Zestaw został zapisany do pliku.");
+  }
+  else {
+    QMessageBox::information(this, "Brak nazwy",
+                            "By zapisać zestaw do pliku nadaj nazwę.");
+  }
 }
 
 void MainWindow::updateFlashcard(unsigned int quality) {
