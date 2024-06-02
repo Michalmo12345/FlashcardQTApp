@@ -50,11 +50,8 @@ std::unique_ptr<pqxx::connection> connectToDatabase() {
         // wersja do testowania na lokalnej bazie danych
         // auto C = std::make_unique<pqxx::connection>("dbname = postgres user = admin password = admin hostaddr = 127.0.0.1 port = 5433");
         
-        std::cout << "db string: " << connect_string<< std::endl;
         auto C = std::make_unique<pqxx::connection>(connect_string);
-        if (C->is_open()) {
-            std::cout << "Opened database successfully: " << C->dbname() << std::endl;
-        } else {
+        if (!C->is_open()) {
             std::cerr << "Can't open database" << std::endl;
             exit(1);
         }

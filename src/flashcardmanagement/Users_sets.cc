@@ -30,7 +30,6 @@ void saveUsersSetToDb(int setId, int userId) {
     }
 
     txn.commit();
-    std::cout << "User set saved successfully to database." << std::endl;
     QMessageBox::information(nullptr, "Sukces",
                              "Pomyślnie zapisano zestaw do ulubionych.");
   } catch (const std::exception &e) {
@@ -57,7 +56,6 @@ void deleteUserSetFromDB(int setId, int userId) {
     txn.exec_params(deleteUserSetSql, usersSetId);
 
     txn.commit();
-    std::cout << "User set deleted successfully from database." << std::endl;
     QMessageBox::information(nullptr, "Sukces",
                              "Usunięto z obserwowanych zestawów.");
   } catch (const std::exception &e) {

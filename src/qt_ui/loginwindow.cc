@@ -65,20 +65,22 @@ void LoginWindow::changeUserName() {
 }
 
 void LoginWindow::onUserCreated(const QString &username) {
-  qDebug() << "New user created with username:" << username;
   User newUser(username.toStdString());
   newUser.saveToDb();
   ui->dbUsersWidget->addItem(username);
+  QMessageBox::information(this, "Nowy użytkownik",
+                              "Utworzono nowego użytkownika.");
 }
 
 void LoginWindow::onUserNameChanged(const QString &username) {
-  qDebug() << "New username: " << username;
   QListWidgetItem *selectedItem = ui->dbUsersWidget->currentItem();
   if (selectedItem) {
     std::string oldUsername = selectedItem->text().toStdString();
     User user(oldUsername);
     user.updateInDb(username.toStdString());
     selectedItem->setText(username);
+    QMessageBox::information(this, "Zmieniono nazwę",
+                              "Nazwa użytkownika została zaktualizowana.");
   }
 }
 
@@ -92,13 +94,14 @@ void LoginWindow::deleteUser() {
 
   msgBox.exec();
   if (msgBox.clickedButton() == buttonYes) {
-    qDebug() << "User deletion confirmed.";
     QListWidgetItem *selectedItem = ui->dbUsersWidget->currentItem();
     if (selectedItem) {
       std::string username = selectedItem->text().toStdString();
       User user(username);
       user.deleteFromDb();
       delete selectedItem;
+      QMessageBox::information(this, "Usunięto",
+                              "Użytkownik został usunięty.");
     }
     // Add deleteing the user from the database
     // Update any UI components such as clearing a lineEdit, refreshing a list,
