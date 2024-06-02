@@ -146,8 +146,8 @@ void Set::updateAllUserFlashcardInDB() const {
     for (const auto& card : flashcards_) {
       txn.exec_params(
           update_user_flashcard, card->getEFactor(), card->getInterval(),
-          card->getRepetitions(), to_string(card->getLastReview()),
-          to_string(card->getNextReviewDate()), card->getUserFlashcardId());
+          card->getRepetitions(), toString(card->getLastReview()),
+          toString(card->getNextReviewDate()), card->getUserFlashcardId());
     }
 
     txn.commit();
@@ -354,7 +354,7 @@ std::vector<int> getFlashcardIds(int setId) {
   }
 }
 
-std::string to_string(std::chrono::system_clock::time_point tp) {
+std::string toString(std::chrono::system_clock::time_point tp) {
   std::time_t time = std::chrono::system_clock::to_time_t(tp);
   std::tm* tm = std::localtime(&time);
   std::ostringstream oss;

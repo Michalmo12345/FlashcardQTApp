@@ -1,4 +1,5 @@
 #include "../src/flashcardmanagement/Set.h"
+#include <iostream>
 #include <gtest/gtest.h>
 
 TEST(SetTest, BasicAssertions) {
@@ -35,5 +36,19 @@ TEST(SetTest, GetCard){
     EXPECT_EQ(set.getCard(0), card1);
     EXPECT_EQ(set.getCard(1), card2);
     EXPECT_EQ(set.getCard(2), nullptr);
+}
+
+TEST(SetTest, ToString){
+
+    std::tm tm = {};
+    tm.tm_year = 2024 - 1900;
+    tm.tm_mon = 4;
+    tm.tm_mday = 30;
+    tm.tm_hour = 12;
+    tm.tm_min = 0;
+    tm.tm_sec = 0;
+
+    std::chrono::system_clock::time_point time_point = std::chrono::system_clock::from_time_t(std::mktime(&tm));
+    EXPECT_EQ(toString(time_point), "2024-05-30 13:00:00");
 }
 
