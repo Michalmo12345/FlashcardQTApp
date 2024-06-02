@@ -29,7 +29,7 @@
 }</string>
       </property>
       <property name="currentIndex">
-       <number>0</number>
+       <number>1</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -116,6 +116,13 @@
          <widget class="QPushButton" name="dbCardButton">
           <property name="text">
            <string>Wybierz zestaw</string>
+          </property>
+         </widget>
+        </item>
+        <item row="2" column="2">
+         <widget class="QPushButton" name="stopSubscribingButton">
+          <property name="text">
+           <string>Przestań obserwować zestaw</string>
           </property>
          </widget>
         </item>
@@ -582,7 +589,6 @@ background-color: rgb(53, 132, 228);
             <property name="font">
              <font>
               <family>Ubuntu Mono</family>
-              <weight>50</weight>
               <bold>false</bold>
              </font>
             </property>

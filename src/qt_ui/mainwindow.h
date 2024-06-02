@@ -57,6 +57,7 @@ class MainWindow : public QMainWindow {
   void beginSuperMemoLearning(const QString& setName);
   void onTableItemClicked(int row, int column);
   void goToSMSets();
+  void deleteSelectedSet();
 
  private:
   void updateStatsWidget();

@@ -155,6 +155,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
   connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this,
           SLOT(onTableItemClicked(int, int)));
+  connect(ui->stopSubscribingButton, SIGNAL(clicked()), this, SLOT(deleteSelectedSet()));
 }
 
 void MainWindow::navigateToPage(Page page) {
@@ -164,6 +165,7 @@ void MainWindow::findSets() {
   navigateToPage(ChooseSetPage);
   auto db_names = getSubscribedSetNamesFromDb(getUserId(user->getUsername()));
   ui->dbSetsList->clear();
+  ui->infoSetText->clear();
   for (auto name : db_names) {
     ui->dbSetsList->addItem(QString::fromStdString(name));
   }
@@ -592,4 +594,12 @@ void MainWindow::updateFileShowButtons() {
   } else {
     ui->answerFileShowButton->setVisible(true);
   }
+}
+
+void MainWindow::deleteSelectedSet() {
+  QString setName = ui->dbSetsList->currentItem()->text();
+  int setId = getSetId(setName.toStdString());
+  int userId = getUserId(user->getUsername());
+  deleteUserSetFromDB(setId, userId);
+  findSets();
 }
