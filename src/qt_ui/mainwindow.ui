@@ -29,7 +29,7 @@
 }</string>
       </property>
       <property name="currentIndex">
-       <number>2</number>
+       <number>3</number>
       </property>
       <widget class="QWidget" name="page">
        <layout class="QGridLayout" name="gridLayout_2">
@@ -61,6 +61,13 @@
               </property>
               <property name="text">
                <string>Tryb nauki swobodnej</string>
+              </property>
+             </widget>
+            </item>
+            <item>
+             <widget class="QPushButton" name="observeSetButton">
+              <property name="text">
+               <string>Zaobserwuj zestawy</string>
               </property>
              </widget>
             </item>
@@ -755,6 +762,7 @@ background-color: rgb(53, 132, 228);
      <string>Widok</string>
     </property>
     <addaction name="actionFullScreen"/>
+    <addaction name="actionReturnToMain"/>
    </widget>
    <widget class="QMenu" name="menuPomoc">
     <property name="title">
@@ -797,6 +805,11 @@ background-color: rgb(53, 132, 228);
   <action name="actionAllSets">
    <property name="text">
     <string>Zestawy użytkowników</string>
+   </property>
+  </action>
+  <action name="actionReturnToMain">
+   <property name="text">
+    <string>Wróć do strony głównej</string>
    </property>
   </action>
  </widget>

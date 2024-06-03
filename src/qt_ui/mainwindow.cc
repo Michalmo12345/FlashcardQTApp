@@ -30,6 +30,7 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->findSetsButton, SIGNAL(clicked()), this, SLOT(findSets()));
   connect(ui->pushContinueButton, SIGNAL(clicked()), this,
           SLOT(pushContinue()));
+  connect(ui->observeSetButton, SIGNAL(clicked()), this, SLOT(seeAllSets()));
   connect(ui->usersFavButton, SIGNAL(clicked()), this, SLOT(goToSMSets()));
   connect(ui->dbCardButton, SIGNAL(clicked()), this, SLOT(readSetFromDB()));
   connect(ui->fileCardButton, SIGNAL(clicked()), this, SLOT(readSetFromFile()));
@@ -118,6 +119,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->actionProfile, &QAction::triggered, this, &MainWindow::goToStats);
   connect(ui->actionFullScreen, &QAction::triggered, this,
           &MainWindow::toggleFullScreen);
+  connect(ui->actionReturnToMain, &QAction::triggered, this,
+          [this]() { navigateToPage(HomePage); });
   connect(ui->actionInfo, &QAction::triggered, this, &MainWindow::showInfo);
   connect(ui->actionExit, &QAction::triggered, this, &MainWindow::close);
   connect(ui->actionSwitchUser, &QAction::triggered, this,

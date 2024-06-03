@@ -34,9 +34,8 @@ void User::updateInDb(const std::string &oldUsername) {
     pqxx::work txn(*conn);
     std::string query =
         "UPDATE app_user SET username = $1 WHERE username = $2;";
-    txn.exec_params(query, oldUsername,
-                    username_);  // username_ is the new username, oldUsername
-                                 // is the current username
+    txn.exec_params(query, oldUsername, username_);
+
     txn.commit();
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
@@ -48,7 +47,7 @@ void User::deleteFromDb() {
     auto conn = connectToDatabase();
     pqxx::work txn(*conn);
     std::string query = "DELETE FROM app_user WHERE username = $1;";
-    txn.exec_params(query, username_);  // Securely pass the username parameter
+    txn.exec_params(query, username_);
     txn.commit();
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;

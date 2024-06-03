@@ -327,12 +327,11 @@ void downloadFileFromDatabase(pqxx::nontransaction& N,
   if (!result.empty()) {
     pqxx::binarystring bytea_data(result[0][0]);
 
-    // Utwórz strumień do zapisu danych do pliku
     std::ofstream file(fileName, std::ios::binary);
-    // Zapisz dane bytea do pliku
+
     file.write(reinterpret_cast<const char*>(bytea_data.data()),
                bytea_data.size());
-    // Zamknij plik
+
     file.close();
 
   } else {

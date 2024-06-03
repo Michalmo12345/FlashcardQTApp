@@ -23,10 +23,6 @@ LoginWindow::LoginWindow(QWidget *parent)
   for (auto name : userNames) {
     ui->dbUsersWidget->addItem(QString::fromStdString(name));
   }
-  // QListWidgetItem *selectedItem = ui->dbUsersWidget->currentItem();
-  // if (selectedItem) {
-  //     this->selectedUser_ = selectedItem->text();
-  // }
   connect(ui->chooseButton, &QPushButton::clicked, this, &LoginWindow::login);
   connect(ui->createNewButton, &QPushButton::clicked, this,
           &LoginWindow::createNewUser);
@@ -69,7 +65,7 @@ void LoginWindow::onUserCreated(const QString &username) {
   newUser.saveToDb();
   ui->dbUsersWidget->addItem(username);
   QMessageBox::information(this, "Nowy użytkownik",
-                              "Utworzono nowego użytkownika.");
+                           "Utworzono nowego użytkownika.");
 }
 
 void LoginWindow::onUserNameChanged(const QString &username) {
@@ -80,7 +76,7 @@ void LoginWindow::onUserNameChanged(const QString &username) {
     user.updateInDb(username.toStdString());
     selectedItem->setText(username);
     QMessageBox::information(this, "Zmieniono nazwę",
-                              "Nazwa użytkownika została zaktualizowana.");
+                             "Nazwa użytkownika została zaktualizowana.");
   }
 }
 
@@ -100,12 +96,8 @@ void LoginWindow::deleteUser() {
       User user(username);
       user.deleteFromDb();
       delete selectedItem;
-      QMessageBox::information(this, "Usunięto",
-                              "Użytkownik został usunięty.");
+      QMessageBox::information(this, "Usunięto", "Użytkownik został usunięty.");
     }
-    // Add deleteing the user from the database
-    // Update any UI components such as clearing a lineEdit, refreshing a list,
-    // etc.
   } else {
     qDebug() << "User deletion cancelled.";
   }

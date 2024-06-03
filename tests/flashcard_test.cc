@@ -49,7 +49,8 @@ TEST(FlashcardTest, FlashcardStatus) {
 
 TEST(FlashcardTest, FullConstructor) {
   Flashcard flashcard("What is the capital of France?", "Paris", "question.txt",
-                      "answer.txt", 1.1, 2, 3, std::chrono::system_clock::now(), std::chrono::system_clock::now(), 3);
+                      "answer.txt", 1.1, 2, 3, std::chrono::system_clock::now(),
+                      std::chrono::system_clock::now(), 3);
   EXPECT_EQ(flashcard.getEFactor(), 1.1);
   EXPECT_EQ(flashcard.getRepetitions(), 3);
   EXPECT_EQ(flashcard.getInterval(), 2);
