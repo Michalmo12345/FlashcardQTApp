@@ -29,6 +29,7 @@ class Set {
   void saveToDB(const std::string& username) const;
   std::vector<std::shared_ptr<Flashcard>> getFlashcards() const;
   void updateAllUserFlashcardInDB() const;
+  bool checkSetNameInDb() const;
 };
 
 std::unique_ptr<Set> readFromFile(const std::string& filename,

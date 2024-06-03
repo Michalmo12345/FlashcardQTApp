@@ -155,6 +155,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
   connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this,
           SLOT(onTableItemClicked(int, int)));
+  connect(ui->stopSubscribingButton, SIGNAL(clicked()), this,
+          SLOT(deleteSelectedSet()));
 }
 
 void MainWindow::navigateToPage(Page page) {
@@ -164,6 +166,7 @@ void MainWindow::findSets() {
   navigateToPage(ChooseSetPage);
   auto db_names = getSubscribedSetNamesFromDb(getUserId(user->getUsername()));
   ui->dbSetsList->clear();
+  ui->infoSetText->clear();
   for (auto name : db_names) {
     ui->dbSetsList->addItem(QString::fromStdString(name));
   }
@@ -275,15 +278,20 @@ void MainWindow::readSetFromFile() {
 }
 
 void MainWindow::beginLearning() {
-  ui->questionBrowser->clear();
-  ui->answerBrowser->clear();
-  navigateToPage(LearningPage);
-  isSuperMemoLearning_ = false;
-  currentCard_ = set_->giveRandomCard();
-  updateFileShowButtons();
-  ui->questionBrowser->setText(
-      QString::fromStdString(currentCard_->getQuestion()));
-  user->startLearningSession();
+  if (set_->getFlashcards().empty()) {
+    QMessageBox::information(this, "Brak fiszek",
+                             "By zacząć naukę dodaj fiszkę.");
+  } else {
+    ui->questionBrowser->clear();
+    ui->answerBrowser->clear();
+    navigateToPage(LearningPage);
+    isSuperMemoLearning_ = false;
+    currentCard_ = set_->giveRandomCard();
+    updateFileShowButtons();
+    ui->questionBrowser->setText(
+        QString::fromStdString(currentCard_->getQuestion()));
+    user->startLearningSession();
+  }
 }
 
 void MainWindow::beginSuperMemoLearning(const QString &setName) {
@@ -353,17 +361,44 @@ void MainWindow::addFlashcard() {
 }
 
 void MainWindow::saveToDB() {
-  set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToDB(user->getUsername());
-  QMessageBox::information(this, "Zapisano",
-                           "Zestaw został zapisany do bazy danych.");
+  if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
+    if (set_->getFlashcards().empty()) {
+      QMessageBox::information(
+          this, "Brak fiszek",
+          "By zapisać zestaw do bazy danych dodaj fiszkę.");
+    } else {
+      set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+      if (set_->checkSetNameInDb()) {
+        set_->saveToDB(user->getUsername());
+        QMessageBox::information(this, "Zapisano",
+                                 "Zestaw został zapisany do bazy danych.");
+      } else {
+        QMessageBox::information(
+            this, "Istniejąca nazwa",
+            "Istnieje już zestaw o tej nazwie. Wybierz inną nazwę.");
+      }
+    }
+  } else {
+    QMessageBox::information(this, "Brak nazwy",
+                             "By zapisać zestaw do bazy danych nadaj nazwę.");
+  }
 }
 
 void MainWindow::saveToFile() {
-  set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
-  set_->saveToFile();
-  QMessageBox::information(this, "Zapisano",
-                           "Zestaw został zapisany do pliku.");
+  if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
+    if (set_->getFlashcards().empty()) {
+      QMessageBox::information(this, "Brak fiszek",
+                               "By zapisać zestaw do pliku dodaj fiszkę.");
+    } else {
+      set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
+      set_->saveToFile();
+      QMessageBox::information(this, "Zapisano",
+                               "Zestaw został zapisany do pliku.");
+    }
+  } else {
+    QMessageBox::information(this, "Brak nazwy",
+                             "By zapisać zestaw do pliku nadaj nazwę.");
+  }
 }
 
 void MainWindow::updateFlashcard(unsigned int quality) {
@@ -375,6 +410,7 @@ void MainWindow::updateFlashcard(unsigned int quality) {
 
 void MainWindow::goToStats() {
   navigateToPage(UserPage);
+  updateUserStats();
   updateStatsWidget();
 }
 
@@ -528,6 +564,7 @@ void MainWindow::updateStatsWidget() {
     ui->tableWidget->setItem(i, 3, pendingCountItem);
   }
 }
+
 QString MainWindow::formatTime(std::chrono::seconds secs) {
   int hours = std::chrono::duration_cast<std::chrono::hours>(secs).count();
   secs -= std::chrono::hours(hours);
@@ -539,16 +576,15 @@ QString MainWindow::formatTime(std::chrono::seconds secs) {
       .arg(minutes)
       .arg(seconds);
 }
+
 void MainWindow::updateUserStats() {
   int flashcardsToday = user->getFlashcardsReviewedToday();
   std::chrono::seconds totalLearningTimeToday =
       user->getTotalLearningTimeToday();
-  // std::chrono::seconds totalLearningTime = user->getTotalLearningTime();
 
-  QString text = QString("Przejrzałeś dzisiaj łącznie %1 fiszek w %2.")
+  QString text = QString("Przejrzałeś w obecnej sesji łącznie %1 fiszek w %2.")
                      .arg(flashcardsToday)
                      .arg(formatTime(totalLearningTimeToday));
-
   ui->statsEdit->setText(text);
 }
 
@@ -592,4 +628,12 @@ void MainWindow::updateFileShowButtons() {
   } else {
     ui->answerFileShowButton->setVisible(true);
   }
+}
+
+void MainWindow::deleteSelectedSet() {
+  QString setName = ui->dbSetsList->currentItem()->text();
+  int setId = getSetId(setName.toStdString());
+  int userId = getUserId(user->getUsername());
+  deleteUserSetFromDB(setId, userId);
+  findSets();
 }

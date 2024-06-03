@@ -30,9 +30,34 @@ void saveUsersSetToDb(int setId, int userId) {
     }
 
     txn.commit();
-    std::cout << "User set saved successfully to database." << std::endl;
     QMessageBox::information(nullptr, "Sukces",
                              "Pomyślnie zapisano zestaw do ulubionych.");
+  } catch (const std::exception &e) {
+    std::cerr << e.what() << std::endl;
+  }
+}
+
+void deleteUserSetFromDB(int setId, int userId) {
+  try {
+    // tutaj usuwanie zamiast dodawania
+    auto conn = connectToDatabase();
+    pqxx::work txn(*conn);
+    std::string userSetIdSql =
+        "SELECT id FROM users_sets WHERE set_id = $1 and user_id = $2";
+    std::string deleteUserFlaschardSql =
+        "DELETE FROM user_flashcard WHERE users_sets_id = $1";
+    std::string deleteUserSetSql =
+        "DELETE FROM users_sets WHERE id = $1";
+    pqxx::result result = txn.exec_params(userSetIdSql, setId, userId);
+
+    int usersSetId = result[0][0].as<int>();
+    txn.exec_params(deleteUserFlaschardSql, usersSetId);
+
+    txn.exec_params(deleteUserSetSql, usersSetId);
+
+    txn.commit();
+    QMessageBox::information(nullptr, "Sukces",
+                             "Usunięto z obserwowanych zestawów.");
   } catch (const std::exception &e) {
     std::cerr << e.what() << std::endl;
   }
@@ -66,6 +91,10 @@ std::unique_ptr<Set> getUserSetByName(const std::string &setName,
     std::unique_ptr<Set> set = std::make_unique<Set>(setName);
 
     std::string setPath = "flashcardFiles/" + setName;
+
+    if (!std::filesystem::exists("flashcardFiles/")) {
+      std::filesystem::create_directory("flashcardFiles/");
+    }
 
     if (!std::filesystem::exists(setPath)) {
       std::filesystem::create_directory(setPath);

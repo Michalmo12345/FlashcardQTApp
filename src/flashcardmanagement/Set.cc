@@ -70,7 +70,6 @@ void Set::saveToFile() const {
       file << card->getQuestion() << "," << card->getAnswer() << std::endl;
     }
     file.close();
-    std::cout << "Zapisano zestaw do pliku: " << path << std::endl;
   } else {
     std::cerr << "Wystąpił błąd przy zapisie: " << path << std::endl;
   }
@@ -128,7 +127,6 @@ void Set::saveToDB(const std::string& username) const {
     }
 
     txn.commit();
-    std::cout << "Set saved successfully to database." << std::endl;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
   }
@@ -151,9 +149,25 @@ void Set::updateAllUserFlashcardInDB() const {
     }
 
     txn.commit();
-    std::cout << "Set updated successfully to database." << std::endl;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
+  }
+}
+
+bool Set::checkSetNameInDb() const {
+  try {
+    auto conn = connectToDatabase();
+    pqxx::nontransaction N(*conn);
+    std::string setNameCheck =
+        "SELECT * \
+         FROM Set \
+         WHERE Name = $1";
+
+    auto result = N.exec_params(setNameCheck, name_);
+    return result.empty();
+  } catch (const std::exception& e) {
+    std::cerr << e.what() << std::endl;
+    return false;
   }
 }
 
@@ -178,7 +192,6 @@ std::unique_ptr<Set> readFromFile(const std::string& filename,
       }
     }
     file.close();
-    std::cout << "Wczytano zestaw z pliku: sets/" << filename << std::endl;
   } else {
     std::cerr << "Nie można otworzyć pliku do odczytu: sets/" << filename
               << std::endl;
@@ -208,6 +221,10 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     pqxx::nontransaction N(*conn);
     std::string setPath = "flashcardFiles/" + setName;
 
+    if (!std::filesystem::exists("flashcardFiles/")) {
+      std::filesystem::create_directory("flashcardFiles/");
+    }
+
     if (!std::filesystem::exists(setPath)) {
       std::filesystem::create_directory(setPath);
     }
@@ -236,6 +253,7 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     return set;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
+    return nullptr;
   }
 }
 
@@ -317,7 +335,6 @@ void downloadFileFromDatabase(pqxx::nontransaction& N,
     // Zamknij plik
     file.close();
 
-    std::cout << "Bytea data saved to file successfully." << std::endl;
   } else {
     std::cerr << "No data found." << std::endl;
   }

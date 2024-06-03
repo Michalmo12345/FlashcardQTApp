@@ -57,6 +57,7 @@ class MainWindow : public QMainWindow {
   void beginSuperMemoLearning(const QString& setName);
   void onTableItemClicked(int row, int column);
   void goToSMSets();
+  void deleteSelectedSet();
 
  private:
   void updateStatsWidget();
@@ -72,7 +73,6 @@ class MainWindow : public QMainWindow {
   std::string answerFilePath_;
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
-  // std::string currentUserName_;
   std::unique_ptr<User> user;
   bool isSuperMemoLearning_ = false;
   bool isFlashcardValidated_ = false;

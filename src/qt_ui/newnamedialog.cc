@@ -1,11 +1,11 @@
 #include "newnamedialog.h"
 
+#include <QMessageBox>
 #include <iostream>
 
-#include "users/User.h"
 #include "./ui_newnamedialog.h"
 #include "ui_newnamedialog.h"
-#include <QMessageBox>
+#include "users/User.h"
 
 NewNameDialog::NewNameDialog(QWidget *parent)
     : QDialog(parent), ui(new Ui::NewNameDialog) {
@@ -21,8 +21,9 @@ void NewNameDialog::changeUserName() {
       emit userNameChanged(username);
       this->close();
     } else {
-      QMessageBox::warning(this, tr("Nazwa użytkownika zajęta"),
-                          tr("Wpisz nazwę użytkownika, której jeszcze nie ma"));
+      QMessageBox::warning(
+          this, tr("Nazwa użytkownika zajęta"),
+          tr("Wpisz nazwę użytkownika, której jeszcze nie ma"));
       ui->newUsername->clear();
       ui->newUsername->setFocus();
     }

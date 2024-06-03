@@ -26,7 +26,6 @@ class User {
   void endLearningSession();
   void incrementFlashcardsReviewed();
 
-  // std::chrono::seconds getTotalLearningTime() const;
   int getFlashcardsReviewedToday() const;
   std::chrono::seconds getTotalLearningTimeToday() const;
 };

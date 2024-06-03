@@ -23,7 +23,6 @@ void User::saveToDb() {
     std::string query = "INSERT INTO app_user (username) VALUES ($1);";
     txn.exec_params(query, username_);
     txn.commit();
-    std::cout << "Dodano użytkownika: " << username_ << std::endl;
   } catch (const std::exception &e) {
     std::cerr << e.what() << std::endl;
   }
@@ -39,8 +38,6 @@ void User::updateInDb(const std::string &oldUsername) {
                     username_);  // username_ is the new username, oldUsername
                                  // is the current username
     txn.commit();
-    std::cout << "Updated user from: " << oldUsername << " to: " << username_
-              << std::endl;
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
@@ -53,7 +50,6 @@ void User::deleteFromDb() {
     std::string query = "DELETE FROM app_user WHERE username = $1;";
     txn.exec_params(query, username_);  // Securely pass the username parameter
     txn.commit();
-    std::cout << "Deleted user: " << username_ << std::endl;
   } catch (const std::exception &e) {
     std::cerr << "Error: " << e.what() << std::endl;
   }
@@ -71,8 +67,6 @@ void User::endLearningSession() {
   auto sessionEndTime = std::chrono::steady_clock::now();
   auto sessionDuration = std::chrono::duration_cast<std::chrono::seconds>(
       sessionEndTime - sessionStartTime_);
-
-  // totalLearningTime_ += sessionDuration;
 
   if (currentLearningDate_ == QDate::currentDate()) {
     totalLearningTimeToday_ += sessionDuration;
@@ -93,10 +87,6 @@ void User::incrementFlashcardsReviewed() {
     totalLearningTimeToday_ = std::chrono::seconds(0);
   }
 }
-
-// std::chrono::seconds User::getTotalLearningTime() const {
-//   return totalLearningTime_;
-// }
 
 int User::getFlashcardsReviewedToday() const {
   return flashcardsReviewedToday_;
@@ -131,10 +121,8 @@ int getUserId(const std::string &username) {
     if (!R.empty()) {
       pqxx::row row = R[0];
       int id = row["id"].as<int>();
-      std::cout << "User ID: " << id << std::endl;
       return id;
     } else {
-      std::cout << "No user found with username: " << username << std::endl;
       return -1;
     }
   } catch (const std::exception &e) {
