@@ -269,17 +269,27 @@ int getSetId(const std::string& setName) {
 }
 
 std::unique_ptr<Set> getSetInfo(const std::string& setName) {
+  std::string creatorName = "";
   std::string set_info =
-      "SELECT set.creation_date, app_user.username \
-                           FROM set JOIN app_user \
-                           ON set.creator_id = app_user.id \
-                           WHERE set.name = $1;";
-
+      "SELECT creation_date, creator_id \
+                           FROM set \
+                           WHERE name = $1;";
   auto conn = connectToDatabase();
   pqxx::nontransaction N(*conn);
   pqxx::result R(N.exec_params(set_info, setName));
-  std::unique_ptr<Set> set = std::make_unique<Set>(
-      setName, R[0][0].as<std::string>(), R[0][1].as<std::string>());
+  auto creationDate = R[0][0].as<std::string>();
+  auto creatorId = R[0][1];
+  if (!creatorId.is_null()) {
+    std::string getUserName =
+        "SELECT username \
+                            FROM app_user \
+                            WHERE id = $1;";
+    pqxx::result R(N.exec_params(getUserName, creatorId.as<int>()));
+    creatorName = R[0][0].as<std::string>();
+  }
+
+  std::unique_ptr<Set> set =
+      std::make_unique<Set>(setName, creationDate, creatorName);
   return set;
 }
 
@@ -327,12 +337,11 @@ void downloadFileFromDatabase(pqxx::nontransaction& N,
   if (!result.empty()) {
     pqxx::binarystring bytea_data(result[0][0]);
 
-    // Utwórz strumień do zapisu danych do pliku
     std::ofstream file(fileName, std::ios::binary);
-    // Zapisz dane bytea do pliku
+
     file.write(reinterpret_cast<const char*>(bytea_data.data()),
                bytea_data.size());
-    // Zamknij plik
+
     file.close();
 
   } else {

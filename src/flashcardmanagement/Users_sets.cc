@@ -39,15 +39,13 @@ void saveUsersSetToDb(int setId, int userId) {
 
 void deleteUserSetFromDB(int setId, int userId) {
   try {
-    // tutaj usuwanie zamiast dodawania
     auto conn = connectToDatabase();
     pqxx::work txn(*conn);
     std::string userSetIdSql =
         "SELECT id FROM users_sets WHERE set_id = $1 and user_id = $2";
     std::string deleteUserFlaschardSql =
         "DELETE FROM user_flashcard WHERE users_sets_id = $1";
-    std::string deleteUserSetSql =
-        "DELETE FROM users_sets WHERE id = $1";
+    std::string deleteUserSetSql = "DELETE FROM users_sets WHERE id = $1";
     pqxx::result result = txn.exec_params(userSetIdSql, setId, userId);
 
     int usersSetId = result[0][0].as<int>();
