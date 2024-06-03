@@ -68,8 +68,6 @@ void User::endLearningSession() {
   auto sessionDuration = std::chrono::duration_cast<std::chrono::seconds>(
       sessionEndTime - sessionStartTime_);
 
-  // totalLearningTime_ += sessionDuration;
-
   if (currentLearningDate_ == QDate::currentDate()) {
     totalLearningTimeToday_ += sessionDuration;
   } else {
@@ -89,10 +87,6 @@ void User::incrementFlashcardsReviewed() {
     totalLearningTimeToday_ = std::chrono::seconds(0);
   }
 }
-
-// std::chrono::seconds User::getTotalLearningTime() const {
-//   return totalLearningTime_;
-// }
 
 int User::getFlashcardsReviewedToday() const {
   return flashcardsReviewedToday_;

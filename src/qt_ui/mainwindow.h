@@ -73,7 +73,6 @@ class MainWindow : public QMainWindow {
   std::string answerFilePath_;
   QPushButton* lastClickedButton_ = nullptr;
   QProcess* ffmpegProcess = nullptr;
-  // std::string currentUserName_;
   std::unique_ptr<User> user;
   bool isSuperMemoLearning_ = false;
   bool isFlashcardValidated_ = false;

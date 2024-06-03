@@ -155,7 +155,8 @@ MainWindow::MainWindow(QWidget *parent)
   connect(ui->loadSetButton, SIGNAL(clicked()), this, SLOT(learnFromAllSets()));
   connect(ui->tableWidget, SIGNAL(cellClicked(int, int)), this,
           SLOT(onTableItemClicked(int, int)));
-  connect(ui->stopSubscribingButton, SIGNAL(clicked()), this, SLOT(deleteSelectedSet()));
+  connect(ui->stopSubscribingButton, SIGNAL(clicked()), this,
+          SLOT(deleteSelectedSet()));
 }
 
 void MainWindow::navigateToPage(Page page) {
@@ -279,9 +280,8 @@ void MainWindow::readSetFromFile() {
 void MainWindow::beginLearning() {
   if (set_->getFlashcards().empty()) {
     QMessageBox::information(this, "Brak fiszek",
-                          "By zacząć naukę dodaj fiszkę.");
-  }
-  else {
+                             "By zacząć naukę dodaj fiszkę.");
+  } else {
     ui->questionBrowser->clear();
     ui->answerBrowser->clear();
     navigateToPage(LearningPage);
@@ -363,25 +363,24 @@ void MainWindow::addFlashcard() {
 void MainWindow::saveToDB() {
   if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
     if (set_->getFlashcards().empty()) {
-      QMessageBox::information(this, "Brak fiszek",
-                            "By zapisać zestaw do bazy danych dodaj fiszkę.");
-    }
-    else {
+      QMessageBox::information(
+          this, "Brak fiszek",
+          "By zapisać zestaw do bazy danych dodaj fiszkę.");
+    } else {
       set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
       if (set_->checkSetNameInDb()) {
         set_->saveToDB(user->getUsername());
         QMessageBox::information(this, "Zapisano",
-                                "Zestaw został zapisany do bazy danych.");
-      }
-      else {
-        QMessageBox::information(this, "Istniejąca nazwa",
-                                "Istnieje już zestaw o tej nazwie. Wybierz inną nazwę.");
+                                 "Zestaw został zapisany do bazy danych.");
+      } else {
+        QMessageBox::information(
+            this, "Istniejąca nazwa",
+            "Istnieje już zestaw o tej nazwie. Wybierz inną nazwę.");
       }
     }
-  }
-  else {
+  } else {
     QMessageBox::information(this, "Brak nazwy",
-                            "By zapisać zestaw do bazy danych nadaj nazwę.");
+                             "By zapisać zestaw do bazy danych nadaj nazwę.");
   }
 }
 
@@ -389,18 +388,16 @@ void MainWindow::saveToFile() {
   if (ui->setNameTextEdit->toPlainText().toStdString() != "") {
     if (set_->getFlashcards().empty()) {
       QMessageBox::information(this, "Brak fiszek",
-                            "By zapisać zestaw do pliku dodaj fiszkę.");
-    }
-    else {
+                               "By zapisać zestaw do pliku dodaj fiszkę.");
+    } else {
       set_->setName(ui->setNameTextEdit->toPlainText().toStdString());
       set_->saveToFile();
       QMessageBox::information(this, "Zapisano",
-                              "Zestaw został zapisany do pliku.");
+                               "Zestaw został zapisany do pliku.");
     }
-  }
-  else {
+  } else {
     QMessageBox::information(this, "Brak nazwy",
-                            "By zapisać zestaw do pliku nadaj nazwę.");
+                             "By zapisać zestaw do pliku nadaj nazwę.");
   }
 }
 
@@ -413,6 +410,7 @@ void MainWindow::updateFlashcard(unsigned int quality) {
 
 void MainWindow::goToStats() {
   navigateToPage(UserPage);
+  updateUserStats();
   updateStatsWidget();
 }
 
@@ -566,6 +564,7 @@ void MainWindow::updateStatsWidget() {
     ui->tableWidget->setItem(i, 3, pendingCountItem);
   }
 }
+
 QString MainWindow::formatTime(std::chrono::seconds secs) {
   int hours = std::chrono::duration_cast<std::chrono::hours>(secs).count();
   secs -= std::chrono::hours(hours);
@@ -577,16 +576,15 @@ QString MainWindow::formatTime(std::chrono::seconds secs) {
       .arg(minutes)
       .arg(seconds);
 }
+
 void MainWindow::updateUserStats() {
   int flashcardsToday = user->getFlashcardsReviewedToday();
   std::chrono::seconds totalLearningTimeToday =
       user->getTotalLearningTimeToday();
-  // std::chrono::seconds totalLearningTime = user->getTotalLearningTime();
 
-  QString text = QString("Przejrzałeś dzisiaj łącznie %1 fiszek w %2.")
+  QString text = QString("Przejrzałeś w obecnej sesji łącznie %1 fiszek w %2.")
                      .arg(flashcardsToday)
                      .arg(formatTime(totalLearningTimeToday));
-
   ui->statsEdit->setText(text);
 }
 

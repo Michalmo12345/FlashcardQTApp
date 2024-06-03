@@ -253,6 +253,7 @@ std::unique_ptr<Set> getSetByName(const std::string& setName) {
     return set;
   } catch (const std::exception& e) {
     std::cerr << e.what() << std::endl;
+    return nullptr;
   }
 }
 
