@@ -293,7 +293,6 @@ void MainWindow::beginLearning() {
     updateFileShowButtons();
     ui->questionBrowser->setText(
         QString::fromStdString(currentCard_->getQuestion()));
-    user->startLearningSession();
   }
 }
 
@@ -327,12 +326,13 @@ void MainWindow::beginSuperMemoLearning(const QString &setName) {
 void MainWindow::goToNextFlashcard() {
   ui->questionBrowser->clear();
   ui->answerBrowser->clear();
-  user->incrementFlashcardsReviewed();
+
   if (lastClickedButton_ != nullptr) {
     lastClickedButton_->setStyleSheet("");
     lastClickedButton_ = nullptr;
   }
   if (isSuperMemoLearning_) {
+    user->incrementFlashcardsReviewed();
     goToNextSuperMemoFlashcard();
     return;
   }
